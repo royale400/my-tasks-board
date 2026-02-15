@@ -7,22 +7,17 @@
     
     <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    
     <script src="https://cdn.tailwindcss.com"></script>
-    
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     
     <style>
         body {
             font-family: 'Cairo', sans-serif;
-            /* خلفية غامقة متدرجة لإبراز تأثير الزجاج */
             background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
             min-height: 100vh;
         }
         
-        /* تأثير الزجاج القوي */
         .glass-panel {
             background: rgba(30, 41, 59, 0.4);
             backdrop-filter: blur(12px);
@@ -31,7 +26,6 @@
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
         }
 
-        /* تأثير الزجاج للبطاقات */
         .glass-card {
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(10px);
@@ -41,6 +35,22 @@
             border-right: 1px solid rgba(255, 255, 255, 0.05);
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* تأثير البطاقة المكتملة */
+        .card-completed {
+            background: rgba(16, 185, 129, 0.1) !important;
+            border-color: rgba(16, 185, 129, 0.3) !important;
+            transform: scale(0.98);
+            opacity: 0.8;
+        }
+
+        .check-btn {
+            transition: all 0.3s ease;
+        }
+        .check-btn:active {
+            transform: scale(0.9);
         }
     </style>
 </head>
@@ -57,7 +67,6 @@
                 title: "أساسيات الشبكات",
                 type: "Home Work",
                 dueDate: "2026-02-18T00:59:00+03:00",
-                // ألوان نيون متناسبة مع الوضع الليلي
                 accentColor: "bg-purple-500",
                 textColor: "text-purple-300",
                 badgeBg: "bg-purple-500/20",
@@ -92,8 +101,28 @@
             </svg>
         );
 
+        const CheckIcon = () => (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        );
+
         const App = () => {
             const [timeLeft, setTimeLeft] = useState({});
+            const [completedTasks, setCompletedTasks] = useState({});
+
+            useEffect(() => {
+                const savedProgress = localStorage.getItem('myHomeworkProgress');
+                if (savedProgress) {
+                    setCompletedTasks(JSON.parse(savedProgress));
+                }
+            }, []);
+
+            const toggleTask = (id) => {
+                const newStatus = { ...completedTasks, [id]: !completedTasks[id] };
+                setCompletedTasks(newStatus);
+                localStorage.setItem('myHomeworkProgress', JSON.stringify(newStatus));
+            };
 
             const calculateTimeLeft = () => {
                 const now = new Date().getTime();
@@ -132,47 +161,55 @@
                 return new Date(dateString).toLocaleDateString('ar-SA', options);
             };
 
+            const remainingCount = assignmentsData.filter(t => !completedTasks[t.id]).length;
+
             return (
-                <div className="glass-panel rounded-3xl overflow-hidden relative">
+                <div className="glass-panel rounded-3xl overflow-hidden relative transition-all duration-500">
                     
-                    {/* Glow Effect behind header */}
                     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-24 bg-blue-500/20 blur-[60px] rounded-full pointer-events-none"></div>
 
-                    {/* Header */}
                     <div className="p-8 pb-4 border-b border-white/10 relative z-10">
                         <div className="flex items-center justify-between mb-2">
                             <h1 className="text-3xl font-bold text-white drop-shadow-lg">قادم</h1>
-                            <div className="relative">
+                            {remainingCount > 0 ? (
                                 <div className="h-3 w-3 bg-green-400 rounded-full animate-pulse shadow-[0_0_10px_rgba(74,222,128,0.8)]"></div>
-                            </div>
+                            ) : (
+                                <div className="text-green-400 font-bold text-sm">✓ تم إنهاء الكل</div>
+                            )}
                         </div>
-                        <p className="text-gray-300 text-lg font-medium">لديك 3 مهام قادمة، بالتوفيق!</p>
+                        <p className="text-gray-300 text-lg font-medium">
+                            {remainingCount > 0 
+                                ? `لديك ${remainingCount} مهام متبقية، بالتوفيق!` 
+                                : `أحسنت! لقد أنهيت جميع المهام.`}
+                        </p>
                     </div>
 
-                    {/* List */}
                     <div className="p-6 space-y-6 relative z-10">
-                        {/* Timeline Line */}
                         <div className="absolute top-8 bottom-8 right-[2.65rem] w-0.5 bg-white/10 hidden sm:block"></div>
 
                         {assignmentsData.map((task) => {
                             const time = timeLeft[task.id];
+                            const isCompleted = completedTasks[task.id];
                             
                             return (
                                 <div key={task.id} className="relative flex flex-col sm:flex-row items-start sm:items-center gap-4 group">
                                     
-                                    {/* Timeline Dot with Glow */}
-                                    <div className={`hidden sm:flex z-10 w-8 h-8 rounded-full items-center justify-center border-2 border-slate-900 shadow-lg ${task.accentColor} shrink-0 shadow-[0_0_15px_rgba(0,0,0,0.5)]`}>
-                                        <div className="w-2.5 h-2.5 bg-white rounded-full"></div>
+                                    {/* Timeline Dot */}
+                                    <div className={`hidden sm:flex z-10 w-8 h-8 rounded-full items-center justify-center border-2 border-slate-900 shadow-lg ${isCompleted ? 'bg-green-500' : task.accentColor} shrink-0 shadow-[0_0_15px_rgba(0,0,0,0.5)] transition-colors duration-500`}>
+                                        {isCompleted ? (
+                                            <div className="text-white w-4 h-4"><CheckIcon /></div>
+                                        ) : (
+                                            <div className="w-2.5 h-2.5 bg-white rounded-full"></div>
+                                        )}
                                     </div>
 
-                                    {/* Floating Glass Card */}
-                                    <div className="glass-card w-full rounded-2xl p-6 transition-all duration-300 hover:-translate-y-2 hover:bg-white/10 hover:shadow-[0_15px_40px_rgba(0,0,0,0.4)] flex flex-col md:flex-row justify-between items-start md:items-center relative overflow-hidden group-hover:border-white/30">
+                                    {/* Card */}
+                                    <div className={`glass-card w-full rounded-2xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center relative overflow-hidden group-hover:border-white/30 ${isCompleted ? 'card-completed' : 'hover:-translate-y-2 hover:bg-white/10'}`}>
                                         
-                                        {/* Glowing Side Border */}
-                                        <div className={`absolute top-0 right-0 bottom-0 w-1 ${task.accentColor} shadow-[0_0_15px_currentColor]`}></div>
+                                        <div className={`absolute top-0 right-0 bottom-0 w-1 ${isCompleted ? 'bg-green-500' : task.accentColor} shadow-[0_0_15px_currentColor] transition-colors duration-300`}></div>
 
-                                        <div className="flex flex-col gap-2 pr-3 mb-4 md:mb-0">
-                                            <h2 className={`text-2xl font-bold ${task.textColor} drop-shadow-md`}>{task.title}</h2>
+                                        <div className="flex flex-col gap-2 pr-3 mb-4 md:mb-0 transition-opacity duration-300" style={{opacity: isCompleted ? 0.5 : 1}}>
+                                            <h2 className={`text-2xl font-bold ${isCompleted ? 'text-gray-400 line-through' : task.textColor} drop-shadow-md`}>{task.title}</h2>
                                             <span className={`${task.badgeBg} ${task.badgeText} px-3 py-1 rounded-lg text-sm font-semibold w-fit border border-white/5`}>
                                                 {task.type}
                                             </span>
@@ -182,37 +219,56 @@
                                             </div>
                                         </div>
 
-                                        {/* Timer */}
-                                        <div className="text-left flex flex-col items-end min-w-[160px] w-full md:w-auto border-t md:border-t-0 pt-4 md:pt-0 border-white/10">
-                                            {time && !time.expired ? (
-                                                <div className="text-center w-full md:w-auto">
-                                                    <div className="flex gap-3 text-center dir-ltr justify-end">
-                                                        <div className="flex flex-col">
-                                                            <span className="text-3xl font-extrabold text-white font-mono leading-none drop-shadow-lg">{time.days}</span>
-                                                            <span className="text-xs text-gray-500 font-bold mt-1">يوم</span>
-                                                        </div>
-                                                        <span className="text-gray-500 font-bold text-2xl -mt-1 opacity-50">:</span>
-                                                        <div className="flex flex-col">
-                                                            <span className="text-3xl font-extrabold text-white font-mono leading-none drop-shadow-lg">{String(time.hours).padStart(2, '0')}</span>
-                                                            <span className="text-xs text-gray-500 font-bold mt-1">ساعة</span>
-                                                        </div>
-                                                        <span className="text-gray-500 font-bold text-2xl -mt-1 opacity-50">:</span>
-                                                        <div className="flex flex-col">
-                                                            <span className="text-3xl font-extrabold text-white font-mono leading-none drop-shadow-lg">{String(time.minutes).padStart(2, '0')}</span>
-                                                            <span className="text-xs text-gray-500 font-bold mt-1">دقيقة</span>
-                                                        </div>
-                                                        <span className="text-gray-500 font-bold text-2xl -mt-1 opacity-50">:</span>
-                                                        <div className="flex flex-col">
-                                                            <span className="text-3xl font-extrabold text-red-400 font-mono leading-none drop-shadow-md shadow-red-500/50">{String(time.seconds).padStart(2, '0')}</span>
-                                                            <span className="text-xs text-gray-500 font-bold mt-1">ثانية</span>
-                                                        </div>
+                                        <div className="flex flex-row-reverse md:flex-row items-center w-full md:w-auto justify-between md:justify-end gap-6 border-t md:border-t-0 pt-4 md:pt-0 border-white/10">
+                                            
+                                            {/* Timer or Done Message */}
+                                            <div className="text-left flex flex-col items-end min-w-[140px]">
+                                                {isCompleted ? (
+                                                    <div className="text-green-400 font-bold text-xl animate-pulse ml-2">
+                                                        تم التسليم
                                                     </div>
+                                                ) : (
+                                                    time && !time.expired ? (
+                                                        <div className="flex gap-3 text-center dir-ltr justify-end">
+                                                            <div className="flex flex-col">
+                                                                <span className="text-2xl font-extrabold text-white font-mono leading-none">{time.days}</span>
+                                                                <span className="text-[10px] text-gray-500 font-bold mt-1">يوم</span>
+                                                            </div>
+                                                            <span className="text-gray-500 font-bold text-xl -mt-1 opacity-50">:</span>
+                                                            <div className="flex flex-col">
+                                                                <span className="text-2xl font-extrabold text-white font-mono leading-none">{String(time.hours).padStart(2, '0')}</span>
+                                                                <span className="text-[10px] text-gray-500 font-bold mt-1">ساعة</span>
+                                                            </div>
+                                                            <span className="text-gray-500 font-bold text-xl -mt-1 opacity-50">:</span>
+                                                            <div className="flex flex-col">
+                                                                <span className="text-2xl font-extrabold text-white font-mono leading-none">{String(time.minutes).padStart(2, '0')}</span>
+                                                                <span className="text-[10px] text-gray-500 font-bold mt-1">دقيقة</span>
+                                                            </div>
+                                                            <span className="text-gray-500 font-bold text-xl -mt-1 opacity-50">:</span>
+                                                            <div className="flex flex-col">
+                                                                <span className="text-2xl font-extrabold text-red-400 font-mono leading-none">{String(time.seconds).padStart(2, '0')}</span>
+                                                                <span className="text-[10px] text-gray-500 font-bold mt-1">ثانية</span>
+                                                            </div>
+                                                        </div>
+                                                    ) : (
+                                                        <div className="text-red-300 font-bold">انتهى الوقت</div>
+                                                    )
+                                                )}
+                                            </div>
+
+                                            {/* Toggle Button */}
+                                            <button 
+                                                onClick={() => toggleTask(task.id)}
+                                                className={`check-btn w-12 h-12 rounded-full flex items-center justify-center border-2 transition-all duration-300 shadow-lg ${isCompleted 
+                                                    ? 'bg-green-500 border-green-400 text-white shadow-[0_0_20px_rgba(34,197,94,0.6)]' 
+                                                    : 'bg-white/5 border-white/20 text-gray-400 hover:bg-white/10 hover:text-white hover:border-white/50'}`}
+                                                title={isCompleted ? "تراجع" : "تحديد كمكتمل"}
+                                            >
+                                                <div className={`transition-transform duration-300 ${isCompleted ? 'scale-110' : 'scale-75 opacity-50'}`}>
+                                                    <CheckIcon />
                                                 </div>
-                                            ) : (
-                                                <div className="px-4 py-2 bg-red-500/20 border border-red-500/30 text-red-300 rounded-lg text-base font-bold shadow-[0_0_15px_rgba(239,68,68,0.2)]">
-                                                    انتهى الوقت
-                                                </div>
-                                            )}
+                                            </button>
+
                                         </div>
                                     </div>
                                 </div>
