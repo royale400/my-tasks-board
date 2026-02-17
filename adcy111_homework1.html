@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حلول واجب أساسيات الشبكات</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        details {
+            background-color: #ffffff;
+            margin-bottom: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        details:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        summary {
+            background-color: #f8f9fa;
+            padding: 15px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.1em;
+            color: #2c3e50;
+            list-style: none; /* Hide default arrow */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        /* Custom arrow for better look */
+        summary::after {
+            content: '+';
+            font-size: 1.5em;
+            color: #007bff;
+            transition: transform 0.2s;
+        }
+        details[open] summary::after {
+            transform: rotate(45deg);
+            color: #dc3545;
+        }
+        details[open] summary {
+            border-bottom: 1px solid #e0e0e0;
+            background-color: #e9ecef;
+        }
+        .content {
+            padding: 20px;
+            text-align: left; /* Keep English questions LTR aligned */
+            direction: ltr; 
+        }
+        .question-text {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            padding: 8px 12px;
+            margin-bottom: 5px;
+            border-radius: 4px;
+            background-color: #fff;
+            border: 1px solid #eee;
+        }
+        li.correct {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+            font-weight: bold;
+        }
+        li.correct::before {
+            content: "✔ ";
+            margin-right: 5px;
+        }
+        .explanation {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #e7f5ff; /* Light blue */
+            border-right: 4px solid #007bff; /* Blue border for RTL */
+            border-radius: 4px;
+            direction: rtl; /* Explanation in Arabic */
+            text-align: right;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+        .explanation strong {
+            color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>مراجعة أسئلة الشبكات (10 أسئلة)</h1>
+    <p style="text-align: center; margin-bottom: 20px; color: #666;">اضغط على عنوان السؤال لعرض الخيارات والإجابة الصحيحة</p>
+
+    <details>
+        <summary>السؤال 1: Hubs vs Switches</summary>
+        <div class="content">
+            <div class="question-text">Which statement is true regarding Hubs and Switches?</div>
+            <ul>
+                <li>Hubs are more efficient than switches for large networks</li>
+                <li>Hubs improve network security by isolating traffic</li>
+                <li class="correct">Hubs are largely obsolete and have been replaced by switches due to inefficiency and security issues</li>
+                <li>Hubs can only connect two devices at a time</li>
+            </ul>
+            <div class="explanation">
+                <strong>الشرح:</strong> أجهزة الـ Hub ترسل البيانات لجميع الأجهزة (Broadcast) مما يسبب بطئاً ومشاكل أمنية، بينما الـ Switch ذكي ويرسل البيانات للجهاز المقصود فقط، لذا أصبح الـ Hub قديماً جداً.
+            </div>
+        </div>
+    </details>
+
+    <details>
+        <summary>السؤال 2: Star Topology</summary>
+        <div class="content">
+            <div class="question-text">In a star topology, how are devices connected?</div>
+            <ul>
+                <li>Every device connects directly to every other device</li>
+                <li>Devices connect to a central backbone cable only</li>
+                <li>All devices connect in a daisy chain without a central device</li>
+                <li class="correct">Each device has a dedicated connection to a central hub, switch, or router</li>
+            </ul>
+            <div class="explanation">
+                <strong>الشرح:</strong> في تصميم النجمة (Star)، كل جهاز يتصل بكابل خاص ومستقل بنقطة مركزية واحدة (Switch أو Hub)، مما يسهل عزل الأعطال.
+            </div>
+        </div>
+    </details>
+
+    <details>
+        <summary>السؤال 3: Port Definition</summary>
+        <div class="content">
+            <div class="question-text">Which statement best describes a 'port' in TCP/IP networking?</div>
+            <ul>
+                <li>It determines the next hop in an IP routing path</li>
+                <li class="correct">It identifies a specific application or service on a device at the Transport layer</li>
+                <li>It translates domain names to IP addresses</li>
+                <li>It marks the physical location of a device on the network</li>
+            </ul>
+            <div class="explanation">
+                <strong>الشرح:</strong> المنفذ (Port) هو رقم يُستخدم لتوجيه البيانات إلى التطبيق الصحيح داخل الجهاز (مثلاً: منفذ 80 للمتصفح، منفذ 25 للبريد) ويعمل في طبقة النقل.
+            </div>
+        </div>
+    </details>
+
+    <details>
+        <summary>السؤال 4: Full Mesh Topology</summary>
+        <div class="content">
+            <div class="question-text">Which topology description matches a ‘full mesh’ network?</div>
+            <ul>
+                <li>All nodes connect to a central hub only</li>
+                <li class="correct">Every node connects directly to every other node</li>
+                <li>Nodes are connected in a ring without a central hub</li>
+                <li>Some nodes connect to all others while some connect to a few</li>
+            </ul>
+            <div class="explanation">
+                <strong>الشرح:</strong> في الشبكة الكاملة (Full Mesh)، يتصل كل جهاز بأسلاك مباشرة مع *جميع* الأجهزة الأخرى لضمان عدم انقطاع الخدمة (Fault Tolerance).
+            </div>
+        </div>
+    </details>
+
+    <details>
+        <summary>السؤال 5: Transport Layer</summary>
+        <div class="content">
+            <div class="question-text">Which OSI layer is responsible for accurate delivery of data between two hosts, including reliability and flow control?</div>
+            <ul>
+                <li>Data Link Layer</li>
+                <li>Application Layer</li>
+                <li>Physical Layer</li>
+                <li class="correct">Transport Layer</li>
+            </ul>
+            <div class="explanation">
+                <strong>الشرح:</strong> طبقة النقل (الطبقة الرابعة) هي المسؤولة عن موثوقية البيانات (Reliability) والتحكم في التدفق (Flow Control) باستخدام بروتوكولات مثل TCP.
+            </div>
+        </div>
+    </details>
+
+    <details>
+        <summary>السؤال 6: IPv4 vs IPv6</summary>
+        <div class="content">
+            <div class="question-text">What is the main difference between IPv4 and IPv6 addresses?</div>
+            <ul>
+                <li>IPv4 is used only for LANs and IPv6 only for WANs</li>
+                <li>IPv4 addresses never change after assignment unlike IPv6 addresses</li>
+                <li>IPv4 is text-based and IPv6 is binary-based</li>
+                <li class="correct">IPv4 uses 32-bit addresses, while IPv6 uses 128-bit addresses</li>
+            </ul>
+            <div class="explanation">
+                <strong>الشرح:</strong> الفرق الجوهري هو حجم العنوان؛ IPv4 محدود (32 بت) مما أدى لنفاد العناوين، بينما IPv6 ضخم جداً (128 بت) لخدمة عدد لا نهائي من الأجهزة.
+            </div>
+        </div>
+    </details>
+
+    <details>
+        <summary>السؤال 7: Switch Function</summary>
+        <div class="content">
+            <div class="question-text">What is the primary purpose of a switch in a Local Area Network (LAN)?</div>
+            <ul>
+                <li>To convert electrical signals to light signals for transmission</li>
+                <li>To manage internet routing between different networks</li>
+                <li class="correct">To forward frames to the correct destination port using MAC addresses</li>
+                <li>To replace the need for hubs entirely in all networks</li>
+            </ul>
+            <div class="explanation">
+                <strong>الشرح:</strong> وظيفة المبدل (Switch) الأساسية هي قراءة عنوان الـ MAC وتوجيه إطار البيانات (Frame) للمنفذ المتصل بالجهاز المستهدف فقط.
+            </div>
+        </div>
+    </details>
+
+    <details>
+        <summary>السؤال 8: Data Communications</summary>
+        <div class="content">
+            <div class="question-text">What does “data communications” refer to in networking terms?</div>
+            <ul>
+                <li>The process of writing code for network devices</li>
+                <li>The physical installation of cables in a building</li>
+                <li class="correct">The exchange of data between two devices via a transmission medium</li>
+                <li>The act of converting data into electrical signals only</li>
+            </ul>
+            <div class="explanation">
+                <strong>الشرح:</strong> اتصالات البيانات هي العملية الكاملة لتبادل المعلومات بين مرسل ومستقبل عبر وسيط ناقل (سلكي أو لاسلكي).
+            </div>
+        </div>
+    </details>
+
+    <details>
+        <summary>السؤال 9: MAC Addresses</summary>
+        <div class="content">
+            <div class="question-text">Which statement describes MAC addresses?</div>
+            <ul>
+                <li>They are IP addresses assigned by network administrators</li>
+                <li class="correct">They identify a NIC on the local network and are used at the Data Link layer</li>
+                <li>They change frequently during each hop in a WAN</li>
+                <li>They identify a device across multiple networks and are used at the Network layer</li>
+            </ul>
+            <div class="explanation">
+                <strong>الشرح:</strong> عنوان الـ MAC هو البصمة الفيزيائية لبطاقة الشبكة (NIC)، ويستخدم للتعريف بالجهاز داخل حدود الشبكة المحلية (LAN) فقط.
+            </div>
+        </div>
+    </details>
+
+    <details>
+        <summary>السؤال 10: Logical Address (IP)</summary>
+        <div class="content">
+            <div class="question-text">Which type of address is primarily used to identify a device's location across interconnected networks?</div>
+            <ul>
+                <li>Domain name</li>
+                <li>Physical address (MAC)</li>
+                <li class="correct">IP address (Logical address)</li>
+                <li>Port address</li>
+            </ul>
+            <div class="explanation">
+                <strong>الشرح:</strong> عنوان الـ IP (العنوان المنطقي) هو المسؤول عن توجيه البيانات عبر الشبكات المختلفة (Interconnected Networks) والإنترنت، بعكس الـ MAC المحلي.
+            </div>
+        </div>
+    </details>
+
+</div>
+
+</body>
+</html>
