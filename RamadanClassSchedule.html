@@ -2,356 +2,294 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>الجدول الدراسي - رمضان</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>جدول رمضان التفاعلي - إعدادات الثيمات</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&family=Cairo:wght@400;700&family=Readex+Pro:wght@400;700&family=Noto+Kufi+Arabic:wght@400;700&family=Changa:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-        /* إعدادات المتغيرات والألوان */
+        /* --- تعريف متغيرات CSS الأساسية (سيتم تحديثها بواسطة الجافاسكريبت) --- */
         :root {
-            --bg-color: #0a0a1a;
-            --card-bg: rgba(20, 20, 40, 0.6);
-            --primary-color: #00f2ff; /* نيون سماوي */
-            --accent-color: #ff0055; /* نيون وردي */
-            --gold-color: #ffd700;   /* ذهبي للحالي */
-            --text-color: #ffffff;
-            --muted-color: #a0a0b0;
+            --bg-main: #0f172a;
+            --bg-card: #1e293b;
+            --accent: #3b82f6;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border-color: rgba(255,255,255,0.05);
+            --font-family: 'Tajawal', sans-serif;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: 'Tajawal', sans-serif;
-            background-color: var(--bg-color);
-            /* خلفية فضائية متدرجة */
-            background-image: 
-                radial-gradient(circle at 20% 30%, rgba(0, 242, 255, 0.15) 0%, transparent 40%),
-                radial-gradient(circle at 80% 70%, rgba(255, 0, 85, 0.15) 0%, transparent 40%);
-            color: var(--text-color);
+            font-family: var(--font-family);
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            padding: 20px;
             min-height: 100vh;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            transition: all 0.5s ease;
         }
 
-        /* الحاوية الرئيسية بتأثير الزجاج */
-        .main-container {
-            width: 100%;
-            max-width: 900px;
-            background: var(--card-bg);
-            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            padding: 24px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            overflow: hidden;
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
         }
 
-        /* الهيدر */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-        .header h1 { font-size: 1.5rem; font-weight: 800; }
-        .header .sub-text { font-size: 0.9rem; color: var(--muted-color); }
-        .live-clock { 
-            font-family: monospace; font-size: 1.2rem; color: var(--primary-color); 
-            text-shadow: 0 0 10px var(--primary-color);
-        }
-
-        /* شريط التنقل بين الأيام */
-        .days-nav {
-            display: flex;
-            gap: 10px;
-            overflow-x: auto;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-            scrollbar-width: none; /* إخفاء شريط التمرير */
-        }
-        .days-nav::-webkit-scrollbar { display: none; }
-        
-        .day-btn {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: var(--muted-color);
-            padding: 10px 20px;
-            border-radius: 30px;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: all 0.3s ease;
-            font-family: inherit; font-weight: bold; font-size: 0.9rem;
-        }
-        .day-btn.active, .day-btn:hover {
-            background: var(--primary-color);
-            color: #000;
-            box-shadow: 0 0 15px var(--primary-color);
-            border-color: transparent;
-        }
-        .day-btn.current-day-indicator::after {
-            content: '•'; position: absolute; top: 2px; right: 5px; color: var(--gold-color);
-        }
-
-        /* تخطيط المحتوى (شبكة) */
-        .content-grid {
-            display: grid;
-            grid-template-columns: 1fr 2fr; /* ثلث لليسار، ثلثين لليمين */
-            gap: 24px;
-        }
-        @media (max-width: 768px) {
-            .content-grid { grid-template-columns: 1fr; /* عمود واحد للجوال */ }
-            .header { flex-direction: column; align-items: flex-start; gap: 10px; }
-            .live-clock { align-self: flex-end; }
-        }
-
-        /* قسم الساعة (اليسار/الأعلى) */
-        .clock-section {
-            background: rgba(0,0,0,0.2);
-            border-radius: 16px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            border: 1px solid rgba(255,255,255,0.05);
-            min-height: 200px;
-        }
-        .main-timer {
-            font-size: 2.5rem; font-weight: 800; font-family: monospace;
-            color: var(--text-color);
-            margin: 10px 0;
-        }
-        .timer-label { 
-            font-size: 0.85rem; color: var(--muted-color); 
-            background: rgba(255,255,255,0.1); padding: 4px 12px; border-radius: 20px;
-        }
-        /* حالات الساعة */
-        .clock-section.status-active .main-timer { color: var(--gold-color); text-shadow: 0 0 15px var(--gold-color); }
-        .clock-section.status-waiting .main-timer { color: var(--primary-color); text-shadow: 0 0 15px var(--primary-color); }
-
-        /* قائمة المحاضرات (اليمين/الأسفل) */
-        .schedule-list {
-            display: flex; flex-direction: column; gap: 12px;
-            max-height: 400px; overflow-y: auto; padding-right: 5px;
-        }
-        /* تنسيق شريط التمرير */
-        .schedule-list::-webkit-scrollbar { width: 5px; }
-        .schedule-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
-
-        /* بطاقة المحاضرة */
-        .course-card {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.08);
-            border-right: 3px solid transparent;
-            padding: 16px;
-            border-radius: 12px;
-            display: flex; justify-content: space-between; align-items: center;
-            transition: all 0.3s ease;
-        }
-        .course-info h3 { font-size: 1rem; margin-bottom: 4px; }
-        .course-info p { font-size: 0.8rem; color: var(--muted-color); display: flex; align-items: center; gap: 5px;}
-        .course-code { 
-            font-size: 0.75rem; font-family: monospace; background: rgba(255,255,255,0.1); 
-            padding: 2px 6px; border-radius: 4px; margin-left: 8px;
-        }
-        .course-time {
-            text-align: left; font-family: monospace; font-size: 0.9rem;
-        }
-
-        /* حالات البطاقات */
-        .course-card.active {
-            background: rgba(255, 215, 0, 0.1);
-            border-color: var(--gold-color);
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
-            transform: scale(1.02);
-        }
-        .course-card.active .course-info h3 { color: var(--gold-color); }
-        
-        .course-card.finished {
-            opacity: 0.5; filter: grayscale(1);
-        }
-
-        .no-data {
-            text-align: center; color: var(--muted-color); padding: 30px; font-style: italic;
-        }
-        .pulse-dot {
-            display: inline-block; width: 8px; height: 8px; background: var(--gold-color);
-            border-radius: 50%; margin-right: 5px; animation: pulse 1.5s infinite;
-        }
-        @keyframes pulse { 0% { opacity: 1; scale: 1;} 50% { opacity: 0.5; scale: 1.2;} 100% { opacity: 1; scale: 1;} }
-
-        /* شاشة التحميل */
-        #loader {
-            position: fixed; inset: 0; background: var(--bg-color); z-index: 1000;
+        /* --- زر الإعدادات (الترس) --- */
+        .settings-btn {
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            width: 40px; height: 40px;
+            border-radius: 50%;
             display: flex; justify-content: center; align-items: center;
-            color: var(--primary-color); font-size: 1.5rem;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+            z-index: 100;
         }
+        .settings-btn:hover { transform: rotate(45deg); color: var(--accent); border-color: var(--accent); }
+
+        /* --- نافذة الإعدادات المنبثقة --- */
+        .settings-panel {
+            position: absolute;
+            top: 50px;
+            left: 0;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 12px;
+            width: 280px;
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+            opacity: 0; pointer-events: none; transform: translateY(-10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 99;
+            backdrop-filter: blur(10px);
+        }
+        .settings-panel.open { opacity: 1; pointer-events: auto; transform: translateY(0); }
+        .settings-panel h3 { font-size: 1rem; margin-bottom: 15px; text-align: center; }
+        .themes-list { display: flex; flex-direction: column; gap: 10px; }
+
+        /* --- أزرار اختيار الثيم --- */
+        .theme-option {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px;
+            background: var(--bg-main);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .theme-option:hover { border-color: var(--accent); transform: translateX(-3px); }
+        .theme-option.active { border-color: var(--accent); background: var(--accent); color: white; }
+        .theme-preview-circle { width: 24px; height: 24px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2); }
+        .theme-name { font-size: 0.9rem; font-weight: bold; }
+
+        /* تصميم الهيدر والتاريخ */
+        .page-header { text-align: center; margin-bottom: 30px; margin-top: 40px; }
+        .page-header h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 5px; color: var(--accent); }
+        .date-display { color: var(--accent); font-size: 1.1rem; font-weight: 500; margin-bottom: 5px; padding: 5px 15px; background: var(--bg-card); border: 1px solid var(--accent); border-radius: 20px; display: inline-block; }
+        .page-header p { color: var(--text-secondary); font-size: 0.9rem; }
+
+        /* --- تصميم الأكورديون --- */
+        .accordion-item { margin-bottom: 15px; border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; background: var(--bg-card); transition: all 0.3s ease; backdrop-filter: blur(5px); }
+        .accordion-header { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 20px; background: transparent; border: none; color: var(--text-primary); font-family: inherit; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: background 0.3s; }
+        .accordion-header:hover { background: rgba(255,255,255,0.02); }
+        .icon-plus { font-size: 1.5rem; color: var(--accent); transition: transform 0.4s ease; line-height: 0; }
+        .accordion-panel { max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1); background: rgba(0,0,0,0.1); }
+        .panel-content { padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+        .accordion-item.active { border-color: var(--accent); box-shadow: 0 4px 20px -10px var(--accent); }
+        .accordion-item.active .accordion-header { color: var(--accent); }
+        .accordion-item.active .icon-plus { transform: rotate(45deg); }
+
+        /* --- تصميم بطاقة المحاضرة --- */
+        .course-card { background: var(--bg-main); padding: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; gap: 10px; border: 1px solid var(--border-color); border-right: 4px solid var(--accent); }
+        .course-info { flex: 1; }
+        .course-info h3 { font-size: 1rem; margin-bottom: 4px; }
+        .course-details { font-size: 0.85rem; color: var(--text-secondary); display: flex; flex-wrap: wrap; gap: 10px; }
+        .course-code { background: var(--bg-card); color: var(--accent); padding: 2px 6px; border-radius: 4px; font-family: monospace; border: 1px solid var(--border-color);}
+        .course-time { font-family: monospace; font-size: 0.9rem; background: var(--bg-card); padding: 6px 10px; border-radius: 6px; white-space: nowrap; flex-shrink: 0; border: 1px solid var(--border-color); }
     </style>
 </head>
 <body>
 
-    <div id="loader">جارِ تهيئة النظام...</div>
+    <div class="container">
+        <button class="settings-btn" id="settings-toggle">
+            <i class="fa-solid fa-gear"></i>
+        </button>
 
-    <div class="main-container" style="display: none;" id="app-content">
-        <div class="header">
-            <div>
-                <h1>الجدول الدراسي (رمضان)</h1>
-                <p class="sub-text" id="day-label">عرض جدول اليوم</p>
-            </div>
-            <div class="live-clock" id="live-clock">00:00</div>
+        <div class="settings-panel" id="settings-panel">
+            <h3><i class="fa-solid fa-palette"></i> تغيير مظهر التطبيق</h3>
+            <div class="themes-list" id="themes-list"></div>
         </div>
 
-        <div class="days-nav" id="days-nav">
-            </div>
+        <header class="page-header">
+            <h1>الجدول الدراسي</h1>
+            <div id="current-date" class="date-display"></div>
+            <p>توقيت شهر رمضان المبارك</p>
+        </header>
 
-        <div class="content-grid">
-            <div class="clock-section" id="clock-section">
-                <div class="timer-label" id="timer-status">الحالة</div>
-                <div class="main-timer" id="main-timer">--:--</div>
-            </div>
-
-            <div class="schedule-list" id="schedule-list">
-                </div>
-        </div>
+        <div id="accordion-container"></div>
     </div>
 
 
     <script>
-        // --- بيانات الجدول (توقيت رمضان 24 ساعة) ---
+        // --- بيانات الجدول ---
         const scheduleData = [
-            { dayName: "الأحد", dayIndex: 0, courses: [{ start: "14:50", end: "15:25", code: "ADIT 1110", name: "مقدمة تقنية المعلومات", prof: "د. محمود عبدالمنعم" }, { start: "21:00", end: "21:35", code: "ADCY 1111", name: "أساسيات الشبكات", prof: "د. عبدالعزيز الدمراني" }, { start: "21:40", end: "22:15", code: "ADEN 1110", name: "اللغة الإنجليزية 1", prof: "د. جلال الربيع" }] },
-            { dayName: "الاثنين", dayIndex: 1, courses: [{ start: "14:50", end: "15:25", code: "ADCY 1112", name: "أساسيات الأمن السيبراني", prof: "د. عمرو أبوزيد" }, { start: "21:00", end: "21:35", code: "ADCY 1113", name: "رياضيات الحاسب", prof: "د. أسامة شاهين" }] },
-            { dayName: "الثلاثاء", dayIndex: 2, courses: [{ start: "14:50", end: "15:25", code: "ADIT 1110", name: "مقدمة تقنية المعلومات", prof: "د. محمود عبدالمنعم" }, { start: "15:30", end: "16:05", code: "ADCY 1111", name: "أساسيات الشبكات", prof: "د. عبدالعزيز الدمراني" }] },
-            { dayName: "الأربعاء", dayIndex: 3, courses: [{ start: "14:50", end: "15:25", code: "ADCY 1112", name: "أساسيات الأمن السيبراني", prof: "د. عمرو أبوزيد" }, { start: "15:30", end: "16:05", code: "ADCY 1113", name: "رياضيات الحاسب", prof: "د. أسامة شاهين" }] },
-            { dayName: "الخميس", dayIndex: 4, courses: [{ start: "14:50", end: "15:25", code: "ADEN 1110", name: "اللغة الإنجليزية 1", prof: "د. جلال الربيع" }] }
+            { dayName: "الأحد", dayIndex: 0, courses: [{ start: "14:50", end: "15:25", code: "ADIT 1110", name: "مقدمة تقنية المعلومات", prof: "د. محمود" }, { start: "21:00", end: "21:35", code: "ADCY 1111", name: "أساسيات الشبكات", prof: "د. عبدالعزيز" }, { start: "21:40", end: "22:15", code: "ADEN 1110", name: "اللغة الإنجليزية 1", prof: "د. جلال" }] },
+            { dayName: "الاثنين", dayIndex: 1, courses: [{ start: "14:50", end: "15:25", code: "ADCY 1112", name: "أساسيات الأمن السيبراني", prof: "د. عمرو" }, { start: "21:00", end: "21:35", code: "ADCY 1113", name: "رياضيات الحاسب", prof: "د. أسامة" }] },
+            { dayName: "الثلاثاء", dayIndex: 2, courses: [{ start: "14:50", end: "15:25", code: "ADIT 1110", name: "مقدمة تقنية المعلومات", prof: "د. محمود" }, { start: "15:30", end: "16:05", code: "ADCY 1111", name: "أساسيات الشبكات", prof: "د. عبدالعزيز" }] },
+            { dayName: "الأربعاء", dayIndex: 3, courses: [{ start: "14:50", end: "15:25", code: "ADCY 1112", name: "أساسيات الأمن السيبراني", prof: "د. عمرو" }, { start: "15:30", end: "16:05", code: "ADCY 1113", name: "رياضيات الحاسب", prof: "د. أسامة" }] },
+            { dayName: "الخميس", dayIndex: 4, courses: [{ start: "14:50", end: "15:25", code: "ADEN 1110", name: "اللغة الإنجليزية 1", prof: "د. جلال" }] }
         ];
 
-        // --- المتغيرات العامة ---
-        let selectedDayIndex = new Date().getDay(); // الافتراضي: اليوم الحالي
-        const currentDayIndexReal = new Date().getDay();
+        // --- قائمة الثيمات المطلوبة (5 ثيمات) ---
+        const themes = [
+            { id: 'dark', name: 'الأصلي الداكن', bgMain: '#0f172a', bgCard: '#1e293b', accent: '#3b82f6', textPri: '#f8fafc', textSec: '#94a3b8', font: 'Tajawal' },
+            { id: 'light', name: 'فاتح نقي', bgMain: '#f8fafc', bgCard: '#ffffff', accent: '#2563eb', textPri: '#1e293b', textSec: '#64748b', font: 'Cairo', borderColor: '#e2e8f0' },
+            { id: 'pink', name: 'وردي هادئ', bgMain: '#fdf2f8', bgCard: '#ffffff', accent: '#ec4899', textPri: '#831843', textSec: '#db2777', font: 'Readex Pro', borderColor: '#fbcfe8' },
+            { id: 'sky', name: 'سماء صافية', bgMain: '#e0f2fe', bgCard: '#ffffff', accent: '#0ea5e9', textPri: '#0369a1', textSec: '#38bdf8', font: 'Noto Kufi Arabic', borderColor: '#bae6fd' },
+            { id: 'lime', name: 'ليموني منعش', bgMain: '#f7fee7', bgCard: '#ffffff', accent: '#84cc16', textPri: '#365314', textSec: '#65a30d', font: 'Changa', borderColor: '#d9f99d' }
+        ];
 
-        // --- دوال مساعدة ---
-        const toMinutes = (t) => { const [h, m] = t.split(':').map(Number); return h * 60 + m; };
-        const formatTime12h = (t) => { const [h, m] = t.split(':').map(Number); let H = h > 12 ? h - 12 : h; if(H===0)H=12; return `${H}:${m.toString().padStart(2,'0')}`; };
-        const msToTimer = (ms) => {
-            if (ms < 0) return "00:00:00";
-            let s = Math.floor((ms / 1000) % 60); let m = Math.floor((ms / (1000 * 60)) % 60); let h = Math.floor((ms / (1000 * 60 * 60)) % 24);
-            return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+        // --- دالة تطبيق الثيم ---
+        const applyTheme = (themeId) => {
+            const theme = themes.find(t => t.id === themeId) || themes[0];
+            const root = document.documentElement;
+            root.style.setProperty('--bg-main', theme.bgMain);
+            root.style.setProperty('--bg-card', theme.bgCard);
+            root.style.setProperty('--accent', theme.accent);
+            root.style.setProperty('--text-primary', theme.textPri);
+            root.style.setProperty('--text-secondary', theme.textSec);
+            root.style.setProperty('--font-family', theme.font);
+            root.style.setProperty('--border-color', theme.borderColor || 'rgba(255,255,255,0.05)');
+            
+            // حفظ الثيم في التخزين المحلي
+            localStorage.setItem('selectedTheme', themeId);
+            updateActiveThemeUI(themeId);
         };
 
-        // --- تهيئة التطبيق ---
-        function initApp() {
-            // إنشاء أزرار التنقل
-            const navContainer = document.getElementById('days-nav');
-            scheduleData.forEach(day => {
-                const btn = document.createElement('button');
-                btn.className = `day-btn ${day.dayIndex === selectedDayIndex ? 'active' : ''} ${day.dayIndex === currentDayIndexReal ? 'current-day-indicator relative' : ''}`;
-                btn.innerText = day.dayName;
-                btn.onclick = () => {
-                    selectedDayIndex = day.dayIndex;
-                    updateUI();
-                    document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                };
-                navContainer.appendChild(btn);
+        // --- تحديث واجهة اختيار الثيم ---
+        const updateActiveThemeUI = (themeId) => {
+            document.querySelectorAll('.theme-option').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.theme === themeId);
+            });
+        };
+
+        // --- إدارة نافذة الإعدادات ---
+        const settingsToggle = document.getElementById('settings-toggle');
+        const settingsPanel = document.getElementById('settings-panel');
+        
+        settingsToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            settingsPanel.classList.toggle('open');
+        });
+
+        // إغلاق النافذة عند النقر خارجها
+        document.addEventListener('click', (e) => {
+            if (!settingsPanel.contains(e.target) && e.target !== settingsToggle) {
+                settingsPanel.classList.remove('open');
+            }
+        });
+
+        // --- بناء قائمة الثيمات ---
+        const themesList = document.getElementById('themes-list');
+        themes.forEach(theme => {
+            const btn = document.createElement('div');
+            btn.className = 'theme-option';
+            btn.dataset.theme = theme.id;
+            btn.innerHTML = `
+                <div class="theme-preview-circle" style="background: ${theme.accent};"></div>
+                <span class="theme-name">${theme.name}</span>
+            `;
+            btn.onclick = () => {
+                applyTheme(theme.id);
+                // settingsPanel.classList.remove('open'); // اختياري: إغلاق القائمة بعد الاختيار
+            };
+            themesList.appendChild(btn);
+        });
+
+        // --- تحميل الثيم المحفوظ عند البدء ---
+        const savedTheme = localStorage.getItem('selectedTheme') || 'dark';
+        applyTheme(savedTheme);
+
+
+        // --- بقية كود بناء الجدول (التاريخ، الأكورديون) ---
+        const formatTime = (t) => { 
+            const [h, m] = t.split(':').map(Number); 
+            let H = h > 12 ? h - 12 : h; if(H===0)H=12; 
+            return `${H}:${m.toString().padStart(2,'0')}`; 
+        };
+
+        const updateDateDisplay = () => {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('current-date').innerText = now.toLocaleDateString('ar-SA', options);
+        };
+        updateDateDisplay();
+
+        const container = document.getElementById('accordion-container');
+        const currentDayIndex = new Date().getDay();
+        let activeItem = null;
+
+        scheduleData.forEach((dayData, index) => {
+            const item = document.createElement('div');
+            item.className = 'accordion-item';
+            
+            const header = document.createElement('button');
+            header.className = 'accordion-header';
+            header.innerHTML = `<span>${dayData.dayName}</span><span class="icon-plus">+</span>`;
+
+            const panel = document.createElement('div');
+            panel.className = 'accordion-panel';
+            const panelContent = document.createElement('div');
+            panelContent.className = 'panel-content';
+
+            dayData.courses.forEach(course => {
+                const card = document.createElement('div');
+                card.className = 'course-card';
+                card.innerHTML = `
+                    <div class="course-info">
+                        <h3>${course.name}</h3>
+                        <div class="course-details"><span class="course-code">${course.code}</span><span>👨‍🏫 ${course.prof}</span></div>
+                    </div>
+                    <div class="course-time">${formatTime(course.start)} - ${formatTime(course.end)}</div>
+                `;
+                panelContent.appendChild(card);
+            });
+            panel.appendChild(panelContent);
+
+            header.addEventListener('click', function() {
+                const isActive = item.classList.contains('active');
+                if (activeItem && activeItem !== item) {
+                    activeItem.classList.remove('active');
+                    activeItem.querySelector('.accordion-panel').style.maxHeight = null;
+                }
+                if (!isActive) {
+                    item.classList.add('active');
+                    panel.style.maxHeight = panel.scrollHeight + "px";
+                    activeItem = item;
+                } else {
+                    item.classList.remove('active');
+                    panel.style.maxHeight = null;
+                    activeItem = null;
+                }
             });
 
-            // إخفاء شاشة التحميل وإظهار المحتوى
-            setTimeout(() => {
-                document.getElementById('loader').style.display = 'none';
-                document.getElementById('app-content').style.display = 'block';
-                updateUI(); // تحديث فوري
-                setInterval(updateUI, 1000); // تشغيل المؤقت
-            }, 1000);
-        }
+            item.appendChild(header);
+            item.appendChild(panel);
+            container.appendChild(item);
 
-        // --- دالة التحديث الرئيسية (تعمل كل ثانية) ---
-        function updateUI() {
-            const now = new Date();
-            const nowMinutes = now.getHours() * 60 + now.getMinutes();
-            const isTodayView = selectedDayIndex === currentDayIndexReal;
-
-            // 1. تحديث الساعة في الهيدر
-            document.getElementById('live-clock').innerText = now.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute:'2-digit' });
-
-            // 2. جلب بيانات اليوم المحدد
-            const selectedData = scheduleData.find(d => d.dayIndex === selectedDayIndex);
-            const courses = selectedData ? selectedData.courses : [];
-            document.getElementById('day-label').innerText = isTodayView ? "بيانات اليوم الحالية" : `أرشيف يوم ${selectedData?.dayName}`;
-
-            // 3. تحديث قسم الساعة (اليسار/الأعلى)
-            const clockSection = document.getElementById('clock-section');
-            const timerStatus = document.getElementById('timer-status');
-            const mainTimer = document.getElementById('main-timer');
-            
-            clockSection.className = 'clock-section'; // Reset classes
-
-            if (courses.length === 0) {
-                mainTimer.innerText = "0"; timerStatus.innerText = "لا توجد محاضرات";
-            } else if (isTodayView) {
-                const active = courses.find(c => { const s = toMinutes(c.start); const e = toMinutes(c.end); return nowMinutes >= s && nowMinutes < e; });
-                const next = courses.find(c => toMinutes(c.start) > nowMinutes);
-
-                if (active) {
-                    clockSection.classList.add('status-active');
-                    const end = new Date(now); const [h, m] = active.end.split(':'); end.setHours(h, m, 0);
-                    mainTimer.innerText = msToTimer(end - now);
-                    timerStatus.innerHTML = `<span class="pulse-dot"></span>جاري: ${active.code}`;
-                } else if (next) {
-                    clockSection.classList.add('status-waiting');
-                    const start = new Date(now); const [h, m] = next.start.split(':'); start.setHours(h, m, 0);
-                    mainTimer.innerText = msToTimer(start - now);
-                    timerStatus.innerText = `القادمة: ${next.code}`;
-                } else {
-                    mainTimer.innerText = "--:--"; timerStatus.innerText = "انتهى دوام اليوم";
-                }
-            } else {
-                mainTimer.innerText = courses.length; timerStatus.innerText = "محاضرات في هذا اليوم";
+            if(dayData.dayIndex === currentDayIndex) {
+                setTimeout(() => {
+                   header.click();
+                   item.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 300);
             }
-
-            // 4. تحديث قائمة المحاضرات (اليمين/الأسفل)
-            const listContainer = document.getElementById('schedule-list');
-            listContainer.innerHTML = ''; // مسح القائمة القديمة
-
-            if (courses.length === 0) {
-                listContainer.innerHTML = '<div class="no-data">لا توجد محاضرات مجدولة لهذا اليوم</div>';
-            } else {
-                courses.forEach(course => {
-                    const startM = toMinutes(course.start);
-                    const endM = toMinutes(course.end);
-                    let statusClass = '';
-                    if (isTodayView) {
-                        if (nowMinutes >= endM) statusClass = 'finished';
-                        else if (nowMinutes >= startM && nowMinutes < endM) statusClass = 'active';
-                    }
-
-                    const card = document.createElement('div');
-                    card.className = `course-card ${statusClass}`;
-                    card.innerHTML = `
-                        <div class="course-info">
-                            <h3>${course.name} <span class="course-code">${course.code}</span></h3>
-                            <p>
-                                ${statusClass === 'active' ? '<span class="pulse-dot"></span>' : ''}
-                                👨‍🏫 ${course.prof}
-                            </p>
-                        </div>
-                        <div class="course-time">
-                            <div>${formatTime12h(course.start)}</div>
-                            <div style="color: var(--muted-color); font-size: 0.8em;">${formatTime12h(course.end)}</div>
-                        </div>
-                    `;
-                    listContainer.appendChild(card);
-                });
-            }
-        }
-
-        // بدء التشغيل عند تحميل الصفحة
-        window.addEventListener('DOMContentLoaded', initApp);
-
+        });
     </script>
 </body>
 </html>
