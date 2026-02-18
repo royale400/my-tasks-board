@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>جدول رمضان التفاعلي v.1.1</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* --- متغيرات الألوان (الوضع الداكن - الافتراضي) --- */
+        :root {
+            --bg-main: #0f172a;
+            --bg-card: #1e293b;
+            --accent: #3b82f6;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border-color: rgba(255,255,255,0.05);
+            --card-hover: rgba(255,255,255,0.02);
+            --time-bg: rgba(255,255,255,0.05);
+            --code-bg: rgba(59, 130, 246, 0.1);
+            --shadow-color: rgba(0,0,0,0.3);
+        }
+
+        /* --- متغيرات الوضع الفاتح (Light Mode) --- */
+        body.light-mode {
+            --bg-main: #f1f5f9;
+            --bg-card: #ffffff;
+            --accent: #2563eb;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --card-hover: #f8fafc;
+            --time-bg: #f1f5f9;
+            --code-bg: #e0f2fe;
+            --shadow-color: rgba(0,0,0,0.05);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            padding: 20px;
+            min-height: 100vh;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* --- زر تبديل الثيم --- */
+        .theme-toggle-btn {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px var(--shadow-color);
+            z-index: 100;
+        }
+        .theme-toggle-btn:hover {
+            transform: scale(1.1);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* الهيدر */
+        .page-header { text-align: center; margin-bottom: 30px; margin-top: 20px; }
+        .page-header h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 5px; color: var(--accent); }
+        .version-badge { font-size: 0.8rem; background: var(--code-bg); color: var(--accent); padding: 2px 8px; border-radius: 4px; vertical-align: middle; margin-right: 5px; }
+        
+        .date-display { 
+            color: var(--accent); font-size: 1.1rem; font-weight: 500; margin-bottom: 5px; 
+            padding: 5px 15px; background: var(--bg-card); border: 1px solid var(--accent); 
+            border-radius: 20px; display: inline-block; 
+            box-shadow: 0 4px 6px -1px var(--shadow-color);
+        }
+        .page-header p { color: var(--text-secondary); font-size: 0.9rem; }
+
+        /* الأكورديون */
+        .accordion-item { margin-bottom: 15px; border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; background: var(--bg-card); transition: all 0.3s ease; box-shadow: 0 2px 4px var(--shadow-color); }
+        .accordion-header { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 20px; background: transparent; border: none; color: var(--text-primary); font-family: inherit; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: background 0.3s; }
+        .accordion-header:hover { background: var(--card-hover); }
+        .icon-plus { font-size: 1.5rem; color: var(--accent); transition: transform 0.4s ease; line-height: 0; }
+        
+        .accordion-panel { max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1); background: rgba(0,0,0,0.02); }
+        .panel-content { padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+
+        .accordion-item.active { border-color: var(--accent); box-shadow: 0 8px 20px -8px rgba(59, 130, 246, 0.25); }
+        .accordion-item.active .accordion-header { color: var(--accent); }
+        .accordion-item.active .icon-plus { transform: rotate(45deg); }
+
+        /* البطاقات */
+        .course-card { 
+            background: var(--bg-main); 
+            padding: 15px; 
+            border-radius: 8px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            gap: 15px; 
+            border: 1px solid var(--border-color); 
+            border-right: 4px solid var(--accent); 
+            transition: transform 0.2s;
+        }
+        .course-card:hover { transform: translateX(-3px); }
+        
+        .course-info { flex: 1; }
+        .course-info h3 { font-size: 1rem; margin-bottom: 6px; font-weight: 700; color: var(--text-primary); }
+        .course-details { font-size: 0.85rem; color: var(--text-secondary); display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+        
+        .course-code { 
+            background: var(--code-bg); color: var(--accent); 
+            padding: 2px 8px; border-radius: 4px; font-family: monospace; font-weight: bold; font-size: 0.8rem;
+        }
+        
+        /* تحديث CSS للوقت لدعم RTL */
+        .course-time { 
+            font-family: monospace; font-size: 0.95rem; font-weight: bold;
+            background: var(--time-bg); padding: 8px 12px; border-radius: 8px; 
+            white-space: nowrap; flex-shrink: 0; border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            /* تم إزالة direction: ltr للسماح بالتدفق الطبيعي */
+            direction: rtl; 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <button class="theme-toggle-btn" id="theme-toggle" title="تغيير المظهر">
+            <i class="fa-solid fa-sun" id="theme-icon"></i>
+        </button>
+
+        <header class="page-header">
+            <h1>الجدول الدراسي <span class="version-badge">v.1</span></h1>
+            <div id="current-date" class="date-display"></div>
+            <p>توقيت شهر رمضان المبارك</p>
+        </header>
+
+        <div id="accordion-container"></div>
+    </div>
+
+    <script>
+        // =========================================
+        // 1. إدارة الثيمات (Dark / Light)
+        // =========================================
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const body = document.body;
+
+        // التحقق من التخزين المحلي أو الإعداد الافتراضي
+        const currentTheme = localStorage.getItem('theme');
+        if (currentTheme === 'light') {
+            body.classList.add('light-mode');
+            // إذا كان الوضع فاتح، الأيقونة التي ستظهر للتبديل هي القمر
+            themeIcon.classList.replace('fa-sun', 'fa-moon');
+        } else {
+            // إذا كان الوضع داكن، الأيقونة التي ستظهر للتبديل هي الشمس الصلبة
+            themeIcon.classList.replace('fa-moon', 'fa-sun');
+        }
+
+        themeToggleBtn.addEventListener('click', () => {
+            body.classList.toggle('light-mode');
+            if (body.classList.contains('light-mode')) {
+                localStorage.setItem('theme', 'light');
+                themeIcon.classList.replace('fa-sun', 'fa-moon');
+            } else {
+                localStorage.setItem('theme', 'dark');
+                themeIcon.classList.replace('fa-moon', 'fa-sun');
+            }
+        });
+
+        // =========================================
+        // 2. معالجة البيانات (JSON)
+        // =========================================
+        const rawScheduleJSON = {
+          "context": "Ramadan 1446 AH Academic Schedule",
+          "university": "Jouf University",
+          "timezone": "Asia/Riyadh",
+          "time_format": "24-hour (HH:mm)",
+          "schedule": {
+            "Sunday": [
+              { "course_code": "ADIT_1110", "course_name": "مقدمة تقنية المعلومات", "start_time": "14:50", "end_time": "16:05", "period_type": "Afternoon" },
+              { "course_code": "ADCY_1111", "course_name": "أساسيات الشبكات", "start_time": "21:00", "end_time": "21:35", "period_type": "Night" },
+              { "course_code": "ADEN_1110", "course_name": "اللغة الإنجليزية 1", "start_time": "21:40", "end_time": "22:55", "period_type": "Night" }
+            ],
+            "Monday": [
+              { "course_code": "ADCY_1112", "course_name": "أساسيات الأمن السيبراني", "start_time": "14:50", "end_time": "16:05", "period_type": "Afternoon" },
+              { "course_code": "ADCY_1113", "course_name": "رياضيات الحاسب", "start_time": "21:00", "end_time": "22:15", "period_type": "Night" }
+            ],
+            "Tuesday": [
+              { "course_code": "ADIT_1110", "course_name": "مقدمة تقنية المعلومات", "start_time": "14:50", "end_time": "15:25", "period_type": "Afternoon" },
+              {
+                "course_code": "ADCY_1111", "course_name": "أساسيات الشبكات", "note": "SPLIT SESSION due to Iftar",
+                "segments": [
+                  { "part": 1, "start_time": "15:30", "end_time": "16:05", "period_type": "Afternoon" },
+                  { "part": 2, "start_time": "21:00", "end_time": "21:35", "period_type": "Night" }
+                ]
+              }
+            ],
+            "Wednesday": [
+              { "course_code": "ADCY_1112", "course_name": "أساسيات الأمن السيبراني", "start_time": "14:50", "end_time": "15:25", "period_type": "Afternoon" },
+              { "course_code": "ADCY_1113", "course_name": "رياضيات الحاسب", "start_time": "15:30", "end_time": "16:05", "period_type": "Afternoon" }
+            ],
+            "Thursday": [
+              { "course_code": "ADEN_1110", "course_name": "اللغة الإنجليزية 1", "start_time": "14:50", "end_time": "15:25", "period_type": "Afternoon" }
+            ]
+          }
+        };
+
+        // تحديث اسم المدرس
+        const professorMap = {
+            "ADIT_1110": "د. محمود عبدالمنعم",
+            "ADCY_1111": "د. عبدالعزيز الدمراني", // تم التحديث هنا
+            "ADEN_1110": "د. جلال الربيع",
+            "ADCY_1112": "د. عمرو أبوزيد",
+            "ADCY_1113": "د. أسامة شاهين"
+        };
+
+        const dayMapping = { "Sunday": 0, "Monday": 1, "Tuesday": 2, "Wednesday": 3, "Thursday": 4 };
+        const arabicDayNames = { "Sunday": "الأحد", "Monday": "الاثنين", "Tuesday": "الثلاثاء", "Wednesday": "الأربعاء", "Thursday": "الخميس" };
+
+        let scheduleData = [];
+
+        for (const [englishDay, courses] of Object.entries(rawScheduleJSON.schedule)) {
+            const dayIndex = dayMapping[englishDay];
+            const dayName = arabicDayNames[englishDay];
+            let processedCourses = [];
+
+            courses.forEach(course => {
+                const profName = professorMap[course.course_code] || "";
+                const formattedCode = course.course_code.replace('_', ' ');
+
+                if (course.segments) {
+                    course.segments.forEach(segment => {
+                         processedCourses.push({
+                            start: segment.start_time,
+                            end: segment.end_time,
+                            code: formattedCode,
+                            name: course.course_name,
+                            prof: profName
+                        });
+                    });
+                } else {
+                    processedCourses.push({
+                        start: course.start_time,
+                        end: course.end_time,
+                        code: formattedCode,
+                        name: course.course_name,
+                        prof: profName
+                    });
+                }
+            });
+
+            processedCourses.sort((a, b) => a.start.localeCompare(b.start));
+
+             scheduleData.push({ dayName: dayName, dayIndex: dayIndex, courses: processedCourses });
+        }
+        scheduleData.sort((a, b) => a.dayIndex - b.dayIndex);
+
+        // =========================================
+        // 3. دوال الوقت والعرض
+        // =========================================
+
+        // تحديث دالة الوقت لتكون RTL
+        const formatTime = (t) => {
+            const [h, m] = t.split(':').map(Number);
+            const suffix = h >= 12 ? 'م' : 'ص';
+            let H = h > 12 ? h - 12 : h;
+            if (H === 0 && h !== 12) H = 12; 
+            if (h === 12) H = 12; 
+            // تمت إزالة span الذي يفرض LTR للسماح بالتدفق الطبيعي RTL
+            return `${H}:${m.toString().padStart(2,'0')} ${suffix}`;
+        };
+
+        const updateDateDisplay = () => {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('current-date').innerText = now.toLocaleDateString('ar-SA', options);
+        };
+        updateDateDisplay();
+
+        // =========================================
+        // 4. بناء الأكورديون
+        // =========================================
+        const container = document.getElementById('accordion-container');
+        const currentDayIndex = new Date().getDay();
+        let activeItem = null;
+
+        scheduleData.forEach((dayData, index) => {
+            const item = document.createElement('div');
+            item.className = 'accordion-item';
+            
+            const header = document.createElement('button');
+            header.className = 'accordion-header';
+            header.innerHTML = `<span>${dayData.dayName}</span><span class="icon-plus">+</span>`;
+
+            const panel = document.createElement('div');
+            panel.className = 'accordion-panel';
+            const panelContent = document.createElement('div');
+            panelContent.className = 'panel-content';
+
+            dayData.courses.forEach(course => {
+                const card = document.createElement('div');
+                card.className = 'course-card';
+                card.innerHTML = `
+                    <div class="course-info">
+                        <h3>${course.name}</h3>
+                        <div class="course-details">
+                            <span class="course-code">${course.code}</span>
+                            <span><i class="fa-solid fa-chalkboard-user"></i> ${course.prof}</span>
+                        </div>
+                    </div>
+                    <div class="course-time">${formatTime(course.start)} - ${formatTime(course.end)}</div>
+                `;
+                panelContent.appendChild(card);
+            });
+            panel.appendChild(panelContent);
+
+            header.addEventListener('click', function() {
+                const isActive = item.classList.contains('active');
+                if (activeItem && activeItem !== item) {
+                    activeItem.classList.remove('active');
+                    activeItem.querySelector('.accordion-panel').style.maxHeight = null;
+                }
+                if (!isActive) {
+                    item.classList.add('active');
+                    panel.style.maxHeight = panel.scrollHeight + "px";
+                    activeItem = item;
+                } else {
+                    item.classList.remove('active');
+                    panel.style.maxHeight = null;
+                    activeItem = null;
+                }
+            });
+
+            item.appendChild(header);
+            item.appendChild(panel);
+            container.appendChild(item);
+
+            if(dayData.dayIndex === currentDayIndex) {
+                setTimeout(() => {
+                   header.click();
+                   item.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 300);
+            }
+        });
+    </script>
+</body>
+</html>
