@@ -3,16 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>جدول رمضان التفاعلي v.1.1</title>
+    <title>الجدول الدراسي</title>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* --- متغيرات الألوان (الوضع الداكن - الافتراضي) --- */
+        /* --- متغيرات الألوان --- */
         :root {
             --bg-main: #0f172a;
             --bg-card: #1e293b;
             --accent: #3b82f6;
+            --accent-green: #10b981;
+            --accent-red: #ef4444; 
             --text-primary: #f8fafc;
             --text-secondary: #94a3b8;
             --border-color: rgba(255,255,255,0.05);
@@ -20,13 +22,22 @@
             --time-bg: rgba(255,255,255,0.05);
             --code-bg: rgba(59, 130, 246, 0.1);
             --shadow-color: rgba(0,0,0,0.3);
+            --holiday-bg: rgba(16, 185, 129, 0.15);
+            --sheet-bg: #1e293b;
+            
+            /* ألوان المشهد الطبيعي (الوضع الداكن) */
+            --sky-bg: #020617; 
+            --hill-back: #0f172a; 
+            --hill-front: #020617; 
+            --flower-opacity: 0;
         }
 
-        /* --- متغيرات الوضع الفاتح (Light Mode) --- */
         body.light-mode {
             --bg-main: #f1f5f9;
             --bg-card: #ffffff;
             --accent: #2563eb;
+            --accent-green: #059669;
+            --accent-red: #dc2626;
             --text-primary: #1e293b;
             --text-secondary: #64748b;
             --border-color: #e2e8f0;
@@ -34,258 +45,623 @@
             --time-bg: #f1f5f9;
             --code-bg: #e0f2fe;
             --shadow-color: rgba(0,0,0,0.05);
+            --holiday-bg: #d1fae5;
+            --sheet-bg: #ffffff;
+
+            /* ألوان المشهد النهاري (الربيع) */
+            --sky-bg: #87ceeb; 
+            --hill-back: #4ade80; 
+            --hill-front: #22c55e; 
+            --flower-opacity: 1;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        .no-tap-highlight { -webkit-tap-highlight-color: transparent !important; outline: none !important; }
+        .preload * { transition: none !important; }
+
         body {
             font-family: 'Tajawal', sans-serif;
             background-color: var(--bg-main);
             color: var(--text-primary);
             padding: 20px;
             min-height: 100vh;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            position: relative;
-        }
-
-        /* --- زر تبديل الثيم --- */
-        .theme-toggle-btn {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            font-size: 1.2rem;
-            cursor: pointer;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px -1px var(--shadow-color);
-            z-index: 100;
+            flex-direction: column;
+            transition: background-color 0.8s ease, color 0.8s ease; 
         }
-        .theme-toggle-btn:hover {
-            transform: scale(1.1);
-            border-color: var(--accent);
-            color: var(--accent);
+
+        .container { max-width: 800px; margin: 0 auto; width: 100%; flex: 1; position: relative; }
+
+        /* --- زر الإعدادات العائم --- */
+        .settings-fab {
+            position: absolute; top: 10px; left: 10px; width: 45px; height: 45px; border-radius: 50%;
+            background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-primary);
+            font-size: 1.2rem; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; box-shadow: 0 4px 10px var(--shadow-color); z-index: 50; transition: all 0.3s ease;
         }
+        .settings-fab:hover { transform: rotate(45deg); color: var(--accent); border-color: var(--accent); }
 
         /* الهيدر */
-        .page-header { text-align: center; margin-bottom: 30px; margin-top: 20px; }
-        .page-header h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: 5px; color: var(--accent); }
-        .version-badge { font-size: 0.8rem; background: var(--code-bg); color: var(--accent); padding: 2px 8px; border-radius: 4px; vertical-align: middle; margin-right: 5px; }
-        
-        .date-display { 
-            color: var(--accent); font-size: 1.1rem; font-weight: 500; margin-bottom: 5px; 
-            padding: 5px 15px; background: var(--bg-card); border: 1px solid var(--accent); 
-            border-radius: 20px; display: inline-block; 
-            box-shadow: 0 4px 6px -1px var(--shadow-color);
-        }
-        .page-header p { color: var(--text-secondary); font-size: 0.9rem; }
+        .page-header { display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; margin-bottom: 30px; margin-top: 25px; } 
+        .page-header h1 { font-size: 1.8rem; font-weight: 800; margin: 0; color: var(--accent); }
+        .date-display { color: var(--accent); font-size: 1.1rem; font-weight: 500; padding: 5px 15px; background: var(--bg-card); border: 1px solid var(--accent); border-radius: 20px; box-shadow: 0 4px 6px -1px var(--shadow-color); margin: 0; }
+        .page-header p { color: var(--text-secondary); font-size: 0.9rem; margin: 0; }
 
         /* الأكورديون */
-        .accordion-item { margin-bottom: 15px; border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; background: var(--bg-card); transition: all 0.3s ease; box-shadow: 0 2px 4px var(--shadow-color); }
-        .accordion-header { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 20px; background: transparent; border: none; color: var(--text-primary); font-family: inherit; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: background 0.3s; }
+        .accordion-item { position: relative; margin-bottom: 15px; border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; background: var(--bg-card); transition: all 0.3s ease; box-shadow: 0 2px 4px var(--shadow-color); }
+        .accordion-header { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 20px; background: transparent; border: none; color: var(--text-primary); font-family: inherit; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: background 0.3s; user-select: none; position: relative; z-index: 2; }
         .accordion-header:hover { background: var(--card-hover); }
         .icon-plus { font-size: 1.5rem; color: var(--accent); transition: transform 0.4s ease; line-height: 0; }
-        
-        .accordion-panel { max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1); background: rgba(0,0,0,0.02); }
+        .accordion-item.is-holiday-day { border-color: var(--accent-green); }
+        .accordion-item.is-holiday-day .accordion-header { color: var(--accent-green); }
+        .accordion-item.is-holiday-day .icon-plus { color: var(--accent-green); }
+        .accordion-panel { max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1); background: rgba(0,0,0,0.02); position: relative; z-index: 2; }
         .panel-content { padding: 20px; display: flex; flex-direction: column; gap: 15px; }
-
         .accordion-item.active { border-color: var(--accent); box-shadow: 0 8px 20px -8px rgba(59, 130, 246, 0.25); }
         .accordion-item.active .accordion-header { color: var(--accent); }
         .accordion-item.active .icon-plus { transform: rotate(45deg); }
 
-        /* البطاقات */
-        .course-card { 
-            background: var(--bg-main); 
-            padding: 15px; 
-            border-radius: 8px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            gap: 15px; 
-            border: 1px solid var(--border-color); 
-            border-right: 4px solid var(--accent); 
-            transition: transform 0.2s;
-        }
+        .highlight-day { border: 1px solid var(--accent) !important; box-shadow: 0 4px 15px -3px rgba(59, 130, 246, 0.3) !important; }
+        .highlight-day::before { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.15), transparent); transform: skewX(-25deg); animation: shine-effect 3s infinite; z-index: 1; pointer-events: none; }
+        @keyframes shine-effect { 0% { left: -100%; } 20% { left: 200%; } 100% { left: 200%; } }
+        .today-badge { font-size: 0.75rem; background: var(--accent); color: #ffffff; padding: 2px 10px; border-radius: 12px; margin-right: 10px; font-weight: bold; display: inline-block; vertical-align: middle; }
+
+        .course-card { background: var(--bg-main); padding: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; gap: 15px; border: 1px solid var(--border-color); border-right: 4px solid var(--accent); transition: transform 0.2s, border-color 0.3s, box-shadow 0.3s; }
         .course-card:hover { transform: translateX(-3px); }
-        
         .course-info { flex: 1; }
         .course-info h3 { font-size: 1rem; margin-bottom: 6px; font-weight: 700; color: var(--text-primary); }
         .course-details { font-size: 0.85rem; color: var(--text-secondary); display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-        
-        .course-code { 
-            background: var(--code-bg); color: var(--accent); 
-            padding: 2px 8px; border-radius: 4px; font-family: monospace; font-weight: bold; font-size: 0.8rem;
+        .course-code { background: var(--code-bg); color: var(--accent); padding: 2px 8px; border-radius: 4px; font-family: monospace; font-weight: bold; font-size: 0.8rem; }
+        .course-time { font-family: monospace; font-size: 0.95rem; font-weight: bold; background: var(--time-bg); padding: 8px 12px; border-radius: 8px; white-space: nowrap; flex-shrink: 0; border: 1px solid var(--border-color); color: var(--text-primary); direction: rtl; }
+
+        .live-course { border-right: 4px solid var(--accent-red); border-left: 1px solid var(--accent-red); border-top: 1px solid var(--accent-red); border-bottom: 1px solid var(--accent-red); background: rgba(239, 68, 68, 0.05); box-shadow: 0 0 15px rgba(239, 68, 68, 0.2); }
+        .live-badge { font-size: 0.7rem; background: rgba(239, 68, 68, 0.15); color: var(--accent-red); padding: 3px 8px; border-radius: 4px; font-weight: bold; border: 1px solid rgba(239, 68, 68, 0.3); display: inline-flex; align-items: center; gap: 5px; animation: pulse-red 2s infinite; }
+        .live-dot { width: 6px; height: 6px; background-color: var(--accent-red); border-radius: 50%; }
+        @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); } 70% { box-shadow: 0 0 0 5px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
+
+        .holiday-card { background: var(--bg-main); padding: 20px; border-radius: 8px; display: flex; align-items: center; gap: 20px; border: 1px solid var(--accent-green); background: linear-gradient(to left, rgba(16, 185, 129, 0.05), transparent); transition: transform 0.2s; }
+        .holiday-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1); }
+        .holiday-icon-box { width: 50px; height: 50px; border-radius: 12px; background: var(--holiday-bg); display: flex; align-items: center; justify-content: center; color: var(--accent-green); font-size: 1.5rem; flex-shrink: 0; }
+        .holiday-content h3 { color: var(--accent-green); margin-bottom: 5px; font-size: 1.1rem; }
+        .holiday-content p { color: var(--text-secondary); font-size: 0.9rem; }
+        .holiday-date { background: var(--bg-card); padding: 4px 10px; border-radius: 4px; border: 1px solid var(--border-color); font-size: 0.8rem; color: var(--text-primary); display: inline-block; margin-top: 5px; }
+
+        /* --- قسم الروابط السريعة --- */
+        .quick-links-section {
+            margin: 25px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
         }
-        
-        /* تحديث CSS للوقت لدعم RTL */
-        .course-time { 
-            font-family: monospace; font-size: 0.95rem; font-weight: bold;
-            background: var(--time-bg); padding: 8px 12px; border-radius: 8px; 
-            white-space: nowrap; flex-shrink: 0; border: 1px solid var(--border-color);
+        .quick-links-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .links-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+        }
+        .quick-link-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 12px 20px;
+            border-radius: 18px;
+            text-decoration: none;
             color: var(--text-primary);
-            /* تم إزالة direction: ltr للسماح بالتدفق الطبيعي */
-            direction: rtl; 
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px var(--shadow-color);
+            flex: 1;
+            min-width: 160px;
+            max-width: 250px;
+            justify-content: center;
+            white-space: nowrap; /* يضمن بقاء النص في سطر واحد */
         }
+        .quick-link-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+            color: var(--accent);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.2);
+        }
+
+        /* --- هوامش الصفحة وكبسولة التواصل --- */
+        .page-footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border-color); text-align: center; color: var(--text-secondary); font-size: 0.95rem; line-height: 1.8; padding-bottom: 20px; }
+        .feedback-wrapper { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 15px; }
+        .feedback-text { font-weight: 700; color: var(--text-secondary); }
+        .contact-pill { display: flex; align-items: center; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 25px; padding: 4px; overflow: hidden; transition: max-width 0.5s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s, border-color 0.3s; max-width: 46px; box-shadow: 0 2px 5px var(--shadow-color); }
+        .contact-pill.open { max-width: 320px; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2); border-color: var(--accent); }
+        .envelope-btn { min-width: 36px; height: 36px; border-radius: 50%; background: var(--accent); color: white; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 2; }
+        .envelope-btn i { font-size: 1.1rem; }
+        .contact-pill.open .envelope-btn i { animation: ring-mail 0.6s ease; }
+        @keyframes ring-mail { 0% { transform: rotate(0); } 20% { transform: rotate(20deg) scale(1.1); } 40% { transform: rotate(-15deg) scale(1.1); } 60% { transform: rotate(10deg) scale(1.1); } 80% { transform: rotate(-5deg) scale(1.1); } 100% { transform: rotate(0) scale(1); } }
+        .email-slider { opacity: 0; transform: translateX(15px); transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); white-space: nowrap; }
+        .contact-pill.open .email-slider { opacity: 1; transform: translateX(0); padding: 0 15px 0 5px; }
+        .email-slider a { color: var(--text-primary); font-family: monospace; font-weight: bold; font-size: 0.85rem; text-decoration: none; letter-spacing: 0.5px; }
+        .email-slider a:hover { color: var(--accent); text-decoration: underline; }
+        .version-container { margin-top: 15px; }
+        .page-footer .version-badge { display: inline-block; background: var(--code-bg); color: var(--accent); padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; font-family: monospace; border: 1px solid var(--border-color); letter-spacing: 1px; }
+
+        /* --- القائمة السفلية (Bottom Sheet) --- */
+        .sheet-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); z-index: 999; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
+        .sheet-overlay.show { opacity: 1; visibility: visible; }
+        .bottom-sheet { position: fixed; bottom: -100%; left: 0; right: 0; background: var(--sheet-bg); border-radius: 30px 30px 0 0; padding: 15px 20px 40px; z-index: 1000; transition: bottom 0.4s cubic-bezier(0.3, 1, 0.3, 1), background-color 0.8s ease; box-shadow: 0 -10px 40px rgba(0,0,0,0.15); max-width: 600px; margin: 0 auto; }
+        .bottom-sheet.show { bottom: 0; }
+        .sheet-handle { width: 40px; height: 5px; background: var(--border-color); border-radius: 5px; margin: 0 auto 25px; }
+        .sheet-title { text-align: center; font-size: 1.1rem; font-weight: 700; color: var(--text-primary); margin-bottom: 30px; transition: color 0.8s ease; }
+
+        /* ========================================================================= */
+        /* --- مشهد النظام البيئي الحي (Living Ecosystem) --- */
+        /* ========================================================================= */
+        .scenery-toggle { 
+            width: 260px; height: 140px; position: relative; margin: 0 auto; cursor: pointer; overflow: hidden; 
+            border-radius: 70px 70px 25px 25px; background: var(--sky-bg); 
+            box-shadow: inset 0 4px 15px rgba(0,0,0,0.2), 0 4px 10px rgba(0,0,0,0.15); 
+            transition: background 1s ease, box-shadow 1s ease; border: 3px solid var(--border-color); 
+        }
+
+        .scenery-elements { pointer-events: none; }
+
+        .hill-back { fill: var(--hill-back); transition: fill 1s ease; }
+        .hill-front { fill: var(--hill-front); transition: fill 1s ease; }
+
+        /* --- عناصر الليل --- */
+        .night-elements { opacity: 1; transition: opacity 1s ease; }
+        body.light-mode .night-elements { opacity: 0; }
+
+        .meteor { opacity: 0; stroke-linecap: round; }
+        .meteor-1 { animation: meteor-fall-1 14s infinite linear; }
+        .meteor-2 { animation: meteor-fall-2 22s infinite linear; animation-delay: 5s; }
+        @keyframes meteor-fall-1 { 0% { transform: translate(240px, -20px); opacity: 0; } 2% { opacity: 1; filter: drop-shadow(0 0 4px white); } 10% { transform: translate(60px, 140px); opacity: 0; } 100% { transform: translate(60px, 140px); opacity: 0; } }
+        @keyframes meteor-fall-2 { 0% { transform: translate(140px, -30px); opacity: 0; } 2% { opacity: 1; filter: drop-shadow(0 0 4px white); } 10% { transform: translate(-20px, 130px); opacity: 0; } 100% { transform: translate(-20px, 130px); opacity: 0; } }
+
+        .airplane-container { animation: fly-plane 20s linear infinite; }
+        @keyframes fly-plane { 0% { transform: translate(-50px, 25px) scale(0.4); } 100% { transform: translate(280px, 15px) scale(0.4); } }
+        .plane-light-red { animation: blink-red 1s infinite; }
+        .plane-light-white { animation: blink-white 1.5s infinite; }
+        @keyframes blink-red { 0%, 40% { opacity: 1; } 41%, 100% { opacity: 0; } }
+        @keyframes blink-white { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
+
+        .firefly { fill: #bef264; opacity: 0; animation: float-up 6s infinite ease-in; }
+        .ff-1 { animation-delay: 0s; } .ff-2 { animation-delay: 2s; } .ff-3 { animation-delay: 4s; }
+        @keyframes float-up {
+            0% { transform: translate(0, 0); opacity: 0; }
+            50% { opacity: 0.8; filter: drop-shadow(0 0 3px #bef264); }
+            100% { transform: translate(-10px, -40px); opacity: 0; }
+        }
+
+        /* --- عناصر النهار --- */
+        .day-elements { opacity: 0; transition: opacity 1s ease; }
+        body.light-mode .day-elements { opacity: 1; }
+
+        .cloud { fill: #ffffff; opacity: 0.7; }
+        .cloud-1 { animation: cloud-move-1 35s linear infinite; }
+        .cloud-2 { animation: cloud-move-2 50s linear infinite; animation-delay: -15s; }
+        
+        @keyframes cloud-move-1 { 0% { transform: translate(-60px, 20px) scale(1); } 100% { transform: translate(300px, 20px) scale(1); } }
+        @keyframes cloud-move-2 { 0% { transform: translate(-60px, 40px) scale(0.6); } 100% { transform: translate(300px, 40px) scale(0.6); } }
+
+        .flower-group { transform-origin: bottom center; transform: scale(0); transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        body.light-mode .flower-group { transform: scale(1); }
+        .flower-group:nth-child(1) { transition-delay: 0.1s; } .flower-group:nth-child(2) { transition-delay: 0.3s; } .flower-group:nth-child(3) { transition-delay: 0.5s; }
+
+        .bee-container { animation: bee-fly 15s linear infinite; }
+        .bee-body { animation: bee-hover 1s ease-in-out infinite alternate; transform-origin: center; }
+        @keyframes bee-fly {
+            0% { transform: translate(-30px, 80px); } 20% { transform: translate(50px, 60px); }
+            40% { transform: translate(100px, 90px); } 60% { transform: translate(150px, 60px); }
+            80% { transform: translate(200px, 80px); } 100% { transform: translate(280px, 50px); }
+        }
+        @keyframes bee-hover { 0% { transform: translateY(0) rotate(-10deg); } 100% { transform: translateY(-5px) rotate(10deg); } }
+
+        .butterfly-container-1 { animation: flutter-path-1 18s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
+        .butterfly-container-2 { animation: flutter-path-2 22s cubic-bezier(0.4, 0, 0.2, 1) infinite; animation-delay: 2s; }
+        
+        .butterfly-wing { transform-origin: center; animation: wing-flap 0.9s infinite alternate ease-in-out; }
+        .butterfly-wing.right { animation-direction: alternate-reverse; }
+
+        @keyframes wing-flap { 0% { transform: scaleX(1); } 100% { transform: scaleX(0.2); } }
+        
+        @keyframes flutter-path-1 {
+            0% { transform: translate(-20px, 100px) rotate(20deg); opacity: 0;} 10% { opacity: 1; }
+            25% { transform: translate(60px, 60px) rotate(-10deg); } 50% { transform: translate(120px, 80px) rotate(30deg); }
+            75% { transform: translate(180px, 50px) rotate(-20deg); } 90% { opacity: 1; }
+            100% { transform: translate(260px, 90px) rotate(10deg); opacity: 0;}
+        }
+        @keyframes flutter-path-2 {
+            0% { transform: translate(260px, 70px) scale(0.7) scaleX(-1) rotate(10deg); opacity: 0;}
+            25% { transform: translate(180px, 100px) scale(0.7) scaleX(-1) rotate(-20deg); opacity: 1;}
+            50% { transform: translate(100px, 50px) scale(0.7) scaleX(-1) rotate(20deg); }
+            75% { transform: translate(40px, 90px) scale(0.7) scaleX(-1) rotate(-10deg); opacity: 1;}
+            100% { transform: translate(-20px, 60px) scale(0.7) scaleX(-1) rotate(10deg); opacity: 0;}
+        }
+
+        /* --- الطيور المحلقة --- */
+        .birds-group { opacity: 0; transition: opacity 1s ease; }
+        body.light-mode .birds-group { opacity: 1; }
+        .bird-path { fill: none; stroke: #475569; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+        
+        @keyframes flap-wings {
+            0% { d: path("M 0,-3 Q 3,-6 6,0 Q 9,-6 12,-3"); }
+            50% { d: path("M 0,4 Q 3,1 6,0 Q 9,1 12,4"); }
+            100% { d: path("M 0,-3 Q 3,-6 6,0 Q 9,-6 12,-3"); }
+        }
+
+        @keyframes hover-bird { 0% { transform: translateY(0px); } 100% { transform: translateY(4px); } }
+
+        .birds-container { animation: fly-across 30s linear infinite; }
+        @keyframes fly-across { 0% { transform: translateX(-40px); } 50% { transform: translateX(30px); } 100% { transform: translateX(-40px); } }
+        
+        .bird-wrapper-1 { animation: hover-bird 3s ease-in-out infinite alternate; transform-origin: 46px 30px;}
+        .bird-wrapper-1 .bird-path { animation: flap-wings 0.8s infinite linear; }
+        
+        .bird-wrapper-2 { animation: hover-bird 3.5s ease-in-out infinite alternate; animation-delay: -1s; transform-origin: 59px 38px;}
+        .bird-wrapper-2 .bird-path { animation: flap-wings 0.9s infinite linear; animation-delay: -0.2s;}
+        
+        .bird-wrapper-3 { animation: hover-bird 2.8s ease-in-out infinite alternate; animation-delay: -2s; transform-origin: 148px 25px;}
+        .bird-wrapper-3 .bird-path { animation: flap-wings 0.85s infinite linear; animation-delay: -0.1s;}
+
+        /* --- الأجرام السماوية الدوارة --- */
+        .pivot-sun, .pivot-moon { position: absolute; bottom: 25px; left: 50%; width: 0; height: 100px; transform-origin: bottom center; z-index: 2; transition: opacity 0.5s ease; }
+        
+        .pivot-sun { opacity: 0; }
+        body.light-mode .pivot-sun { opacity: 1; }
+        
+        .pivot-moon { opacity: 1; }
+        body.light-mode .pivot-moon { opacity: 0; }
+
+        .has-transition { transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease; }
+        .pos-top { transform: rotate(0deg); }      
+        .pos-left { transform: rotate(-100deg); }  
+        .pos-right { transform: rotate(100deg); }  
+
+        .celestial-body { position: absolute; top: -20px; left: -20px; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; transition: box-shadow 0.8s ease; }
+        .celestial-body.sun { background: #f59e0b; color: #fff; box-shadow: 0 0 30px #f59e0b, inset 0 0 10px rgba(255,255,255,0.5); }
+        .celestial-body.moon { background: #e2e8f0; color: #1e293b; box-shadow: 0 0 25px rgba(255,255,255,0.6), inset 0 0 10px rgba(0,0,0,0.2); }
+
     </style>
 </head>
-<body>
+<body class="preload"> 
 
     <div class="container">
-        <button class="theme-toggle-btn" id="theme-toggle" title="تغيير المظهر">
-            <i class="fa-solid fa-sun" id="theme-icon"></i>
+        
+        <button class="settings-fab no-tap-highlight" id="open-sheet-btn" title="الإعدادات والمظهر">
+            <i class="fa-solid fa-gear"></i>
         </button>
 
         <header class="page-header">
-            <h1>الجدول الدراسي <span class="version-badge">v.1</span></h1>
+            <h1>الجدول الدراسي</h1> 
             <div id="current-date" class="date-display"></div>
             <p>توقيت شهر رمضان المبارك</p>
         </header>
 
         <div id="accordion-container"></div>
+
+        <!-- قسم الروابط السريعة المحدث -->
+        <section class="quick-links-section">
+            <div class="quick-links-title">
+                <i class="fa-solid fa-bolt-lightning"></i> روابط سريعة
+            </div>
+            <div class="links-container">
+                <a href="https://lms.ju.edu.sa/" target="_blank" rel="noopener noreferrer" class="quick-link-card no-tap-highlight">
+                    <i class="fa-solid fa-graduation-cap"></i> بلاك بورد
+                </a>
+                <a href="https://edug.ju.edu.sa/ju/init" target="_blank" rel="noopener noreferrer" class="quick-link-card no-tap-highlight">
+                    <i class="fa-solid fa-user-gear"></i> البوابة الإلكترونية
+                </a>
+            </div>
+        </section>
+        
+        <footer class="page-footer">
+            <p><strong>دبلوم الأمن السيبراني - ( عن بعد ) جامعة الجوف 2026</strong></p>
+            
+            <div class="feedback-wrapper">
+                <span class="feedback-text">شاركنا فكرتك</span>
+                <div class="contact-pill no-tap-highlight" id="contact-pill">
+                    <button class="envelope-btn no-tap-highlight" id="envelope-btn" title="اضغط لإظهار الإيميل">
+                        <i class="fa-solid fa-envelope"></i>
+                    </button>
+                    <div class="email-slider">
+                        <a href="mailto:ali.dev.3662@gmail.com">ali.dev.3662@gmail.com</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="version-container">
+                <span class="version-badge">V 1.2</span>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- القائمة السفلية -->
+    <div class="sheet-overlay no-tap-highlight" id="sheet-overlay"></div>
+    <div class="bottom-sheet no-tap-highlight" id="bottom-sheet">
+        <div class="sheet-handle"></div>
+        <h3 class="sheet-title">المظهر</h3>
+        
+        <!-- مشهد النظام البيئي التفاعلي (Living Ecosystem) -->
+        <div class="scenery-toggle no-tap-highlight" id="theme-toggle" title="اضغط لتغيير المظهر">
+            
+            <svg class="scenery-elements" style="position: absolute; top:0; left:0; width: 100%; height: 100%; z-index: 1;" viewBox="0 0 260 140" preserveAspectRatio="none">
+                
+                <defs>
+                    <linearGradient id="meteorGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#ffffff" stop-opacity="1" />
+                        <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+                    </linearGradient>
+                </defs>
+
+                <!-- ================== عناصر الليل ================== -->
+                <g class="night-elements">
+                    <circle cx="40" cy="30" r="1.5" fill="#fff" opacity="0.6" />
+                    <circle cx="180" cy="25" r="2" fill="#fff" opacity="0.8" />
+                    <circle cx="120" cy="50" r="1" fill="#fff" opacity="0.4" />
+                    <circle cx="80" cy="20" r="1.5" fill="#fff" opacity="0.7" />
+                    <circle cx="210" cy="60" r="1" fill="#fff" opacity="0.5" />
+                    <circle cx="20" cy="65" r="1.5" fill="#fff" opacity="0.9" />
+
+                    <g class="meteor meteor-1"><line x1="0" y1="0" x2="35" y2="-35" stroke="url(#meteorGrad)" stroke-width="1.5" /><circle cx="0" cy="0" r="1.5" fill="#ffffff" /></g>
+                    <g class="meteor meteor-2"><line x1="0" y1="0" x2="35" y2="-35" stroke="url(#meteorGrad)" stroke-width="1.5" /><circle cx="0" cy="0" r="1.5" fill="#ffffff" /></g>
+
+                    <g class="airplane-container">
+                        <path d="M -12 0 L 8 0 L 12 2 L 8 4 L -12 4 L -14 2 Z" fill="#64748b" /> 
+                        <path d="M 0 0 L -5 -6 L 4 0 Z" fill="#475569" /> 
+                        <path d="M 0 4 L -5 10 L 4 4 Z" fill="#334155" /> 
+                        <path d="M -12 0 L -16 -5 L -8 0 Z" fill="#475569" /> 
+                        <circle cx="-1" cy="5" r="1.5" fill="#ef4444" class="plane-light-red" />
+                        <circle cx="-14" cy="-5" r="1.5" fill="#ffffff" class="plane-light-white" />
+                    </g>
+                    
+                    <circle cx="60" cy="110" r="1.5" class="firefly ff-1" />
+                    <circle cx="140" cy="120" r="2" class="firefly ff-2" />
+                    <circle cx="200" cy="115" r="1.5" class="firefly ff-3" />
+                </g>
+
+                <!-- ================== عناصر النهار ================== -->
+                <g class="day-elements">
+                    <g class="cloud cloud-1" transform="translate(0, 20)">
+                        <path d="M 20,15 Q 25,5 35,10 Q 45,0 55,10 Q 65,5 70,15 Q 75,25 65,25 L 25,25 Q 15,25 20,15 Z" />
+                    </g>
+                    <g class="cloud cloud-2" transform="translate(0, 40) scale(0.6)">
+                        <path d="M 20,15 Q 25,5 35,10 Q 45,0 55,10 Q 65,5 70,15 Q 75,25 65,25 L 25,25 Q 15,25 20,15 Z" />
+                    </g>
+
+                    <g class="bee-container">
+                        <g class="bee-body">
+                            <ellipse cx="0" cy="0" rx="4" ry="3" fill="#fbbf24" />
+                            <line x1="-2" y1="-2.5" x2="-2" y2="2.5" stroke="#1e293b" stroke-width="1.5" />
+                            <line x1="1" y1="-2.8" x2="1" y2="2.8" stroke="#1e293b" stroke-width="1.5" />
+                            <ellipse cx="1" cy="-3" rx="2.5" ry="1.5" fill="#fff" opacity="0.6" transform="rotate(-20)" />
+                        </g>
+                    </g>
+                    
+                    <g class="butterfly-container-1">
+                        <rect x="-0.5" y="-3" width="1" height="6" rx="0.5" fill="#334155" />
+                        <path d="M 0,0 Q -8,-8 -6,-2 Q -8,4 0,0 Z" fill="#ec4899" class="butterfly-wing left" />
+                        <path d="M 0,0 Q 8,-8 6,-2 Q 8,4 0,0 Z" fill="#f472b6" class="butterfly-wing right" />
+                    </g>
+
+                    <g class="butterfly-container-2">
+                        <rect x="-0.5" y="-3" width="1" height="6" rx="0.5" fill="#334155" />
+                        <path d="M 0,0 Q -8,-8 -6,-2 Q -8,4 0,0 Z" fill="#3b82f6" class="butterfly-wing left" />
+                        <path d="M 0,0 Q 8,-8 6,-2 Q 8,4 0,0 Z" fill="#60a5fa" class="butterfly-wing right" />
+                    </g>
+
+                    <!-- الطيور المرفرفة -->
+                    <g class="birds-group">
+                        <g class="birds-container">
+                            <g class="bird-wrapper-1"><path d="M 0,0 Q 3,-3 6,0 Q 9,-3 12,0" class="bird-path" transform="translate(40, 30)" /></g>
+                            <g class="bird-wrapper-2"><path d="M 0,0 Q 3,-3 6,0 Q 9,-3 12,0" class="bird-path" transform="translate(53, 38) scale(0.8)" /></g>
+                            <g class="bird-wrapper-3"><path d="M 0,0 Q 3,-3 6,0 Q 9,-3 12,0" class="bird-path" transform="translate(142, 25) scale(0.9)" /></g>
+                        </g>
+                    </g>
+                </g>
+            </svg>
+            
+            <div class="pivot-sun" id="pivot-sun"><div class="celestial-body sun"><i class="fa-solid fa-sun"></i></div></div>
+            <div class="pivot-moon" id="pivot-moon"><div class="celestial-body moon"><i class="fa-solid fa-moon"></i></div></div>
+            
+            <!-- طبقة الأرض (التلال والأزهار) -->
+            <svg class="scenery-elements" style="position: absolute; bottom: -2px; left: 0; width: 100%; height: 60px; z-index: 10;" viewBox="0 0 260 60" preserveAspectRatio="none">
+                
+                <path d="M -20,60 Q 40,10 130,40 T 280,60 Z" class="hill-back" />
+                <path d="M -20,60 Q 60,30 160,50 T 280,60 Z" class="hill-front" />
+
+                <g class="day-elements">
+                    <g class="flower-group" style="transform-origin: 50px 60px;">
+                        <line x1="50" y1="60" x2="50" y2="40" stroke="#16a34a" stroke-width="2" stroke-linecap="round" />
+                        <circle cx="50" cy="40" r="4" fill="#fef08a" />
+                        <circle cx="45" cy="40" r="3" fill="#f87171" /><circle cx="55" cy="40" r="3" fill="#f87171" />
+                        <circle cx="50" cy="35" r="3" fill="#f87171" /><circle cx="50" cy="45" r="3" fill="#f87171" />
+                    </g>
+                    <g class="flower-group" style="transform-origin: 200px 60px;">
+                        <line x1="200" y1="60" x2="200" y2="45" stroke="#16a34a" stroke-width="1.5" stroke-linecap="round" />
+                        <circle cx="200" cy="45" r="3" fill="#fef08a" />
+                        <circle cx="196" cy="45" r="2.5" fill="#a78bfa" /><circle cx="204" cy="45" r="2.5" fill="#a78bfa" />
+                        <circle cx="200" cy="41" r="2.5" fill="#a78bfa" /><circle cx="200" cy="49" r="2.5" fill="#a78bfa" />
+                    </g>
+                    <g class="flower-group" style="transform-origin: 130px 60px;">
+                        <line x1="130" y1="60" x2="130" y2="50" stroke="#16a34a" stroke-width="1.5" stroke-linecap="round" />
+                        <circle cx="130" cy="50" r="2" fill="#fef08a" />
+                        <circle cx="127" cy="50" r="2" fill="#60a5fa" /><circle cx="133" cy="50" r="2" fill="#60a5fa" />
+                        <circle cx="130" cy="47" r="2" fill="#60a5fa" /><circle cx="130" cy="53" r="2" fill="#60a5fa" />
+                    </g>
+                </g>
+
+                <rect x="0" y="58" width="260" height="5" class="hill-front" />
+            </svg>
+        </div>
     </div>
 
     <script>
-        // =========================================
-        // 1. إدارة الثيمات (Dark / Light)
-        // =========================================
-        const themeToggleBtn = document.getElementById('theme-toggle');
-        const themeIcon = document.getElementById('theme-icon');
-        const body = document.body;
+        window.addEventListener('load', () => {
+            setTimeout(() => { document.body.classList.remove('preload'); }, 100);
+        });
 
-        // التحقق من التخزين المحلي أو الإعداد الافتراضي
-        const currentTheme = localStorage.getItem('theme');
-        if (currentTheme === 'light') {
-            body.classList.add('light-mode');
-            // إذا كان الوضع فاتح، الأيقونة التي ستظهر للتبديل هي القمر
-            themeIcon.classList.replace('fa-sun', 'fa-moon');
-        } else {
-            // إذا كان الوضع داكن، الأيقونة التي ستظهر للتبديل هي الشمس الصلبة
-            themeIcon.classList.replace('fa-moon', 'fa-sun');
-        }
+        const contactPill = document.getElementById('contact-pill');
+        const envelopeBtn = document.getElementById('envelope-btn');
 
-        themeToggleBtn.addEventListener('click', () => {
-            body.classList.toggle('light-mode');
-            if (body.classList.contains('light-mode')) {
-                localStorage.setItem('theme', 'light');
-                themeIcon.classList.replace('fa-sun', 'fa-moon');
-            } else {
-                localStorage.setItem('theme', 'dark');
-                themeIcon.classList.replace('fa-moon', 'fa-sun');
+        envelopeBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); 
+            contactPill.classList.toggle('open');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!contactPill.contains(e.target) && contactPill.classList.contains('open')) {
+                contactPill.classList.remove('open');
             }
         });
 
-        // =========================================
-        // 2. معالجة البيانات (JSON)
-        // =========================================
+        const openSheetBtn = document.getElementById('open-sheet-btn');
+        const bottomSheet = document.getElementById('bottom-sheet');
+        const sheetOverlay = document.getElementById('sheet-overlay');
+
+        function openSheet() {
+            sheetOverlay.classList.add('show'); bottomSheet.classList.add('show');
+        }
+
+        function closeSheet() {
+            sheetOverlay.classList.remove('show'); bottomSheet.classList.remove('show');
+        }
+
+        openSheetBtn.addEventListener('click', openSheet);
+        sheetOverlay.addEventListener('click', closeSheet);
+
+        const skyToggle = document.getElementById('theme-toggle');
+        const pivotSun = document.getElementById('pivot-sun');
+        const pivotMoon = document.getElementById('pivot-moon');
+        const body = document.body;
+        
+        let isThemeAnimating = false;
+
+        const currentTheme = localStorage.getItem('theme') || 'dark'; 
+        let isLight = (currentTheme === 'light');
+
+        if (isLight) {
+            body.classList.add('light-mode');
+            pivotSun.className = 'pivot-sun pos-top has-transition';
+            pivotMoon.className = 'pivot-moon pos-right has-transition';
+        } else {
+            pivotSun.className = 'pivot-sun pos-right has-transition';
+            pivotMoon.className = 'pivot-moon pos-top has-transition';
+        }
+
+        skyToggle.addEventListener('click', () => {
+            if (isThemeAnimating) return; 
+            isThemeAnimating = true;
+
+            isLight = !isLight; 
+
+            if (isLight) {
+                body.classList.add('light-mode');
+                localStorage.setItem('theme', 'light');
+
+                pivotSun.classList.remove('pos-right');
+                pivotSun.classList.add('pos-top');
+
+                pivotMoon.classList.remove('pos-top');
+                pivotMoon.classList.add('pos-left');
+
+                setTimeout(() => { closeSheet(); }, 500);
+
+                setTimeout(() => {
+                    pivotMoon.classList.remove('has-transition'); 
+                    pivotMoon.classList.remove('pos-left');
+                    pivotMoon.classList.add('pos-right'); 
+                    
+                    void pivotMoon.offsetWidth; 
+                    
+                    pivotMoon.classList.add('has-transition'); 
+                    isThemeAnimating = false;
+                }, 850);
+
+            } else {
+                body.classList.remove('light-mode');
+                localStorage.setItem('theme', 'dark');
+
+                pivotMoon.classList.remove('pos-right');
+                pivotMoon.classList.add('pos-top');
+
+                pivotSun.classList.remove('pos-top');
+                pivotSun.classList.add('pos-left');
+
+                setTimeout(() => { closeSheet(); }, 500);
+
+                setTimeout(() => {
+                    pivotSun.classList.remove('has-transition');
+                    pivotSun.classList.remove('pos-left');
+                    pivotSun.classList.add('pos-right'); 
+                    
+                    void pivotSun.offsetWidth; 
+                    
+                    pivotSun.classList.add('has-transition');
+                    isThemeAnimating = false;
+                }, 850);
+            }
+        });
+
         const rawScheduleJSON = {
-          "context": "Ramadan 1446 AH Academic Schedule",
-          "university": "Jouf University",
-          "timezone": "Asia/Riyadh",
-          "time_format": "24-hour (HH:mm)",
           "schedule": {
             "Sunday": [
-              { "course_code": "ADIT_1110", "course_name": "مقدمة تقنية المعلومات", "start_time": "14:50", "end_time": "16:05", "period_type": "Afternoon" },
-              { "course_code": "ADCY_1111", "course_name": "أساسيات الشبكات", "start_time": "21:00", "end_time": "21:35", "period_type": "Night" },
-              { "course_code": "ADEN_1110", "course_name": "اللغة الإنجليزية 1", "start_time": "21:40", "end_time": "22:55", "period_type": "Night" }
+              { "course_code": "ADIT_1110", "course_name": "مقدمة تقنية المعلومات", "start_time": "14:50", "end_time": "16:05" },
+              { "course_code": "ADCY_1111", "course_name": "أساسيات الشبكات", "start_time": "21:00", "end_time": "21:35" },
+              { "course_code": "ADEN_1110", "course_name": "اللغة الإنجليزية 1", "start_time": "21:40", "end_time": "22:55" }
             ],
             "Monday": [
-              { "course_code": "ADCY_1112", "course_name": "أساسيات الأمن السيبراني", "start_time": "14:50", "end_time": "16:05", "period_type": "Afternoon" },
-              { "course_code": "ADCY_1113", "course_name": "رياضيات الحاسب", "start_time": "21:00", "end_time": "22:15", "period_type": "Night" }
+              { "course_code": "ADCY_1112", "course_name": "أساسيات الأمن السيبراني", "start_time": "14:50", "end_time": "16:05" },
+              { "course_code": "ADCY_1113", "course_name": "رياضيات الحاسب", "start_time": "21:00", "end_time": "22:15" }
             ],
             "Tuesday": [
-              { "course_code": "ADIT_1110", "course_name": "مقدمة تقنية المعلومات", "start_time": "14:50", "end_time": "15:25", "period_type": "Afternoon" },
-              {
-                "course_code": "ADCY_1111", "course_name": "أساسيات الشبكات", "note": "SPLIT SESSION due to Iftar",
-                "segments": [
-                  { "part": 1, "start_time": "15:30", "end_time": "16:05", "period_type": "Afternoon" },
-                  { "part": 2, "start_time": "21:00", "end_time": "21:35", "period_type": "Night" }
-                ]
-              }
+              { "course_code": "ADIT_1110", "course_name": "مقدمة تقنية المعلومات", "start_time": "14:50", "end_time": "15:25" },
+              { "course_code": "ADCY_1111", "course_name": "أساسيات الشبكات (الجزء 1)", "start_time": "15:30", "end_time": "16:05" },
+              { "course_code": "ADCY_1111", "course_name": "أساسيات الشبكات (الجزء 2)", "start_time": "21:00", "end_time": "21:35" }
             ],
             "Wednesday": [
-              { "course_code": "ADCY_1112", "course_name": "أساسيات الأمن السيبراني", "start_time": "14:50", "end_time": "15:25", "period_type": "Afternoon" },
-              { "course_code": "ADCY_1113", "course_name": "رياضيات الحاسب", "start_time": "15:30", "end_time": "16:05", "period_type": "Afternoon" }
+              { "course_code": "ADCY_1112", "course_name": "أساسيات الأمن السيبراني", "start_time": "14:50", "end_time": "15:25" },
+              { "course_code": "ADCY_1113", "course_name": "رياضيات الحاسب", "start_time": "15:30", "end_time": "16:05" }
             ],
             "Thursday": [
-              { "course_code": "ADEN_1110", "course_name": "اللغة الإنجليزية 1", "start_time": "14:50", "end_time": "15:25", "period_type": "Afternoon" }
+              { "course_code": "ADEN_1110", "course_name": "اللغة الإنجليزية 1", "start_time": "14:50", "end_time": "15:25" }
             ]
           }
         };
 
-        // تحديث اسم المدرس
         const professorMap = {
-            "ADIT_1110": "د. محمود عبدالمنعم",
-            "ADCY_1111": "د. عبدالعزيز الدمراني", // تم التحديث هنا
-            "ADEN_1110": "د. جلال الربيع",
-            "ADCY_1112": "د. عمرو أبوزيد",
-            "ADCY_1113": "د. أسامة شاهين"
+            "ADIT_1110": "د. محمود عبدالمنعم", "ADCY_1111": "د. عبدالعزيز الدمراني", "ADEN_1110": "د. جلال الربيع",
+            "ADCY_1112": "د. عمرو أبوزيد", "ADCY_1113": "د. أسامة شاهين"
         };
+
+        const upcomingHolidays = [
+            { dateObj: new Date('2026-02-22T00:00:00'), targetDay: "Sunday", title: "يوم التأسيس السعودي", desc: "إجازة رسمية لكافة الطلاب والمنسوبين", icon: "fa-chess-rook" }
+        ];
 
         const dayMapping = { "Sunday": 0, "Monday": 1, "Tuesday": 2, "Wednesday": 3, "Thursday": 4 };
         const arabicDayNames = { "Sunday": "الأحد", "Monday": "الاثنين", "Tuesday": "الثلاثاء", "Wednesday": "الأربعاء", "Thursday": "الخميس" };
 
-        let scheduleData = [];
-
-        for (const [englishDay, courses] of Object.entries(rawScheduleJSON.schedule)) {
-            const dayIndex = dayMapping[englishDay];
-            const dayName = arabicDayNames[englishDay];
-            let processedCourses = [];
-
-            courses.forEach(course => {
-                const profName = professorMap[course.course_code] || "";
-                const formattedCode = course.course_code.replace('_', ' ');
-
-                if (course.segments) {
-                    course.segments.forEach(segment => {
-                         processedCourses.push({
-                            start: segment.start_time,
-                            end: segment.end_time,
-                            code: formattedCode,
-                            name: course.course_name,
-                            prof: profName
-                        });
-                    });
-                } else {
-                    processedCourses.push({
-                        start: course.start_time,
-                        end: course.end_time,
-                        code: formattedCode,
-                        name: course.course_name,
-                        prof: profName
-                    });
-                }
-            });
-
-            processedCourses.sort((a, b) => a.start.localeCompare(b.start));
-
-             scheduleData.push({ dayName: dayName, dayIndex: dayIndex, courses: processedCourses });
-        }
-        scheduleData.sort((a, b) => a.dayIndex - b.dayIndex);
-
-        // =========================================
-        // 3. دوال الوقت والعرض
-        // =========================================
-
-        // تحديث دالة الوقت لتكون RTL
         const formatTime = (t) => {
             const [h, m] = t.split(':').map(Number);
             const suffix = h >= 12 ? 'م' : 'ص';
             let H = h > 12 ? h - 12 : h;
             if (H === 0 && h !== 12) H = 12; 
             if (h === 12) H = 12; 
-            // تمت إزالة span الذي يفرض LTR للسماح بالتدفق الطبيعي RTL
             return `${H}:${m.toString().padStart(2,'0')} ${suffix}`;
+        };
+
+        const timeToMins = (t) => {
+            const [h, m] = t.split(':').map(Number);
+            return (h * 60) + m;
         };
 
         const updateDateDisplay = () => {
@@ -295,71 +671,134 @@
         };
         updateDateDisplay();
 
-        // =========================================
-        // 4. بناء الأكورديون
-        // =========================================
-        const container = document.getElementById('accordion-container');
-        const currentDayIndex = new Date().getDay();
-        let activeItem = null;
+        const accordionContainer = document.getElementById('accordion-container');
+        
+        const now = new Date();
+        const currentDayIndex = now.getDay();
+        const currentMinutes = (now.getHours() * 60) + now.getMinutes();
+        
+        now.setHours(0,0,0,0); 
 
-        scheduleData.forEach((dayData, index) => {
+        let targetDayIndex = currentDayIndex;
+        if (currentDayIndex === 5 || currentDayIndex === 6) targetDayIndex = 0;
+
+        let activeAccordionItem = null;
+
+        function createAccordionItem(title, contentHTML, isHolidayDay = false, isHighlight = false, badgeText = "") {
             const item = document.createElement('div');
-            item.className = 'accordion-item';
+            item.className = `accordion-item ${isHolidayDay ? 'is-holiday-day' : ''}`;
+            if (isHighlight) item.classList.add('highlight-day');
             
             const header = document.createElement('button');
             header.className = 'accordion-header';
-            header.innerHTML = `<span>${dayData.dayName}</span><span class="icon-plus">+</span>`;
+            
+            let titleHTML = `<span>${title}</span>`;
+            if (badgeText) titleHTML = `<span>${title} <span class="today-badge">${badgeText}</span></span>`;
+
+            header.innerHTML = `${titleHTML}<span class="icon-plus">+</span>`;
 
             const panel = document.createElement('div');
             panel.className = 'accordion-panel';
             const panelContent = document.createElement('div');
             panelContent.className = 'panel-content';
-
-            dayData.courses.forEach(course => {
-                const card = document.createElement('div');
-                card.className = 'course-card';
-                card.innerHTML = `
-                    <div class="course-info">
-                        <h3>${course.name}</h3>
-                        <div class="course-details">
-                            <span class="course-code">${course.code}</span>
-                            <span><i class="fa-solid fa-chalkboard-user"></i> ${course.prof}</span>
-                        </div>
-                    </div>
-                    <div class="course-time">${formatTime(course.start)} - ${formatTime(course.end)}</div>
-                `;
-                panelContent.appendChild(card);
-            });
+            
+            panelContent.innerHTML = contentHTML;
             panel.appendChild(panelContent);
 
             header.addEventListener('click', function() {
                 const isActive = item.classList.contains('active');
-                if (activeItem && activeItem !== item) {
-                    activeItem.classList.remove('active');
-                    activeItem.querySelector('.accordion-panel').style.maxHeight = null;
+                if (activeAccordionItem && activeAccordionItem !== item) {
+                    activeAccordionItem.classList.remove('active');
+                    activeAccordionItem.querySelector('.accordion-panel').style.maxHeight = null;
                 }
                 if (!isActive) {
                     item.classList.add('active');
                     panel.style.maxHeight = panel.scrollHeight + "px";
-                    activeItem = item;
+                    activeAccordionItem = item;
                 } else {
                     item.classList.remove('active');
                     panel.style.maxHeight = null;
-                    activeItem = null;
+                    activeAccordionItem = null;
                 }
             });
 
             item.appendChild(header);
             item.appendChild(panel);
-            container.appendChild(item);
+            return item;
+        }
 
-            if(dayData.dayIndex === currentDayIndex) {
+        const sortedDays = Object.entries(rawScheduleJSON.schedule).sort((a, b) => dayMapping[a[0]] - dayMapping[b[0]]);
+
+        sortedDays.forEach(([englishDay, courses]) => {
+            const dayName = arabicDayNames[englishDay];
+            const dayIndex = dayMapping[englishDay];
+            let contentHTML = '';
+            let isHolidayDay = false;
+            let displayTitle = dayName;
+
+            const activeHoliday = upcomingHolidays.find(h => h.targetDay === englishDay && now <= h.dateObj);
+
+            if (activeHoliday) {
+                isHolidayDay = true;
+                displayTitle = `${dayName} (إجازة رسمية)`;
+                const formattedDate = activeHoliday.dateObj.toLocaleDateString('ar-SA', { month: 'long', day: 'numeric' });
+                contentHTML = `
+                    <div class="holiday-card">
+                        <div class="holiday-icon-box"><i class="fa-solid ${activeHoliday.icon}"></i></div>
+                        <div class="holiday-content">
+                            <h3>${activeHoliday.title}</h3><p>${activeHoliday.desc}</p><span class="holiday-date">${formattedDate}</span>
+                        </div>
+                    </div>
+                `;
+            } else {
+                courses.sort((a, b) => a.start_time.localeCompare(b.start_time));
+                contentHTML = courses.map(course => {
+                    const profName = professorMap[course.course_code.split(' ')[0]] || "";
+                    const formattedCode = course.course_code.replace('_', ' ');
+                    
+                    let liveClassHTML = '';
+                    let liveClassCard = '';
+                    
+                    if (currentDayIndex === dayIndex) {
+                        const startMins = timeToMins(course.start_time);
+                        const endMins = timeToMins(course.end_time);
+                        
+                        if (currentMinutes >= startMins && currentMinutes <= endMins) {
+                            liveClassCard = 'live-course';
+                            liveClassHTML = `<span class="live-badge"><div class="live-dot"></div> الآن</span>`;
+                        }
+                    }
+
+                    return `
+                        <div class="course-card ${liveClassCard}">
+                            <div class="course-info">
+                                <h3>${course.course_name} ${liveClassHTML}</h3>
+                                <div class="course-details">
+                                    <span class="course-code">${formattedCode}</span>
+                                    <span><i class="fa-solid fa-chalkboard-user"></i> ${profName}</span>
+                                </div>
+                            </div>
+                            <div class="course-time">${formatTime(course.start_time)} - ${formatTime(course.end_time)}</div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            let isHighlight = (dayIndex === targetDayIndex);
+            let badgeText = isHighlight ? ((currentDayIndex === dayIndex) ? "اليوم" : "القادم") : "";
+
+            const item = createAccordionItem(displayTitle, contentHTML, isHolidayDay, isHighlight, badgeText);
+            accordionContainer.appendChild(item);
+
+            if(isHighlight) {
                 setTimeout(() => {
-                   header.click();
+                   item.querySelector('.accordion-header').click();
                    item.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }, 300);
             }
         });
+
     </script>
 </body>
 </html>
+
