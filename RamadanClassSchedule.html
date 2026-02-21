@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>دبلوم الأمن السيبراني | جدول المحاضرات</title>
+    <title>دبلوم الأمن السيبراني | البوابة الموحدة</title>
     
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/webfonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
@@ -21,6 +22,7 @@
             --accent-glow: rgba(59, 130, 246, 0.4); 
             --accent-green: #10b981;  
             --accent-red: #ef4444;    
+            --accent-orange: #f59e0b;
             
             --text-primary: #ffffff;
             --text-secondary: #94a3b8;
@@ -33,10 +35,6 @@
             
             --accordion-header-bg: rgba(0, 0, 0, 0.2);
             --links-card-bg: rgba(59, 130, 246, 0.05); 
-            
-            --sky-bg: #020617; 
-            --hill-back: #0f172a; 
-            --hill-front: #060b14; 
         }
 
         body.light-mode {
@@ -48,6 +46,7 @@
             --accent-glow: rgba(37, 99, 235, 0.2);
             --accent-green: #059669;
             --accent-red: #dc2626;
+            --accent-orange: #d97706;
             
             --text-primary: #1e293b;
             --text-secondary: #64748b;
@@ -56,13 +55,8 @@
             --bento-bg: #ffffff;
             --bento-border: #f1f5f9;
             --bento-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-
             --accordion-header-bg: #f8fafc;
             --links-card-bg: #ffffff;
-
-            --sky-bg: #87ceeb; 
-            --hill-back: #4ade80; 
-            --hill-front: #22c55e; 
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -85,7 +79,7 @@
         body.no-scroll { overflow: hidden; }
 
         /* ========================================= */
-        /* --- شاشة الدخول (الدرع الطائر) --- */
+        /* --- شاشة الدخول (الدرع الطائر والموجات) --- */
         /* ========================================= */
         .cyber-splash {
             position: fixed; inset: 0; 
@@ -99,36 +93,24 @@
         .shield-ripple {
             position: absolute; width: 100%; height: 100%;
             border-radius: 50%; border: 3px solid var(--accent-green);
-            opacity: 0; animation: ripple-effect 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+            opacity: 0; animation: ripple-effect 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
         }
-        .shield-ripple:nth-child(2) { animation-delay: 0.6s; }
-        .shield-ripple:nth-child(3) { animation-delay: 1.2s; }
+        .shield-ripple:nth-child(2) { animation-delay: 0.4s; }
+        .shield-ripple:nth-child(3) { animation-delay: 0.8s; }
         
-        @keyframes ripple-effect {
-            0% { transform: scale(0.3); opacity: 1; border-width: 4px; }
-            100% { transform: scale(2.2); opacity: 0; border-width: 0px; }
-        }
+        @keyframes ripple-effect { 0% { transform: scale(0.3); opacity: 1; border-width: 4px; } 100% { transform: scale(2.2); opacity: 0; border-width: 0px; } }
         
         .splash-shield-icon {
-            font-size: 5rem; color: var(--accent-green); position: relative; z-index: 2;
+            width: 90px; height: 90px; color: var(--accent-green); position: relative; z-index: 2;
             filter: drop-shadow(0 0 20px rgba(16, 185, 129, 0.6));
-            animation: shield-beat 2s ease-in-out infinite;
-            transform-origin: center center;
+            animation: shield-beat 1.5s ease-in-out infinite; transform-origin: center center;
         }
         
-        @keyframes shield-beat {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.15); filter: drop-shadow(0 0 30px rgba(16, 185, 129, 0.9)); }
-        }
-
-        .splash-shield-icon.flying {
-            animation: none !important;
-            filter: drop-shadow(0 0 5px rgba(59, 130, 246, 0.5)) !important;
-            color: var(--accent) !important;
-        }
+        @keyframes shield-beat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); filter: drop-shadow(0 0 30px rgba(16, 185, 129, 0.9)); } }
+        .splash-shield-icon.flying { animation: none !important; filter: drop-shadow(0 0 5px rgba(59, 130, 246, 0.5)) !important; color: var(--accent) !important; }
 
         /* ========================================= */
-        /* --- هيكل الـ Bento Grid --- */
+        /* --- هيكل الـ Bento Grid الرئيسي --- */
         /* ========================================= */
         .bento-container {
             width: 100%; max-width: 800px;
@@ -147,8 +129,7 @@
         }
         
         .bento-box::before {
-            content: ''; position: absolute;
-            top: -50%; left: -50%; width: 200%; height: 200%;
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
             background: radial-gradient(circle, rgba(59,130,246,0.1) 0%, transparent 60%);
             z-index: -1; pointer-events: none; transition: opacity 0.4s;
         }
@@ -162,10 +143,7 @@
         .title-main-part { display: flex; align-items: center; gap: 10px; }
         .title-main-part i { color: var(--accent); font-size: 1.4rem; }
         
-        .ramadan-note {
-            font-size: 0.85rem; color: var(--accent); background: rgba(59, 130, 246, 0.1);
-            padding: 4px 12px; border-radius: 8px; font-weight: 700;
-        }
+        .ramadan-note { font-size: 0.85rem; color: var(--accent); background: rgba(59, 130, 246, 0.1); padding: 4px 12px; border-radius: 8px; font-weight: 700; }
         body.light-mode .ramadan-note { background: #eff6ff; }
 
         /* ========================================= */
@@ -175,19 +153,12 @@
         .welcome-info { display: flex; align-items: center; gap: 20px; }
         
         .header-icon { 
-            width: 80px; height: 80px; 
-            display: flex; align-items: center; justify-content: center; 
-            font-size: 2rem; flex-shrink: 0;
-            border-radius: 16px; background: rgba(59, 130, 246, 0.1); 
-            border: 1px solid rgba(59, 130, 246, 0.3); color: #60a5fa;
-            opacity: 0; transition: opacity 0.3s;
+            width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; 
+            flex-shrink: 0; border-radius: 16px; background: rgba(59, 130, 246, 0.1); 
+            border: 1px solid rgba(59, 130, 246, 0.3); color: #60a5fa; opacity: 0; transition: opacity 0.3s;
         }
-        body.light-mode .header-icon { 
-            border-radius: 50%; background: #eff6ff; 
-            border: 1px solid #dbeafe; color: #2563eb; box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-        }
+        body.light-mode .header-icon { border-radius: 50%; background: #eff6ff; border: 1px solid #dbeafe; color: #2563eb; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
         .header-icon.visible { opacity: 1; animation: float-icon 3s ease-in-out infinite;  }
-
         @keyframes float-icon { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
 
         .welcome-text h1 { font-size: 1.6rem; font-weight: 800; margin: 0 0 5px 0; color: var(--text-primary); }
@@ -196,220 +167,170 @@
         .style-badge { color: #60a5fa; font-size: 0.75rem; font-family: monospace; letter-spacing: 0.1em; font-weight: 800; margin-bottom: 4px; display: block; }
         body.light-mode .style-badge { color: #94a3b8; }
 
-        .date-display { 
-            background: rgba(59, 130, 246, 0.2); color: #93c5fd; 
-            font-size: 0.9rem; font-weight: 700; padding: 10px 20px; 
-            border-radius: 12px; border: 1px solid rgba(59, 130, 246, 0.2); 
-            flex-shrink: 0;
-        }
+        .date-display { background: rgba(59, 130, 246, 0.2); color: #93c5fd; font-size: 0.9rem; font-weight: 700; padding: 10px 20px; border-radius: 12px; border: 1px solid rgba(59, 130, 246, 0.2); flex-shrink: 0; }
         body.light-mode .date-display { background: #eff6ff; color: #1d4ed8; border-color: #dbeafe; }
 
         /* ========================================= */
-        /* --- الأكورديون (الجدول) --- */
+        /* --- بطاقات السحب للأقسام (Slider Cards) --- */
+        /* ========================================= */
+        .sections-slider {
+            display: flex; gap: 16px; overflow-x: auto; padding: 5px 5px 20px 5px; margin-bottom: -10px;
+            scroll-behavior: smooth; -ms-overflow-style: none; scrollbar-width: none;
+            scroll-snap-type: x mandatory; 
+        }
+        .sections-slider::-webkit-scrollbar { display: none; }
+        
+        .section-card {
+            display: flex; align-items: center; gap: 15px;
+            min-width: 260px; 
+            background: var(--bento-bg); border: 1px solid var(--bento-border);
+            padding: 20px; border-radius: 20px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            scroll-snap-align: center; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            flex-shrink: 0; position: relative; overflow: hidden;
+        }
+
+        .section-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: transparent; transition: background 0.3s; }
+        .section-card:hover { transform: translateY(-3px); border-color: var(--accent); }
+        
+        .section-card.active {
+            border-color: var(--accent); background: var(--links-card-bg);
+            box-shadow: 0 10px 20px var(--accent-glow); transform: translateY(-3px);
+        }
+        .section-card.active::after { background: var(--accent); }
+
+        .sc-icon { width: 50px; height: 50px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; transition: all 0.3s; background: rgba(59, 130, 246, 0.1); color: var(--accent); }
+        .section-card[data-target="exams-view"] .sc-icon { background: rgba(245, 158, 11, 0.1); color: var(--accent-orange); }
+        .section-card.active .sc-icon { transform: scale(1.1); }
+
+        .sc-text h4 { font-size: 1.1rem; font-weight: 800; color: var(--text-primary); margin: 0 0 4px 0; transition: color 0.3s; }
+        .sc-text span { font-size: 0.85rem; color: var(--text-secondary); font-weight: 500; }
+        
+        .tab-content-section { display: none; animation: fadeInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+        .tab-content-section.active { display: block; }
+        @keyframes fadeInUp { 0% { opacity: 0; transform: translateY(15px); } 100% { opacity: 1; transform: translateY(0); } }
+
+        /* ========================================= */
+        /* --- الأكورديون (الجدول الدراسي) --- */
         /* ========================================= */
         .accordion-container { display: flex; flex-direction: column; gap: 15px; }
         .accordion-item { background: transparent; border: 1px solid var(--bento-border); border-radius: 20px; overflow: hidden; transition: all 0.4s; }
-        
-        .accordion-header { 
-            width: 100%; display: flex; justify-content: space-between; align-items: center; 
-            padding: 20px; background: var(--accordion-header-bg); border: none; border-bottom: 1px solid transparent;
-            color: var(--text-primary); font-family: inherit; font-size: 1.1rem; font-weight: 600; cursor: pointer; user-select: none; transition: all 0.3s; 
-        }
-        
+        .accordion-header { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 20px; background: var(--accordion-header-bg); border: none; border-bottom: 1px solid transparent; color: var(--text-primary); font-family: inherit; font-size: 1.1rem; font-weight: 600; cursor: pointer; user-select: none; transition: all 0.3s; }
         .icon-plus { color: var(--accent); transition: transform 0.4s ease; font-size: 1.2rem; }
         .accordion-panel { max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
         .panel-content { padding: 15px 20px 25px 20px; } 
-        
         .accordion-item.active { border-color: var(--accent); background: rgba(59, 130, 246, 0.02); }
         .accordion-item.active .accordion-header { font-weight: 800; border-bottom-color: var(--bento-border); }
         .accordion-item.active .icon-plus { transform: rotate(45deg); color: var(--accent-red); }
-        
         .today-badge { font-size: 0.75rem; background: var(--accent); color: #ffffff; padding: 4px 12px; border-radius: 10px; margin-right: 10px; font-weight: bold; display: inline-block; }
 
-        /* ========================================= */
-        /* --- الهندسة الدقيقة للتايم لاين 100% --- */
-        /* ========================================= */
+        /* التايم لاين والأحداث */
         .timeline-wrapper { position: relative; padding-right: 45px; margin-top: 5px; }
         .timeline-container { display: flex; flex-direction: column; gap: 25px; border: none; position: relative;}
-        
         .timeline-track-bg { position: absolute; right: 22.5px; top: 16px; bottom: 16px; width: 2px; background-image: linear-gradient(to bottom, var(--timeline-line) 50%, transparent 0%); background-size: 2px 8px; transform: translateX(50%); z-index: 1; }
         .timeline-track-fill { position: absolute; right: 22.5px; top: 16px; width: 2px; height: 0%; background-color: var(--accent); transform: translateX(50%); z-index: 2; transition: height 1s linear, background-color 0.5s ease; box-shadow: 0 0 10px var(--accent-glow); }
-        
         .timeline-item { position: relative; display: flex; flex-direction: column; gap: 6px; transition: all 0.5s ease; }
         .timeline-item::before { content: ''; position: absolute; right: -22.5px; top: 9px; width: 14px; height: 14px; border-radius: 50%; background: var(--bento-bg); border: 3px solid var(--accent); transform: translateX(50%); z-index: 3; box-sizing: border-box; transition: all 0.5s ease; }
-
         .timeline-pulsing-dot { position: absolute; right: 22.5px; top: 16px; width: 14px; height: 14px; background-color: var(--accent); border-radius: 50%; transform: translate(50%, -50%); z-index: 4; opacity: 0; transition: top 1s linear, opacity 0.5s ease, background-color 0.5s ease; box-sizing: border-box; margin-top: 0; }
         .timeline-pulsing-dot::after { content: ''; position: absolute; top: -4px; left: -4px; right: -4px; bottom: -4px; border-radius: 50%; border: 2px solid var(--accent); animation: radar-pulse-blue 1.5s infinite; }
         @keyframes radar-pulse-blue { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(2.5); opacity: 0; } }
         .timeline-pulsing-dot.resting::after { animation: none !important; opacity: 0 !important; }
-        
         .timeline-wrapper.is-live-track .timeline-track-fill { background-color: var(--accent-red); box-shadow: 0 0 10px rgba(239, 68, 68, 0.4); }
         .timeline-wrapper.is-live-track .timeline-pulsing-dot { background-color: var(--accent-red); }
         .timeline-wrapper.is-live-track .timeline-pulsing-dot::after { border-color: var(--accent-red); animation: radar-pulse-red 1.5s infinite; }
         @keyframes radar-pulse-red { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(2.5); opacity: 0; } }
-
         .time-header { display: flex; align-items: center; gap: 10px; font-family: monospace; font-weight: 800; font-size: 1rem; color: var(--accent); direction: rtl; }
         .course-title { font-size: 1.05rem; font-weight: 500; color: var(--text-primary); margin: 0; line-height: 1.5; }
         .course-note { font-size: 0.85rem; color: var(--text-muted); font-weight: 400; }
-        
         .course-meta { display: flex; align-items: center; gap: 12px; font-size: 0.85rem; color: var(--text-secondary); font-weight: 600; margin-top: 2px; flex-wrap: wrap; }
         .course-meta > span { display: flex; align-items: center; gap: 6px; white-space: nowrap; }
         .course-meta i { color: var(--text-muted); font-size: 0.9rem; }
         .course-code { background: rgba(255, 255, 255, 0.05); color: var(--text-secondary); padding: 3px 8px; border-radius: 6px; font-family: monospace; font-weight: 600; border: 1px solid var(--bento-border); }
         body.light-mode .course-code { background: rgba(0, 0, 0, 0.03); color: var(--text-muted); }
-
-        .past-item { opacity: 0.45; filter: grayscale(100%); }
-        .past-item::before { border-color: var(--text-muted); background: var(--bento-bg); }
-        .past-item .time-header { color: var(--text-muted); font-weight: 600; }
+        .past-item { opacity: 0.45; filter: grayscale(100%); } .past-item::before { border-color: var(--text-muted); background: var(--bento-bg); } .past-item .time-header { color: var(--text-muted); font-weight: 600; }
         .badge-past { background: rgba(255,255,255,0.05); border: 1px solid var(--bento-border); color: var(--text-secondary); font-family: 'Tajawal', sans-serif; font-size: 0.75rem; padding: 2px 8px; border-radius: 6px; margin-right: 8px; font-weight: bold; }
-        
-        .live-item { opacity: 1; }
-        .live-item::before { opacity: 0; }
-        .live-item .time-header { color: var(--accent-red); font-family: 'Tajawal', sans-serif; font-size: 0.95rem; }
+        .live-item { opacity: 1; } .live-item::before { opacity: 0; } .live-item .time-header { color: var(--accent-red); font-family: 'Tajawal', sans-serif; font-size: 0.95rem; }
         .countdown-clock { background: rgba(239, 68, 68, 0.15); color: var(--accent-red); padding: 3px 10px; border-radius: 8px; font-weight: 800; font-family: monospace; border: 1px solid rgba(239, 68, 68, 0.3); display: inline-flex; align-items: center; direction: ltr; font-size: 1.05rem; letter-spacing: 1px; box-shadow: 0 0 10px rgba(239, 68, 68, 0.1); }
         .countdown-label { font-size: 0.8rem; font-weight: bold; margin: 0 4px; }
         .future-item { opacity: 0.9; }
-
-        /* تصميم الإجازة */
         .accordion-item.is-holiday-day { border: 1px solid var(--accent-green) !important; background: rgba(16, 185, 129, 0.03) !important; }
-        .accordion-item.is-holiday-day .accordion-header { color: var(--accent-green) !important; background: transparent !important;}
-        .accordion-item.is-holiday-day .icon-plus { color: var(--accent-green) !important; }
-        .holiday-card { background: transparent; padding: 10px 0; display: flex; align-items: center; gap: 20px; }
-        .holiday-icon-box { width: 55px; height: 55px; border-radius: 14px; background: rgba(16, 185, 129, 0.15); display: flex; align-items: center; justify-content: center; color: var(--accent-green); font-size: 2rem; flex-shrink: 0; }
-        .holiday-content h3 { color: var(--accent-green); margin-bottom: 5px; font-size: 1.1rem; font-weight: 700; }
-        .holiday-content p { color: var(--text-secondary); font-size: 0.9rem; margin: 0; }
-        .holiday-date { background: rgba(0,0,0,0.2); padding: 5px 12px; border-radius: 6px; border: 1px solid rgba(16,185,129,0.2); font-size: 0.8rem; color: var(--text-primary); display: inline-block; margin-top: 8px; font-weight: bold; }
-        body.light-mode .holiday-date { background: rgba(255,255,255,0.5); color: var(--text-primary); }
+        .accordion-item.is-holiday-day .accordion-header { color: var(--accent-green) !important; background: transparent !important;} .accordion-item.is-holiday-day .icon-plus { color: var(--accent-green) !important; }
+        .holiday-card { background: transparent; padding: 10px 0; display: flex; align-items: center; gap: 20px; } .holiday-icon-box { width: 55px; height: 55px; border-radius: 14px; background: rgba(16, 185, 129, 0.15); display: flex; align-items: center; justify-content: center; color: var(--accent-green); font-size: 2rem; flex-shrink: 0; }
+        .holiday-content h3 { color: var(--accent-green); margin-bottom: 5px; font-size: 1.1rem; font-weight: 700; } .holiday-content p { color: var(--text-secondary); font-size: 0.9rem; margin: 0; }
+        .holiday-date { background: rgba(0,0,0,0.2); padding: 5px 12px; border-radius: 6px; border: 1px solid rgba(16,185,129,0.2); font-size: 0.8rem; color: var(--text-primary); display: inline-block; margin-top: 8px; font-weight: bold; } body.light-mode .holiday-date { background: rgba(255,255,255,0.5); color: var(--text-primary); }
 
         /* ========================================= */
-        /* --- صندوق المظهر (الليل والنهار) --- */
+        /* --- جدول الاختبارات --- */
         /* ========================================= */
-        /* تأثير البروز عند تغيير المظهر */
+        .table-responsive { width: 100%; overflow-x: auto; border-radius: 16px; border: 1px solid var(--bento-border); margin-bottom: 15px; background-color: transparent; scrollbar-width: thin; scrollbar-color: var(--accent) var(--bento-bg); }
+        .table-responsive::-webkit-scrollbar { height: 6px; } .table-responsive::-webkit-scrollbar-track { background: var(--bento-bg); border-radius: 8px; } .table-responsive::-webkit-scrollbar-thumb { background-color: var(--accent); border-radius: 8px; }
+        .exam-table { width: 100%; border-collapse: collapse; min-width: 600px; text-align: center; }
+        .exam-table th { background: var(--accordion-header-bg); color: var(--text-primary); padding: 16px; font-weight: 800; border-bottom: 1px solid var(--bento-border); white-space: nowrap; }
+        .exam-table td { padding: 18px 15px; color: var(--text-primary); border-bottom: 1px solid var(--bento-border); vertical-align: middle; }
+        .exam-table tr:last-child td { border-bottom: none; }
+        .exam-table tbody tr { transition: background-color 0.3s; }
+        .exam-table tbody tr:hover { background: var(--links-card-bg); }
+        .subject-name { font-weight: 800; color: var(--accent); display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 1.1rem; white-space: nowrap; }
+        .date-main { font-weight: 800; color: var(--text-primary); white-space: nowrap; }
+        .date-sub { font-size: 0.85rem; color: var(--text-secondary); margin-top: 5px; display: flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap; }
+        .time-badge { background: rgba(245, 158, 11, 0.1); color: var(--accent-orange); padding: 5px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: bold; display: inline-flex; align-items: center; gap: 6px; border: 1px solid rgba(245, 158, 11, 0.2); white-space: nowrap; } body.light-mode .time-badge { background: #fffbeb; border-color: #fef3c7; }
+        .links-flex { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+        .table-link { background: var(--bento-bg); color: var(--text-primary); border: 1px solid var(--bento-border); padding: 6px 14px; border-radius: 8px; text-decoration: none; font-size: 0.85rem; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; transition: all 0.3s; white-space: nowrap; } .table-link:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); box-shadow: 0 4px 10px var(--accent-glow); }
+        .exam-footer-note { background: var(--links-card-bg); padding: 12px; border-radius: 12px; text-align: center; font-size: 0.9rem; color: var(--text-secondary); display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 8px; border: 1px solid var(--bento-border); } .exam-footer-note strong { color: var(--text-primary); } .exam-footer-note i { color: var(--accent); }
+
+        /* ========================================= */
+        /* --- صندوق المظهر و الروابط --- */
+        /* ========================================= */
         .bento-box.theme-elevated { z-index: 10000; position: relative; transform: scale(1.03); box-shadow: 0 25px 60px rgba(0,0,0,0.8); border-color: var(--accent); }
-
         .scenery-bento-content { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; gap: 15px;}
         .scenery-toggle { --local-sky: #020617; --local-hill-back: #0f172a; --local-hill-front: #020617; width: 100%; max-width: 320px; height: 150px; position: relative; cursor: pointer; overflow: hidden; border-radius: 20px; background: var(--local-sky); box-shadow: inset 0 4px 15px rgba(0,0,0,0.4); transition: background 1.2s ease; border: 2px solid var(--bento-border); }
         .scenery-toggle.is-day { --local-sky: #87ceeb; --local-hill-back: #4ade80; --local-hill-front: #22c55e; }
-        .scenery-elements { pointer-events: none; width: 100%; height: 100%; }
-        .hill-back { fill: var(--local-hill-back); transition: fill 1.2s ease; }
-        .hill-front { fill: var(--local-hill-front); transition: fill 1.2s ease; }
-        .night-elements { opacity: 1; transition: opacity 1.2s ease; } .scenery-toggle.is-day .night-elements { opacity: 0; }
-        .meteor { opacity: 0; stroke-linecap: round; } .meteor-1 { animation: meteor-fall-1 14s infinite linear; } .meteor-2 { animation: meteor-fall-2 22s infinite linear; animation-delay: 5s; }
-        @keyframes meteor-fall-1 { 0% { transform: translate(240px, -20px); opacity: 0; } 2% { opacity: 1; filter: drop-shadow(0 0 4px white); } 10% { transform: translate(60px, 140px); opacity: 0; } 100% { transform: translate(60px, 140px); opacity: 0; } }
-        @keyframes meteor-fall-2 { 0% { transform: translate(140px, -30px); opacity: 0; } 2% { opacity: 1; filter: drop-shadow(0 0 4px white); } 10% { transform: translate(-20px, 130px); opacity: 0; } 100% { transform: translate(-20px, 130px); opacity: 0; } }
-        .airplane-container { animation: fly-plane 20s linear infinite; } @keyframes fly-plane { 0% { transform: translate(-50px, 25px) scale(0.4); } 100% { transform: translate(320px, 15px) scale(0.4); } }
-        .plane-light-red { animation: blink-red 1s infinite; } .plane-light-white { animation: blink-white 1.5s infinite; }
-        @keyframes blink-red { 0%, 40% { opacity: 1; } 41%, 100% { opacity: 0; } } @keyframes blink-white { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
-        .firefly { fill: #bef264; opacity: 0; animation: float-up 6s infinite ease-in; } .ff-1 { animation-delay: 0s; } .ff-2 { animation-delay: 2s; } .ff-3 { animation-delay: 4s; }
-        @keyframes float-up { 0% { transform: translate(0, 0); opacity: 0; } 50% { opacity: 0.8; filter: drop-shadow(0 0 3px #bef264); } 100% { transform: translate(-10px, -40px); opacity: 0; } }
-        .day-elements { opacity: 0; transition: opacity 1.2s ease; } .scenery-toggle.is-day .day-elements { opacity: 1; }
-        .cloud { fill: #ffffff; opacity: 0.7; } .cloud-1 { animation: cloud-move-1 35s linear infinite; } .cloud-2 { animation: cloud-move-2 50s linear infinite; animation-delay: -15s; }
-        @keyframes cloud-move-1 { 0% { transform: translate(-60px, 20px) scale(1); } 100% { transform: translate(360px, 20px) scale(1); } }
-        @keyframes cloud-move-2 { 0% { transform: translate(-60px, 40px) scale(0.6); } 100% { transform: translate(360px, 40px) scale(0.6); } }
-        .flower-group { transform-origin: bottom center; transform: scale(0); transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); } .scenery-toggle.is-day .flower-group { transform: scale(1); }
-        .flower-group:nth-child(1) { transition-delay: 0.1s; } .flower-group:nth-child(2) { transition-delay: 0.3s; } .flower-group:nth-child(3) { transition-delay: 0.5s; }
-        .bee-container { animation: bee-fly 15s linear infinite; } .bee-body { animation: bee-hover 1s ease-in-out infinite alternate; transform-origin: center; }
-        @keyframes bee-fly { 0% { transform: translate(-30px, 80px); } 20% { transform: translate(50px, 60px); } 40% { transform: translate(100px, 90px); } 60% { transform: translate(150px, 60px); } 80% { transform: translate(200px, 80px); } 100% { transform: translate(320px, 50px); } }
-        @keyframes bee-hover { 0% { transform: translateY(0) rotate(-10deg); } 100% { transform: translateY(-5px) rotate(10deg); } }
-        .birds-group { opacity: 0; transition: opacity 1s ease; } .scenery-toggle.is-day .birds-group { opacity: 1; }
-        .bird-path { fill: none; stroke: #475569; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
-        @keyframes flap-wings { 0% { d: path("M 0,-3 Q 3,-6 6,0 Q 9,-6 12,-3"); } 50% { d: path("M 0,4 Q 3,1 6,0 Q 9,1 12,4"); } 100% { d: path("M 0,-3 Q 3,-6 6,0 Q 9,-6 12,-3"); } }
-        @keyframes hover-bird { 0% { transform: translateY(0px); } 100% { transform: translateY(4px); } }
-        .birds-container { animation: fly-across 30s linear infinite; } @keyframes fly-across { 0% { transform: translateX(-40px); } 50% { transform: translateX(30px); } 100% { transform: translateX(-40px); } }
-        .bird-wrapper-1 { animation: hover-bird 3s ease-in-out infinite alternate; transform-origin: 46px 30px;} .bird-wrapper-1 .bird-path { animation: flap-wings 0.8s infinite linear; }
-        .bird-wrapper-2 { animation: hover-bird 3.5s ease-in-out infinite alternate; animation-delay: -1s; transform-origin: 59px 38px;} .bird-wrapper-2 .bird-path { animation: flap-wings 0.9s infinite linear; animation-delay: -0.2s;}
-        .bird-wrapper-3 { animation: hover-bird 2.8s ease-in-out infinite alternate; animation-delay: -2s; transform-origin: 148px 25px;} .bird-wrapper-3 .bird-path { animation: flap-wings 0.85s infinite linear; animation-delay: -0.1s;}
-        .pivot-sun, .pivot-moon { position: absolute; bottom: 25px; left: 50%; width: 0; height: 100px; transform-origin: bottom center; z-index: 2; transition: opacity 0.5s ease; }
-        .pivot-sun { opacity: 0; } .scenery-toggle.is-day .pivot-sun { opacity: 1; } .pivot-moon { opacity: 1; } .scenery-toggle.is-day .pivot-moon { opacity: 0; }
-        .has-transition { transition: transform 1.2s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.8s ease; } .pos-top { transform: rotate(0deg); } .pos-left { transform: rotate(-100deg); } .pos-right { transform: rotate(100deg); }  
-        .celestial-body { position: absolute; top: -20px; left: -20px; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; transition: box-shadow 0.8s ease; }
-        .celestial-body.sun { background: #f59e0b; color: #fff; box-shadow: 0 0 30px #f59e0b, inset 0 0 10px rgba(255,255,255,0.5); }
-        .celestial-body.moon { background: #e2e8f0; color: #1e293b; box-shadow: 0 0 25px rgba(255,255,255,0.6), inset 0 0 10px rgba(0,0,0,0.2); }
-        
+        .scenery-elements { pointer-events: none; width: 100%; height: 100%; } .hill-back { fill: var(--local-hill-back); transition: fill 1.2s ease; } .hill-front { fill: var(--local-hill-front); transition: fill 1.2s ease; } .night-elements { opacity: 1; transition: opacity 1.2s ease; } .scenery-toggle.is-day .night-elements { opacity: 0; } .meteor { opacity: 0; stroke-linecap: round; } .meteor-1 { animation: meteor-fall-1 14s infinite linear; } .meteor-2 { animation: meteor-fall-2 22s infinite linear; animation-delay: 5s; } @keyframes meteor-fall-1 { 0% { transform: translate(240px, -20px); opacity: 0; } 2% { opacity: 1; filter: drop-shadow(0 0 4px white); } 10% { transform: translate(60px, 140px); opacity: 0; } 100% { transform: translate(60px, 140px); opacity: 0; } } @keyframes meteor-fall-2 { 0% { transform: translate(140px, -30px); opacity: 0; } 2% { opacity: 1; filter: drop-shadow(0 0 4px white); } 10% { transform: translate(-20px, 130px); opacity: 0; } 100% { transform: translate(-20px, 130px); opacity: 0; } } .airplane-container { animation: fly-plane 20s linear infinite; } @keyframes fly-plane { 0% { transform: translate(-50px, 25px) scale(0.4); } 100% { transform: translate(320px, 15px) scale(0.4); } } .plane-light-red { animation: blink-red 1s infinite; } .plane-light-white { animation: blink-white 1.5s infinite; } @keyframes blink-red { 0%, 40% { opacity: 1; } 41%, 100% { opacity: 0; } } @keyframes blink-white { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } } .firefly { fill: #bef264; opacity: 0; animation: float-up 6s infinite ease-in; } .ff-1 { animation-delay: 0s; } .ff-2 { animation-delay: 2s; } .ff-3 { animation-delay: 4s; } @keyframes float-up { 0% { transform: translate(0, 0); opacity: 0; } 50% { opacity: 0.8; filter: drop-shadow(0 0 3px #bef264); } 100% { transform: translate(-10px, -40px); opacity: 0; } } .day-elements { opacity: 0; transition: opacity 1.2s ease; } .scenery-toggle.is-day .day-elements { opacity: 1; } .cloud { fill: #ffffff; opacity: 0.7; } .cloud-1 { animation: cloud-move-1 35s linear infinite; } .cloud-2 { animation: cloud-move-2 50s linear infinite; animation-delay: -15s; } @keyframes cloud-move-1 { 0% { transform: translate(-60px, 20px) scale(1); } 100% { transform: translate(360px, 20px) scale(1); } } @keyframes cloud-move-2 { 0% { transform: translate(-60px, 40px) scale(0.6); } 100% { transform: translate(360px, 40px) scale(0.6); } } .flower-group { transform-origin: bottom center; transform: scale(0); transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); } .scenery-toggle.is-day .flower-group { transform: scale(1); } .flower-group:nth-child(1) { transition-delay: 0.1s; } .flower-group:nth-child(2) { transition-delay: 0.3s; } .flower-group:nth-child(3) { transition-delay: 0.5s; } .bee-container { animation: bee-fly 15s linear infinite; } .bee-body { animation: bee-hover 1s ease-in-out infinite alternate; transform-origin: center; } @keyframes bee-fly { 0% { transform: translate(-30px, 80px); } 20% { transform: translate(50px, 60px); } 40% { transform: translate(100px, 90px); } 60% { transform: translate(150px, 60px); } 80% { transform: translate(200px, 80px); } 100% { transform: translate(320px, 50px); } } @keyframes bee-hover { 0% { transform: translateY(0) rotate(-10deg); } 100% { transform: translateY(-5px) rotate(10deg); } } .birds-group { opacity: 0; transition: opacity 1s ease; } .scenery-toggle.is-day .birds-group { opacity: 1; } .bird-path { fill: none; stroke: #475569; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; } @keyframes flap-wings { 0% { d: path("M 0,-3 Q 3,-6 6,0 Q 9,-6 12,-3"); } 50% { d: path("M 0,4 Q 3,1 6,0 Q 9,1 12,4"); } 100% { d: path("M 0,-3 Q 3,-6 6,0 Q 9,-6 12,-3"); } } @keyframes hover-bird { 0% { transform: translateY(0px); } 100% { transform: translateY(4px); } } .birds-container { animation: fly-across 30s linear infinite; } @keyframes fly-across { 0% { transform: translateX(-40px); } 50% { transform: translateX(30px); } 100% { transform: translateX(-40px); } } .bird-wrapper-1 { animation: hover-bird 3s ease-in-out infinite alternate; transform-origin: 46px 30px;} .bird-wrapper-1 .bird-path { animation: flap-wings 0.8s infinite linear; } .bird-wrapper-2 { animation: hover-bird 3.5s ease-in-out infinite alternate; animation-delay: -1s; transform-origin: 59px 38px;} .bird-wrapper-2 .bird-path { animation: flap-wings 0.9s infinite linear; animation-delay: -0.2s;} .bird-wrapper-3 { animation: hover-bird 2.8s ease-in-out infinite alternate; animation-delay: -2s; transform-origin: 148px 25px;} .bird-wrapper-3 .bird-path { animation: flap-wings 0.85s infinite linear; animation-delay: -0.1s;} .pivot-sun, .pivot-moon { position: absolute; bottom: 25px; left: 50%; width: 0; height: 100px; transform-origin: bottom center; z-index: 2; transition: opacity 0.5s ease; } .pivot-sun { opacity: 0; } .scenery-toggle.is-day .pivot-sun { opacity: 1; } .pivot-moon { opacity: 1; } .scenery-toggle.is-day .pivot-moon { opacity: 0; } .has-transition { transition: transform 1.2s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.8s ease; } .pos-top { transform: rotate(0deg); } .pos-left { transform: rotate(-100deg); } .pos-right { transform: rotate(100deg); } .celestial-body { position: absolute; top: -20px; left: -20px; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; transition: box-shadow 0.8s ease; } .celestial-body.sun { background: #f59e0b; color: #fff; box-shadow: 0 0 30px #f59e0b, inset 0 0 10px rgba(255,255,255,0.5); } .celestial-body.moon { background: #e2e8f0; color: #1e293b; box-shadow: 0 0 25px rgba(255,255,255,0.6), inset 0 0 10px rgba(0,0,0,0.2); }
         .theme-instruction { font-size: 0.85rem; color: var(--text-muted); margin: 0; font-weight: 500; }
 
-        /* ========================================= */
-        /* --- الأزرار السريعة (بجانب بعض ولون داكن) --- */
-        /* ========================================= */
         .modern-btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        
-        .modern-btn {
-            position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
-            background: var(--links-card-bg); 
-            border: 1px solid var(--bento-border);
-            padding: 20px 10px; border-radius: 20px; text-decoration: none; overflow: hidden;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer;
+        .modern-btn { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; background: var(--links-card-bg); border: 1px solid var(--bento-border); padding: 20px 10px; border-radius: 20px; text-decoration: none; overflow: hidden; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
+        .modern-btn:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 10px 25px var(--accent-glow); } .modern-btn:active, .modern-btn.clicked { transform: scale(0.94); background: var(--accent) !important; border-color: var(--accent); }
+        .btn-icon-box { width: 50px; height: 50px; border-radius: 50%; background: rgba(59, 130, 246, 0.15); display: flex; align-items: center; justify-content: center; color: var(--accent); font-size: 1.4rem; transition: all 0.2s; } .modern-btn:hover .btn-icon-box { transform: scale(1.1); } .modern-btn.clicked .btn-icon-box { background: rgba(255, 255, 255, 0.2); color: white; transform: scale(1.1); }
+        .btn-title { font-weight: 700; font-size: 1.05rem; color: var(--text-primary); transition: color 0.2s; text-align: center; } .modern-btn.clicked .btn-title { color: white !important; }
+
+        .page-footer { text-align: center; padding-bottom: 40px; display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; max-width: 800px; opacity: 0; transition: opacity 0.8s ease; } .page-footer.visible { opacity: 1; }
+        .version-badge { color: var(--accent); font-size: 0.95rem; font-weight: 800; font-family: monospace; letter-spacing: 2px; margin-bottom: 5px; }
+        .contact-pill { display: flex; align-items: center; background: var(--bento-bg); border-radius: 25px; padding: 4px; overflow: hidden; transition: max-width 0.4s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s; max-width: 44px; box-shadow: var(--bento-shadow); border: 1px solid var(--bento-border); direction: ltr; } .contact-pill.open { max-width: 300px; border-color: var(--accent); }
+        .envelope-btn { min-width: 36px; height: 36px; border-radius: 50%; background: transparent; color: var(--text-secondary); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.3s, color 0.3s; } .contact-pill.open .envelope-btn { background: var(--accent); color: white; } .envelope-btn i { font-size: 1.1rem; }
+        .email-slider { opacity: 0; transform: translateX(-10px); transition: all 0.4s ease; white-space: nowrap; } .contact-pill.open .email-slider { opacity: 1; transform: translateX(0); padding: 0 12px; } .email-slider a { color: var(--text-primary); font-family: monospace; font-weight: bold; font-size: 0.9rem; text-decoration: none; }
+
+        @media (max-width: 600px) {
+            .bento-box { padding: 20px 15px; } .welcome-bento { flex-direction: column; align-items: flex-start; gap: 15px; } .header-icon { width: 60px; height: 60px; font-size: 1.5rem; } .welcome-text h1 { font-size: 1.3rem; }
+            .section-card { min-width: 240px; padding: 15px; } .sc-icon { width: 45px; height: 45px; font-size: 1.2rem; }
+            .exam-table th, .exam-table td { padding: 12px 10px; font-size: 0.9rem; } .subject-name { font-size: 1rem; } .time-badge { padding: 4px 8px; font-size: 0.8rem; } .table-link { padding: 5px 10px; font-size: 0.8rem; }
         }
-        
-        .modern-btn:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 10px 25px var(--accent-glow); }
-        .modern-btn:active, .modern-btn.clicked { transform: scale(0.94); background: var(--accent) !important; border-color: var(--accent); }
-
-        .btn-icon-box {
-            width: 50px; height: 50px; border-radius: 50%; background: rgba(59, 130, 246, 0.15);
-            display: flex; align-items: center; justify-content: center; color: var(--accent);
-            font-size: 1.4rem; transition: all 0.2s;
-        }
-        .modern-btn:hover .btn-icon-box { transform: scale(1.1); }
-        .modern-btn.clicked .btn-icon-box { background: rgba(255, 255, 255, 0.2); color: white; transform: scale(1.1); }
-
-        .btn-title { font-weight: 700; font-size: 1.05rem; color: var(--text-primary); transition: color 0.2s; text-align: center; }
-        .modern-btn.clicked .btn-title { color: white !important; }
-
-        /* ========================================= */
-        /* --- الفوتر الثابت والمرتب --- */
-        /* ========================================= */
-        .page-footer { 
-            text-align: center; padding-bottom: 40px; display: flex; flex-direction: column; align-items: center; gap: 12px; 
-            width: 100%; max-width: 800px; opacity: 0; transition: opacity 0.8s ease;
-        }
-        .page-footer.visible { opacity: 1; }
-
-        .version-badge { 
-            color: var(--accent); font-size: 0.95rem; font-weight: 800; font-family: monospace; letter-spacing: 2px; 
-            margin-bottom: 5px;
-        }
-
-        .contact-pill {
-            display: flex; align-items: center; background: var(--bento-bg); border-radius: 25px; padding: 4px; overflow: hidden; 
-            transition: max-width 0.4s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s; max-width: 44px; 
-            box-shadow: var(--bento-shadow); border: 1px solid var(--bento-border);
-            direction: ltr; 
-        }
-        .contact-pill.open { max-width: 300px; border-color: var(--accent); }
-        .envelope-btn { min-width: 36px; height: 36px; border-radius: 50%; background: transparent; color: var(--text-secondary); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.3s, color 0.3s; }
-        .contact-pill.open .envelope-btn { background: var(--accent); color: white; }
-        .envelope-btn i { font-size: 1.1rem; }
-        
-        .email-slider { opacity: 0; transform: translateX(-10px); transition: all 0.4s ease; white-space: nowrap; }
-        .contact-pill.open .email-slider { opacity: 1; transform: translateX(0); padding: 0 12px; }
-        .email-slider a { color: var(--text-primary); font-family: monospace; font-weight: bold; font-size: 0.9rem; text-decoration: none; }
-
     </style>
 </head>
 <body class="preload no-scroll"> 
 
-    <!-- شاشة الدخول السيبرانية مع الدرع -->
     <div id="cyber-splash" class="cyber-splash">
         <div class="shield-wrapper">
             <div class="shield-ripple"></div>
             <div class="shield-ripple"></div>
             <div class="shield-ripple"></div>
-            <!-- الأيقونة التي ستطير للمكان العلوي -->
-            <i class="fa-solid fa-shield-halved splash-shield-icon" id="splash-shield"></i>
+            <!-- استبدال الأيقونة برسمة SVG مدمجة لتجنب مشكلة التحميل המربع "x" -->
+            <svg id="splash-shield" class="splash-shield-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor">
+                <path d="M256 0c-2.4 0-4.7 .3-7 .9C149.7 27 49 53 49 53c-15.3 4.8-25 19.3-25 35V224c0 131.4 87.8 249.7 213 283.5c6.2 1.7 12.8 1.7 19 0C381.2 473.7 469 355.4 469 224V88c0-15.7-9.7-30.2-25-35c0 0-100.7-26-200-52.1c-2.3-.6-4.6-.9-7-.9zM256 464c-2.2-.6-4.4-1.2-6.6-1.9C137.4 429.5 64 330.4 64 224V98.1C132 77.2 216.7 53.6 256 42.4V464z"/>
+            </svg>
         </div>
     </div>
 
-    <div class="container">
+    <div class="container" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
         
-        <!-- شبكة Bento Grid -->
         <div class="bento-container" id="main-content">
             
-            <!-- 1. صندوق الترحيب -->
+            <!-- 1. صندوق الترحيب (ثابت) -->
             <div class="bento-box welcome-bento">
                 <div class="welcome-info">
-                    <!-- المكان الذي سيستقر فيه الدرع الطائر -->
                     <div class="header-icon" id="header-shield-container">
-                        <i class="fa-solid fa-shield-halved" id="header-shield" style="opacity: 0;"></i>
+                        <svg id="header-shield" style="opacity: 0; width: 40px; height: 40px; color: inherit; transition: opacity 0.3s ease;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor">
+                            <path d="M256 0c-2.4 0-4.7 .3-7 .9C149.7 27 49 53 49 53c-15.3 4.8-25 19.3-25 35V224c0 131.4 87.8 249.7 213 283.5c6.2 1.7 12.8 1.7 19 0C381.2 473.7 469 355.4 469 224V88c0-15.7-9.7-30.2-25-35c0 0-100.7-26-200-52.1c-2.3-.6-4.6-.9-7-.9zM256 464c-2.2-.6-4.4-1.2-6.6-1.9C137.4 429.5 64 330.4 64 224V98.1C132 77.2 216.7 53.6 256 42.4V464z"/>
+                        </svg>
                     </div>
                     <div class="welcome-text">
                         <span class="style-badge">2026</span>
@@ -420,27 +341,122 @@
                 <div id="current-date" class="date-display">جاري التحميل...</div>
             </div>
 
-            <!-- 2. صندوق الجدول الدراسي -->
-            <div class="bento-box">
-                <div class="bento-title">
-                    <div class="title-main-part">
-                        <i class="fa-regular fa-calendar-check"></i> الجدول الدراسي
+            <!-- بطاقات السحب (Slider Cards) للأقسام -->
+            <div class="sections-slider no-tap-highlight">
+                <div class="section-card active" data-target="classes-view">
+                    <div class="sc-icon"><i class="fa-regular fa-calendar-check"></i></div>
+                    <div class="sc-text">
+                        <h4>الجدول الدراسي</h4>
+                        <span>المحاضرات الأسبوعية</span>
                     </div>
-                    <span class="ramadan-note">( توقيت شهر رمضان المبارك )</span>
                 </div>
-                <div id="accordion-container" class="accordion-container"></div>
+                
+                <div class="section-card" data-target="exams-view">
+                    <div class="sc-icon"><i class="fa-solid fa-file-signature"></i></div>
+                    <div class="sc-text">
+                        <h4>الاختبارات الفترية</h4>
+                        <span>Midterm 1 (15%)</span>
+                    </div>
+                </div>
             </div>
 
-            <!-- 3. صندوق المظهر (بدون أيقونة إعدادات وبدون شاشة التعتيم المزعجة) -->
+            <!-- عرض المحاضرات (يُعرض افتراضياً) -->
+            <div id="classes-view" class="tab-content-section active">
+                <div class="bento-box">
+                    <div class="bento-title">
+                        <div class="title-main-part">
+                            <i class="fa-regular fa-clock"></i> توقيت المحاضرات
+                        </div>
+                        <span class="ramadan-note">( توقيت شهر رمضان المبارك )</span>
+                    </div>
+                    <div id="accordion-container" class="accordion-container"></div>
+                </div>
+            </div>
+
+            <!-- عرض الاختبارات (مخفي افتراضياً) -->
+            <div id="exams-view" class="tab-content-section">
+                <div class="bento-box">
+                    <div class="bento-title">
+                        <div class="title-main-part">
+                            <i class="fa-solid fa-file-signature"></i> جدول الاختبارات الفترية
+                        </div>
+                        <span class="ramadan-note">الوزن: 15% من المجموع</span>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="exam-table">
+                            <thead>
+                                <tr>
+                                    <th>المادة</th>
+                                    <th>اليوم</th>
+                                    <th>التاريخ</th>
+                                    <th>الوقت</th>
+                                    <th>المقرر (Links)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="subject-name"><i class="fa-solid fa-shield-halved"></i> الأمن السيبراني</div>
+                                    </td>
+                                    <td>الاثنين</td>
+                                    <td>
+                                        <div class="date-main">١٣ رمضان</div>
+                                        <div class="date-sub"><i class="fa-regular fa-calendar"></i> ٢ مارس</div>
+                                    </td>
+                                    <td><span class="time-badge"><i class="fa-regular fa-clock"></i> سيحدد لاحقاً</span></td>
+                                    <td>
+                                        <div class="links-flex">
+                                            <a href="https://drive.google.com/file/d/1Als7w3U1kW_TDdfeA1WP1K1X2ulKD1sB/view?usp=drivesdk" target="_blank" class="table-link no-tap-highlight"><i class="fa-solid fa-link"></i> Ch 1</a>
+                                            <a href="https://drive.google.com/file/d/1WDTHiSYRAxn4WuCZm127M3CRTLMFfJ11/view?usp=drivesdk" target="_blank" class="table-link no-tap-highlight"><i class="fa-solid fa-link"></i> Ch 2</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="subject-name"><i class="fa-solid fa-calculator"></i> رياضيات الحاسب</div>
+                                    </td>
+                                    <td>الأربعاء</td>
+                                    <td>
+                                        <div class="date-main">١٥ رمضان</div>
+                                        <div class="date-sub"><i class="fa-regular fa-calendar"></i> ٤ مارس</div>
+                                    </td>
+                                    <td><span class="time-badge"><i class="fa-regular fa-clock"></i> سيحدد لاحقاً</span></td>
+                                    <td>
+                                        <div class="links-flex">
+                                            <a href="https://drive.google.com/file/d/10Q-z3Xkh_XsYhuOnVzGzmCaEofWAF5vc/view?usp=drivesdk" target="_blank" class="table-link no-tap-highlight"><i class="fa-solid fa-link"></i> Ch 1</a>
+                                            <a href="https://drive.google.com/file/d/1Bw9rB8jFstLw8NuNAZtiQI9o7QZ9I9HG/view?usp=drivesdk" target="_blank" class="table-link no-tap-highlight"><i class="fa-solid fa-link"></i> Ch 2</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="exam-footer-note">
+                        <i class="fa-solid fa-globe"></i> الاختبارات ستقام <strong>عن بُعد</strong> | يرجى متابعة التحديثات لمعرفة الوقت المحدد.
+                    </div>
+                </div>
+            </div>
+
+            <!-- الإعدادات والروابط (ثابتة في الأسفل) -->
+            <div class="modern-btn-grid">
+                <a href="https://lms.ju.edu.sa/" class="modern-btn" onclick="handleLinkClick(event, this)">
+                    <div class="btn-icon-box"><i class="fa-solid fa-chalkboard-user"></i></div>
+                    <span class="btn-title">بلاك بورد</span>
+                </a>
+                <a href="https://edug.ju.edu.sa/ju/init" class="modern-btn" onclick="handleLinkClick(event, this)">
+                    <div class="btn-icon-box"><i class="fa-solid fa-laptop-file"></i></div>
+                    <span class="btn-title">البوابة الإلكترونية</span>
+                </a>
+            </div>
+
             <div class="bento-box" id="theme-card">
                 <div class="bento-title">
-                    <div class="title-main-part">
-                        <i class="fa-solid fa-palette"></i> المظهر
-                    </div>
+                    <div class="title-main-part"><i class="fa-solid fa-palette"></i> المظهر</div>
                 </div>
                 <div class="scenery-bento-content">
                     <div class="scenery-toggle no-tap-highlight" id="theme-toggle" title="اضغط لتغيير المظهر">
-                        <svg class="scenery-elements" viewBox="0 0 260 140" preserveAspectRatio="none">
+                         <svg class="scenery-elements" viewBox="0 0 260 140" preserveAspectRatio="none">
                             <defs><linearGradient id="meteorGrad" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1" /><stop offset="100%" stop-color="#ffffff" stop-opacity="0" /></linearGradient></defs>
                             <g class="night-elements">
                                 <circle cx="40" cy="30" r="1.5" fill="#fff" opacity="0.6" /><circle cx="180" cy="25" r="2" fill="#fff" opacity="0.8" /><circle cx="120" cy="50" r="1" fill="#fff" opacity="0.4" /><circle cx="80" cy="20" r="1.5" fill="#fff" opacity="0.7" /><circle cx="210" cy="60" r="1" fill="#fff" opacity="0.5" /><circle cx="20" cy="65" r="1.5" fill="#fff" opacity="0.9" />
@@ -474,31 +490,10 @@
                 </div>
             </div>
 
-            <!-- 4. صندوق الروابط السريعة (تأثير ضغطة زر حقيقي) -->
-            <div class="bento-box">
-                <div class="bento-title">
-                    <div class="title-main-part">
-                        <i class="fa-solid fa-link"></i> روابط سريعة
-                    </div>
-                </div>
-                <div class="modern-btn-grid">
-                    <a href="https://lms.ju.edu.sa/" class="modern-btn" onclick="handleLinkClick(event, this)">
-                        <div class="btn-icon-box"><i class="fa-solid fa-chalkboard-user"></i></div>
-                        <span class="btn-title">بلاك بورد</span>
-                    </a>
-                    
-                    <a href="https://edug.ju.edu.sa/ju/init" class="modern-btn" onclick="handleLinkClick(event, this)">
-                        <div class="btn-icon-box"><i class="fa-solid fa-laptop-file"></i></div>
-                        <span class="btn-title">البوابة الإلكترونية</span>
-                    </a>
-                </div>
-            </div>
-
         </div>
 
-        <!-- الفوتر الثابت -->
         <footer class="page-footer" id="page-footer">
-            <div class="version-badge">V.1.4</div>
+            <div class="version-badge">V.1.5</div>
             <div class="contact-pill no-tap-highlight" id="contact-pill">
                 <button class="envelope-btn no-tap-highlight" id="envelope-btn" title="تواصل معنا">
                     <i class="fa-solid fa-envelope"></i>
@@ -513,7 +508,27 @@
 
     <script>
         // =========================================================
-        // --- الأنيميشن البطل (Hero Animation) للدرع ---
+        // --- نظام السحب واختيار البطاقات (Slider Cards) ---
+        // =========================================================
+        const sectionCards = document.querySelectorAll('.section-card');
+        const tabContents = document.querySelectorAll('.tab-content-section');
+
+        sectionCards.forEach(card => {
+            card.addEventListener('click', () => {
+                sectionCards.forEach(c => c.classList.remove('active'));
+                tabContents.forEach(content => content.classList.remove('active'));
+                
+                card.classList.add('active');
+                const targetId = card.getAttribute('data-target');
+                document.getElementById(targetId).classList.add('active');
+                card.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+
+                if(targetId === 'classes-view') { setTimeout(updateLiveTimeline, 50); }
+            });
+        });
+
+        // =========================================================
+        // --- الأنيميشن البطل (Hero Animation) للدرع المسرّع (2 ثانية) ---
         // =========================================================
         window.addEventListener('load', () => {
             const splash = document.getElementById('cyber-splash');
@@ -524,73 +539,59 @@
             const mainContent = document.getElementById('main-content');
             const pageFooter = document.getElementById('page-footer');
 
+            // بعد 1.2 ثانية (نبض الدرع والموجات) يتم إيقافها والبدء بالطيران
             setTimeout(() => {
-                // 1. إيقاف الموجات والنبض
                 ripples.forEach(r => r.style.display = 'none');
                 splashShield.classList.add('flying');
-                
-                // 2. إخفاء خلفية الشاشة ليبدأ المحتوى بالظهور
                 splash.style.backgroundColor = 'transparent';
+                
                 mainContent.classList.add('visible');
                 pageFooter.classList.add('visible');
                 
-                // 3. حساب المسار بدقة من منتصف الشاشة إلى موقع الأيقونة العلوية
                 const rectSplash = splashShield.getBoundingClientRect();
                 const rectHeader = headerContainer.getBoundingClientRect();
 
                 const deltaX = rectHeader.left + (rectHeader.width / 2) - (rectSplash.left + (rectSplash.width / 2));
                 const deltaY = rectHeader.top + (rectHeader.height / 2) - (rectSplash.top + (rectSplash.height / 2));
                 
-                // مقياس التصغير: الأيقونة الأساسية 5rem، الهدف تقريباً 2.2rem -> المقياس ~ 0.44
+                // مقياس التصغير: الدرع 90px، الهدف 40px -> المقياس تقريباً 0.44
                 const scale = 0.44;
 
-                // 4. تطبيق حركة الطيران بالـ CSS
+                // حركة الطيران تستغرق 0.8 ثانية (ليصبح المجموع الكلي 2.0 ثانية)
                 splashShield.style.transition = 'transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.8s';
                 splashShield.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(${scale})`;
                 
-                // فك تجميد الشاشة
                 document.body.classList.remove('preload');
                 document.body.classList.remove('no-scroll');
 
-                // 5. بعد انتهاء الطيران، نظهر الأيقونة الأصلية ونخفي الشاشة كاملة
+                // بعد 0.8 ثانية (انتهاء حركة الطيران)، نظهر الأيقونة الأصلية ونمسح الشاشة المؤقتة
                 setTimeout(() => {
                     headerShield.style.opacity = '1';
                     headerContainer.classList.add('visible');
                     splash.remove();
                 }, 800);
 
-            }, 1800); // الشاشة تنبض لـ 1.8 ثانية ثم تبدأ الطيران
+            }, 1200); // 1.2s للنبض
         });
 
         // =========================================================
-        // --- فتح الروابط السريعة (تأثير ضغطة الزر الفعلي) ---
+        // --- الروابط والمظهر والتايم لاين ---
         // =========================================================
         function handleLinkClick(event, element) {
             event.preventDefault(); 
             const href = element.getAttribute('href');
-            
-            // إضافة كلاس الضغطة لتفعيل التأثير اللوني وتصغير الحجم
             element.classList.add('clicked');
-            
-            // الانتظار قليلاً لرؤية التأثير ثم فتح الموقع
             setTimeout(() => {
                 window.open(href, '_blank'); 
-                // إزالة التأثير بعد العودة للصفحة
                 setTimeout(() => element.classList.remove('clicked'), 300);
             }, 250); 
         }
 
-        // =========================================================
-        // --- إيميل الفوتر ---
-        // =========================================================
         const contactPill = document.getElementById('contact-pill');
         const envelopeBtn = document.getElementById('envelope-btn');
         envelopeBtn.addEventListener('click', (e) => { e.stopPropagation(); contactPill.classList.toggle('open'); });
         document.addEventListener('click', (e) => { if (!contactPill.contains(e.target) && contactPill.classList.contains('open')) { contactPill.classList.remove('open'); } });
 
-        // =========================================================
-        // --- منطق تغيير المظهر (السينمائي بدون تعتيم مزعج) ---
-        // =========================================================
         const skyToggle = document.getElementById('theme-toggle');
         const themeCard = document.getElementById('theme-card');
         const pivotSun = document.getElementById('pivot-sun');
@@ -602,22 +603,16 @@
         let isLight = (currentTheme === 'light');
 
         if (isLight) {
-            body.classList.add('light-mode');
-            skyToggle.classList.add('is-day');
-            pivotSun.className = 'pivot-sun pos-top has-transition';
-            pivotMoon.className = 'pivot-moon pos-right has-transition';
+            body.classList.add('light-mode'); skyToggle.classList.add('is-day');
+            pivotSun.className = 'pivot-sun pos-top has-transition'; pivotMoon.className = 'pivot-moon pos-right has-transition';
         } else {
             skyToggle.classList.remove('is-day');
-            pivotSun.className = 'pivot-sun pos-right has-transition';
-            pivotMoon.className = 'pivot-moon pos-top has-transition';
+            pivotSun.className = 'pivot-sun pos-right has-transition'; pivotMoon.className = 'pivot-moon pos-top has-transition';
         }
 
         skyToggle.addEventListener('click', () => {
             if (isThemeAnimating) return; 
-            isThemeAnimating = true; 
-            isLight = !isLight; 
-            
-            // رفع بطاقة المظهر للأمام فقط لتركيز الانتباه عليها
+            isThemeAnimating = true; isLight = !isLight; 
             themeCard.classList.add('theme-elevated');
             
             if (isLight) {
@@ -632,22 +627,14 @@
                 setTimeout(() => { pivotSun.classList.remove('has-transition'); pivotSun.classList.remove('pos-left'); pivotSun.classList.add('pos-right'); void pivotSun.offsetWidth; pivotSun.classList.add('has-transition'); }, 850);
             }
 
-            // بعد اكتمال حركة الشمس/القمر، يتغير لون الصفحة بسلاسة
             setTimeout(() => {
-                if (isLight) { 
-                    body.classList.add('light-mode'); localStorage.setItem('theme', 'light'); 
-                } else { 
-                    body.classList.remove('light-mode'); localStorage.setItem('theme', 'dark'); 
-                }
-                
+                if (isLight) { body.classList.add('light-mode'); localStorage.setItem('theme', 'light'); } 
+                else { body.classList.remove('light-mode'); localStorage.setItem('theme', 'dark'); }
                 themeCard.classList.remove('theme-elevated');
                 isThemeAnimating = false;
             }, 2500); 
         });
 
-        // =========================================================
-        // --- بناء الجدول والتايم لاين ---
-        // =========================================================
         const rawScheduleJSON = {
           "schedule": {
             "Sunday": [
@@ -699,9 +686,7 @@
         if (todayEngInit && rawScheduleJSON.schedule[todayEngInit]) {
             const todayCourses = rawScheduleJSON.schedule[todayEngInit];
             let isTodayOver = true;
-            for (let i = 0; i < todayCourses.length; i++) {
-                if (currentMinutesInit <= timeToMins(todayCourses[i].end_time)) { isTodayOver = false; break; }
-            }
+            for (let i = 0; i < todayCourses.length; i++) { if (currentMinutesInit <= timeToMins(todayCourses[i].end_time)) { isTodayOver = false; break; } }
             if (isTodayOver) targetDayIndex = currentDayIndexInit + 1;
         }
         if (targetDayIndex === 5 || targetDayIndex === 6 || targetDayIndex > 6) targetDayIndex = 0;
@@ -727,18 +712,10 @@
             header.addEventListener('click', function() {
                 const isActive = item.classList.contains('active');
                 document.querySelectorAll('.accordion-item.active').forEach(actItem => {
-                    if (actItem !== item) {
-                        actItem.classList.remove('active');
-                        actItem.querySelector('.accordion-panel').style.maxHeight = null;
-                    }
+                    if (actItem !== item) { actItem.classList.remove('active'); actItem.querySelector('.accordion-panel').style.maxHeight = null; }
                 });
-                if (!isActive) {
-                    item.classList.add('active');
-                    panel.style.maxHeight = panel.scrollHeight + "px";
-                } else {
-                    item.classList.remove('active');
-                    panel.style.maxHeight = null;
-                }
+                if (!isActive) { item.classList.add('active'); panel.style.maxHeight = panel.scrollHeight + "px"; } 
+                else { item.classList.remove('active'); panel.style.maxHeight = null; }
             });
             item.appendChild(header); item.appendChild(panel); return item;
         }
@@ -746,11 +723,8 @@
         const sortedDays = Object.entries(rawScheduleJSON.schedule).sort((a, b) => dayMapping[a[0]] - dayMapping[b[0]]);
 
         sortedDays.forEach(([englishDay, courses]) => {
-            const dayName = arabicDayNames[englishDay];
-            const dayIndex = dayMapping[englishDay];
-            let contentHTML = '';
-            let isHolidayDay = false;
-            let displayTitle = dayName;
+            const dayName = arabicDayNames[englishDay]; const dayIndex = dayMapping[englishDay];
+            let contentHTML = ''; let isHolidayDay = false; let displayTitle = dayName;
             const activeHoliday = upcomingHolidays.find(h => h.targetDay === englishDay && nowInit <= h.dateObj);
 
             if (activeHoliday) {
@@ -766,13 +740,7 @@
                     let displayName = course.course_name.replace(/(\(.*?\))/g, '<span class="course-note">$1</span>');
                     const timeHeaderHTML = `${formatTime(course.start_time)} - ${formatTime(course.end_time)}`;
 
-                    return `<div class="timeline-item" data-start="${timeToMins(course.start_time)}" data-end="${timeToMins(course.end_time)}" data-original-time="${timeHeaderHTML}">
-                            <div class="time-header">${timeHeaderHTML}</div>
-                            <h3 class="course-title">${displayName}</h3>
-                            <div class="course-meta">
-                                <span><span class="course-code">${formattedCode}</span></span>
-                                <span><i class="fa-solid fa-user-tie"></i> ${profName}</span>
-                            </div></div>`;
+                    return `<div class="timeline-item" data-start="${timeToMins(course.start_time)}" data-end="${timeToMins(course.end_time)}" data-original-time="${timeHeaderHTML}"><div class="time-header">${timeHeaderHTML}</div><h3 class="course-title">${displayName}</h3><div class="course-meta"><span><span class="course-code">${formattedCode}</span></span><span><i class="fa-solid fa-user-tie"></i> ${profName}</span></div></div>`;
                 }).join('');
                 contentHTML += `</div></div>`;
             }
@@ -782,12 +750,12 @@
             const item = createAccordionItem(displayTitle, contentHTML, isHolidayDay, isHighlight, badgeText);
             accordionContainer.appendChild(item);
 
-            if(isHighlight) {
-                setTimeout(() => { item.querySelector('.accordion-header').click(); }, 2000); // يفتح بعد انتهاء التحميل
-            }
+            if(isHighlight) { setTimeout(() => { item.querySelector('.accordion-header').click(); }, 2000); }
         });
 
         function updateLiveTimeline() {
+            if(!document.getElementById('classes-view').classList.contains('active')) return;
+
             const dateNow = new Date();
             const currentDayIndex = dateNow.getDay();
             const currentMins = dateNow.getHours() * 60 + dateNow.getMinutes();
@@ -800,11 +768,7 @@
                 const pulsingDot = wrapper.querySelector('.timeline-pulsing-dot');
                 const containerOffset = wrapper.querySelector('.timeline-container').offsetTop;
                 
-                let dotY = 16; 
-                let fillHeight = 0;
-                let isLiveFound = false;
-                let allPast = true;
-                let firstFutureTop = null;
+                let dotY = 16; let fillHeight = 0; let isLiveFound = false; let allPast = true; let firstFutureTop = null;
                 
                 items.forEach(item => {
                     const startSecs = parseInt(item.getAttribute('data-start')) * 60;
@@ -818,8 +782,7 @@
 
                     if (currentDayIndex === dayIndex) {
                         if (currentSecs >= endSecs) {
-                            item.classList.add('past-item');
-                            timeHeader.innerHTML = `${originalTime} <span class="badge-past">انتهت</span>`;
+                            item.classList.add('past-item'); timeHeader.innerHTML = `${originalTime} <span class="badge-past">انتهت</span>`;
                         } else if (currentSecs >= startSecs && currentSecs < endSecs) {
                             isLiveFound = true; allPast = false; item.classList.add('live-item');
                             const diffSec = endSecs - currentSecs;
@@ -852,4 +815,4 @@
 
     </script>
 </body>
-</html>
+    </html>
