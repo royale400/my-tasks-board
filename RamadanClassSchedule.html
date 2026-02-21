@@ -259,10 +259,38 @@
         .holiday-date { background: rgba(0,0,0,0.2); padding: 5px 12px; border-radius: 6px; border: 1px solid rgba(16,185,129,0.2); font-size: 0.8rem; color: var(--text-primary); display: inline-block; margin-top: 8px; font-weight: bold; } body.light-mode .holiday-date { background: rgba(255,255,255,0.5); color: var(--text-primary); }
 
         /* ========================================= */
-        /* --- جدول الاختبارات --- */
+        /* --- جدول الاختبارات وتلميح السحب --- */
         /* ========================================= */
-        .table-responsive { width: 100%; overflow-x: auto; border-radius: 16px; border: 1px solid var(--bento-border); margin-bottom: 15px; background-color: transparent; scrollbar-width: thin; scrollbar-color: var(--accent) var(--bento-bg); }
-        .table-responsive::-webkit-scrollbar { height: 6px; } .table-responsive::-webkit-scrollbar-track { background: var(--bento-bg); border-radius: 8px; } .table-responsive::-webkit-scrollbar-thumb { background-color: var(--accent); border-radius: 8px; }
+        .table-scroll-container { position: relative; width: 100%; }
+
+        .scroll-hint {
+            display: none; text-align: center; font-size: 0.8rem;
+            color: var(--accent); margin-bottom: 8px; font-weight: bold;
+            animation: pulse-hint 2s infinite;
+        }
+
+        @keyframes pulse-hint {
+            0%, 100% { opacity: 0.6; transform: translateX(0); }
+            50% { opacity: 1; transform: translateX(-5px); }
+        }
+
+        .table-fade-edge {
+            position: absolute; top: 0; left: 0; bottom: 15px; width: 30px;
+            background: linear-gradient(to right, var(--bento-bg), transparent);
+            pointer-events: none; z-index: 2; opacity: 0;
+            border-top-left-radius: 16px; border-bottom-left-radius: 16px;
+            transition: opacity 0.3s ease;
+        }
+
+        .table-responsive { 
+            width: 100%; overflow-x: auto; border-radius: 16px; border: 1px solid var(--bento-border); 
+            margin-bottom: 15px; background-color: transparent; 
+            scrollbar-width: thin; scrollbar-color: var(--accent) transparent; 
+        }
+        .table-responsive::-webkit-scrollbar { height: 6px; } 
+        .table-responsive::-webkit-scrollbar-track { background: transparent; } 
+        .table-responsive::-webkit-scrollbar-thumb { background-color: var(--accent); border-radius: 8px; }
+        
         .exam-table { width: 100%; border-collapse: collapse; min-width: 600px; text-align: center; }
         .exam-table th { background: var(--accordion-header-bg); color: var(--text-primary); padding: 16px; font-weight: 800; border-bottom: 1px solid var(--bento-border); white-space: nowrap; }
         .exam-table td { padding: 18px 15px; color: var(--text-primary); border-bottom: 1px solid var(--bento-border); vertical-align: middle; }
@@ -303,6 +331,9 @@
             .bento-box { padding: 20px 15px; } .welcome-bento { flex-direction: column; align-items: flex-start; gap: 15px; } .header-icon { width: 60px; height: 60px; font-size: 1.5rem; } .welcome-text h1 { font-size: 1.3rem; }
             .section-card { min-width: 240px; padding: 15px; } .sc-icon { width: 45px; height: 45px; font-size: 1.2rem; }
             .exam-table th, .exam-table td { padding: 12px 10px; font-size: 0.9rem; } .subject-name { font-size: 1rem; } .time-badge { padding: 4px 8px; font-size: 0.8rem; } .table-link { padding: 5px 10px; font-size: 0.8rem; }
+            
+            .scroll-hint { display: block; }
+            .table-fade-edge { opacity: 1; }
         }
     </style>
 </head>
@@ -313,7 +344,7 @@
             <div class="shield-ripple"></div>
             <div class="shield-ripple"></div>
             <div class="shield-ripple"></div>
-            <!-- استبدال الأيقونة برسمة SVG مدمجة لتجنب مشكلة التحميل המربع "x" -->
+            <!-- استبدال الأيقونة برسمة SVG مدمجة لتجنب مشكلة التحميل المربع "x" -->
             <svg id="splash-shield" class="splash-shield-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor">
                 <path d="M256 0c-2.4 0-4.7 .3-7 .9C149.7 27 49 53 49 53c-15.3 4.8-25 19.3-25 35V224c0 131.4 87.8 249.7 213 283.5c6.2 1.7 12.8 1.7 19 0C381.2 473.7 469 355.4 469 224V88c0-15.7-9.7-30.2-25-35c0 0-100.7-26-200-52.1c-2.3-.6-4.6-.9-7-.9zM256 464c-2.2-.6-4.4-1.2-6.6-1.9C137.4 429.5 64 330.4 64 224V98.1C132 77.2 216.7 53.6 256 42.4V464z"/>
             </svg>
@@ -324,7 +355,6 @@
         
         <div class="bento-container" id="main-content">
             
-            <!-- 1. صندوق الترحيب (ثابت) -->
             <div class="bento-box welcome-bento">
                 <div class="welcome-info">
                     <div class="header-icon" id="header-shield-container">
@@ -341,7 +371,6 @@
                 <div id="current-date" class="date-display">جاري التحميل...</div>
             </div>
 
-            <!-- بطاقات السحب (Slider Cards) للأقسام -->
             <div class="sections-slider no-tap-highlight">
                 <div class="section-card active" data-target="classes-view">
                     <div class="sc-icon"><i class="fa-regular fa-calendar-check"></i></div>
@@ -360,7 +389,6 @@
                 </div>
             </div>
 
-            <!-- عرض المحاضرات (يُعرض افتراضياً) -->
             <div id="classes-view" class="tab-content-section active">
                 <div class="bento-box">
                     <div class="bento-title">
@@ -373,7 +401,6 @@
                 </div>
             </div>
 
-            <!-- عرض الاختبارات (مخفي افتراضياً) -->
             <div id="exams-view" class="tab-content-section">
                 <div class="bento-box">
                     <div class="bento-title">
@@ -383,62 +410,66 @@
                         <span class="ramadan-note">الوزن: 15% من المجموع</span>
                     </div>
                     
-                    <div class="table-responsive">
-                        <table class="exam-table">
-                            <thead>
-                                <tr>
-                                    <th>المادة</th>
-                                    <th>اليوم</th>
-                                    <th>التاريخ</th>
-                                    <th>الوقت</th>
-                                    <th>المقرر (Links)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <div class="subject-name"><i class="fa-solid fa-shield-halved"></i> الأمن السيبراني</div>
-                                    </td>
-                                    <td>الاثنين</td>
-                                    <td>
-                                        <div class="date-main">١٣ رمضان</div>
-                                        <div class="date-sub"><i class="fa-regular fa-calendar"></i> ٢ مارس</div>
-                                    </td>
-                                    <td><span class="time-badge"><i class="fa-regular fa-clock"></i> سيحدد لاحقاً</span></td>
-                                    <td>
-                                        <div class="links-flex">
-                                            <a href="https://drive.google.com/file/d/1Als7w3U1kW_TDdfeA1WP1K1X2ulKD1sB/view?usp=drivesdk" target="_blank" class="table-link no-tap-highlight"><i class="fa-solid fa-link"></i> Ch 1</a>
-                                            <a href="https://drive.google.com/file/d/1WDTHiSYRAxn4WuCZm127M3CRTLMFfJ11/view?usp=drivesdk" target="_blank" class="table-link no-tap-highlight"><i class="fa-solid fa-link"></i> Ch 2</a>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="subject-name"><i class="fa-solid fa-calculator"></i> رياضيات الحاسب</div>
-                                    </td>
-                                    <td>الأربعاء</td>
-                                    <td>
-                                        <div class="date-main">١٥ رمضان</div>
-                                        <div class="date-sub"><i class="fa-regular fa-calendar"></i> ٤ مارس</div>
-                                    </td>
-                                    <td><span class="time-badge"><i class="fa-regular fa-clock"></i> سيحدد لاحقاً</span></td>
-                                    <td>
-                                        <div class="links-flex">
-                                            <a href="https://drive.google.com/file/d/10Q-z3Xkh_XsYhuOnVzGzmCaEofWAF5vc/view?usp=drivesdk" target="_blank" class="table-link no-tap-highlight"><i class="fa-solid fa-link"></i> Ch 1</a>
-                                            <a href="https://drive.google.com/file/d/1Bw9rB8jFstLw8NuNAZtiQI9o7QZ9I9HG/view?usp=drivesdk" target="_blank" class="table-link no-tap-highlight"><i class="fa-solid fa-link"></i> Ch 2</a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="table-scroll-container">
+                        <div class="scroll-hint"><i class="fa-solid fa-arrow-right-arrow-left"></i> اسحب للانتقال</div>
+                        <div class="table-responsive" id="exam-table-wrapper">
+                            <table class="exam-table">
+                                <thead>
+                                    <tr>
+                                        <th>المادة</th>
+                                        <th>اليوم</th>
+                                        <th>التاريخ</th>
+                                        <th>الوقت</th>
+                                        <th>المقرر (Links)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div class="subject-name"><i class="fa-solid fa-shield-halved"></i> الأمن السيبراني</div>
+                                        </td>
+                                        <td>الاثنين</td>
+                                        <td>
+                                            <div class="date-main">١٣ رمضان</div>
+                                            <div class="date-sub"><i class="fa-regular fa-calendar"></i> ٢ مارس</div>
+                                        </td>
+                                        <td><span class="time-badge"><i class="fa-regular fa-clock"></i> سيحدد لاحقاً</span></td>
+                                        <td>
+                                            <div class="links-flex">
+                                                <a href="https://drive.google.com/file/d/1Als7w3U1kW_TDdfeA1WP1K1X2ulKD1sB/view?usp=drivesdk" target="_blank" class="table-link no-tap-highlight"><i class="fa-solid fa-link"></i> Ch 1</a>
+                                                <a href="https://drive.google.com/file/d/1WDTHiSYRAxn4WuCZm127M3CRTLMFfJ11/view?usp=drivesdk" target="_blank" class="table-link no-tap-highlight"><i class="fa-solid fa-link"></i> Ch 2</a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="subject-name"><i class="fa-solid fa-calculator"></i> رياضيات الحاسب</div>
+                                        </td>
+                                        <td>الأربعاء</td>
+                                        <td>
+                                            <div class="date-main">١٥ رمضان</div>
+                                            <div class="date-sub"><i class="fa-regular fa-calendar"></i> ٤ مارس</div>
+                                        </td>
+                                        <td><span class="time-badge"><i class="fa-regular fa-clock"></i> سيحدد لاحقاً</span></td>
+                                        <td>
+                                            <div class="links-flex">
+                                                <a href="https://drive.google.com/file/d/10Q-z3Xkh_XsYhuOnVzGzmCaEofWAF5vc/view?usp=drivesdk" target="_blank" class="table-link no-tap-highlight"><i class="fa-solid fa-link"></i> Ch 1</a>
+                                                <a href="https://drive.google.com/file/d/1Bw9rB8jFstLw8NuNAZtiQI9o7QZ9I9HG/view?usp=drivesdk" target="_blank" class="table-link no-tap-highlight"><i class="fa-solid fa-link"></i> Ch 2</a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="table-fade-edge" id="table-fade"></div>
                     </div>
+
                     <div class="exam-footer-note">
                         <i class="fa-solid fa-globe"></i> الاختبارات ستقام <strong>عن بُعد</strong> | يرجى متابعة التحديثات لمعرفة الوقت المحدد.
                     </div>
                 </div>
             </div>
 
-            <!-- الإعدادات والروابط (ثابتة في الأسفل) -->
             <div class="modern-btn-grid">
                 <a href="https://lms.ju.edu.sa/" class="modern-btn" onclick="handleLinkClick(event, this)">
                     <div class="btn-icon-box"><i class="fa-solid fa-chalkboard-user"></i></div>
@@ -528,7 +559,23 @@
         });
 
         // =========================================================
-        // --- الأنيميشن البطل (Hero Animation) للدرع المسرّع (2 ثانية) ---
+        // --- منطق إخفاء ظل الجدول عند السحب لأقصى اليسار ---
+        // =========================================================
+        const tableWrapper = document.getElementById('exam-table-wrapper');
+        const tableFade = document.getElementById('table-fade');
+        
+        if (tableWrapper && tableFade) {
+            tableWrapper.addEventListener('scroll', () => {
+                if (tableWrapper.scrollLeft <= -(tableWrapper.scrollWidth - tableWrapper.clientWidth - 10)) {
+                    tableFade.style.opacity = '0';
+                } else {
+                    if(window.innerWidth <= 600) { tableFade.style.opacity = '1'; }
+                }
+            });
+        }
+
+        // =========================================================
+        // --- الأنيميشن البطل (Hero Animation) (2 ثانية) ---
         // =========================================================
         window.addEventListener('load', () => {
             const splash = document.getElementById('cyber-splash');
@@ -539,7 +586,6 @@
             const mainContent = document.getElementById('main-content');
             const pageFooter = document.getElementById('page-footer');
 
-            // بعد 1.2 ثانية (نبض الدرع والموجات) يتم إيقافها والبدء بالطيران
             setTimeout(() => {
                 ripples.forEach(r => r.style.display = 'none');
                 splashShield.classList.add('flying');
@@ -554,37 +600,31 @@
                 const deltaX = rectHeader.left + (rectHeader.width / 2) - (rectSplash.left + (rectSplash.width / 2));
                 const deltaY = rectHeader.top + (rectHeader.height / 2) - (rectSplash.top + (rectSplash.height / 2));
                 
-                // مقياس التصغير: الدرع 90px، الهدف 40px -> المقياس تقريباً 0.44
                 const scale = 0.44;
 
-                // حركة الطيران تستغرق 0.8 ثانية (ليصبح المجموع الكلي 2.0 ثانية)
                 splashShield.style.transition = 'transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.8s';
                 splashShield.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(${scale})`;
                 
                 document.body.classList.remove('preload');
                 document.body.classList.remove('no-scroll');
 
-                // بعد 0.8 ثانية (انتهاء حركة الطيران)، نظهر الأيقونة الأصلية ونمسح الشاشة المؤقتة
                 setTimeout(() => {
                     headerShield.style.opacity = '1';
                     headerContainer.classList.add('visible');
                     splash.remove();
                 }, 800);
 
-            }, 1200); // 1.2s للنبض
+            }, 1200); 
         });
 
         // =========================================================
-        // --- الروابط والمظهر والتايم لاين ---
+        // --- الروابط والمظهر ---
         // =========================================================
         function handleLinkClick(event, element) {
             event.preventDefault(); 
             const href = element.getAttribute('href');
             element.classList.add('clicked');
-            setTimeout(() => {
-                window.open(href, '_blank'); 
-                setTimeout(() => element.classList.remove('clicked'), 300);
-            }, 250); 
+            setTimeout(() => { window.open(href, '_blank'); setTimeout(() => element.classList.remove('clicked'), 300); }, 250); 
         }
 
         const contactPill = document.getElementById('contact-pill');
@@ -635,6 +675,9 @@
             }, 2500); 
         });
 
+        // =========================================================
+        // --- بناء الجدول والتايم لاين ---
+        // =========================================================
         const rawScheduleJSON = {
           "schedule": {
             "Sunday": [
@@ -662,7 +705,19 @@
         };
 
         const professorMap = { "ADIT_1110": "د. محمود عبدالمنعم", "ADCY_1111": "د. عبدالعزيز الدمراني", "ADEN_1110": "د. جلال الربيع", "ADCY_1112": "د. عمرو أبوزيد", "ADCY_1113": "د. أسامة شاهين" };
-        const upcomingHolidays = [ { dateObj: new Date('2026-02-22T00:00:00'), targetDay: "Sunday", title: "يوم التأسيس السعودي", desc: "إجازة رسمية لكافة الطلاب والمنسوبين", icon: "fa-solid fa-chess-rook" } ];
+        
+        // إصلاح الإجازة: تم إضافة endDateObj لضمان ظهور الإجازة طوال يوم الأحد حتى منتصف الليل
+        const upcomingHolidays = [ 
+            { 
+                dateObj: new Date('2026-02-22T00:00:00'), 
+                endDateObj: new Date('2026-02-22T23:59:59'), 
+                targetDay: "Sunday", 
+                title: "يوم التأسيس السعودي", 
+                desc: "إجازة رسمية لكافة الطلاب والمنسوبين", 
+                icon: "fa-solid fa-chess-rook" 
+            } 
+        ];
+        
         const dayMapping = { "Sunday": 0, "Monday": 1, "Tuesday": 2, "Wednesday": 3, "Thursday": 4 };
         const arabicDayNames = { "Sunday": "الأحد", "Monday": "الاثنين", "Tuesday": "الثلاثاء", "Wednesday": "الأربعاء", "Thursday": "الخميس" };
         
@@ -725,7 +780,9 @@
         sortedDays.forEach(([englishDay, courses]) => {
             const dayName = arabicDayNames[englishDay]; const dayIndex = dayMapping[englishDay];
             let contentHTML = ''; let isHolidayDay = false; let displayTitle = dayName;
-            const activeHoliday = upcomingHolidays.find(h => h.targetDay === englishDay && nowInit <= h.dateObj);
+            
+            // تحقق من وجود إجازة في هذا اليوم بناءً على وقت الانتهاء (ليتم تفعيلها طوال اليوم)
+            const activeHoliday = upcomingHolidays.find(h => h.targetDay === englishDay && nowInit <= h.endDateObj);
 
             if (activeHoliday) {
                 isHolidayDay = true; displayTitle = `${dayName} (إجازة)`;
@@ -815,4 +872,4 @@
 
     </script>
 </body>
-    </html>
+</html>
