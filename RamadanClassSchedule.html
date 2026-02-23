@@ -171,6 +171,52 @@
         body.light-mode .date-display { background: #eff6ff; color: #1d4ed8; border-color: #dbeafe; }
 
         /* ========================================= */
+        /* --- لوحة الإعلانات والمهام --- */
+        /* ========================================= */
+        #tasks-board { display: none; }
+        .tasks-container { display: flex; flex-direction: column; gap: 12px; }
+        .task-card {
+            display: flex; gap: 15px; padding: 18px; border-radius: 16px;
+            background: rgba(255, 255, 255, 0.02); border: 1px solid var(--bento-border);
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            position: relative; overflow: hidden;
+        }
+        body.light-mode .task-card { background: #ffffff; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+        .task-card:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        
+        .task-card.urgent { border-right: 4px solid var(--accent-red); background: linear-gradient(90deg, rgba(239, 68, 68, 0.05) 0%, transparent 100%); }
+        .task-card.info { border-right: 4px solid var(--accent); background: linear-gradient(90deg, rgba(59, 130, 246, 0.05) 0%, transparent 100%); }
+        .task-card.warning { border-right: 4px solid var(--accent-orange); background: linear-gradient(90deg, rgba(245, 158, 11, 0.05) 0%, transparent 100%); }
+        .task-card.ended { opacity: 0.6; filter: grayscale(80%); border-right: 4px solid var(--text-muted); background: rgba(255,255,255,0.02); }
+        
+        body.light-mode .task-card.urgent { background: linear-gradient(90deg, #fef2f2 0%, transparent 100%); }
+        body.light-mode .task-card.info { background: linear-gradient(90deg, #eff6ff 0%, transparent 100%); }
+        body.light-mode .task-card.warning { background: linear-gradient(90deg, #fffbeb 0%, transparent 100%); }
+        body.light-mode .task-card.ended { background: #f1f5f9; }
+
+        .task-icon { 
+            width: 45px; height: 45px; border-radius: 12px; display: flex; 
+            align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; 
+        }
+        .urgent .task-icon { background: rgba(239, 68, 68, 0.1); color: var(--accent-red); }
+        .info .task-icon { background: rgba(59, 130, 246, 0.1); color: var(--accent); }
+        .warning .task-icon { background: rgba(245, 158, 11, 0.1); color: var(--accent-orange); }
+        .ended .task-icon { background: rgba(0,0,0,0.2); color: var(--text-secondary); }
+        body.light-mode .ended .task-icon { background: rgba(0,0,0,0.05); }
+
+        .task-content { flex-grow: 1; display: flex; flex-direction: column; gap: 8px; justify-content: center; }
+        .task-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px;}
+        .task-title { font-weight: 800; font-size: 1.1rem; color: var(--text-primary); margin: 0; line-height: 1.4; display: flex; align-items: center; gap: 8px;}
+        .task-course { font-size: 0.8rem; background: var(--bento-bg); padding: 4px 10px; border-radius: 8px; border: 1px solid var(--bento-border); font-family: monospace; font-weight: bold; color: var(--text-secondary); white-space: nowrap; }
+        body.light-mode .task-course { background: #f8fafc; }
+        .task-desc { font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6; margin: 0; font-weight: 500; }
+        
+        /* تأثيرات الرابط والشارة داخل المهام */
+        .task-link { color: var(--accent); font-weight: 800; text-decoration: none; border-bottom: 1px dashed var(--accent); padding-bottom: 1px; transition: color 0.3s, border-color 0.3s; }
+        .task-link:hover { color: var(--accent-orange); border-bottom-color: var(--accent-orange); }
+        .task-ended-badge { background: var(--accent-red); color: #fff; font-size: 0.7rem; padding: 3px 8px; border-radius: 6px; font-weight: bold; vertical-align: middle; }
+
+        /* ========================================= */
         /* --- بطاقات السحب للأقسام (Slider Cards) --- */
         /* ========================================= */
         .sections-slider {
@@ -263,33 +309,12 @@
         /* ========================================= */
         .table-scroll-container { position: relative; width: 100%; }
 
-        .scroll-hint {
-            display: none; text-align: center; font-size: 0.8rem;
-            color: var(--accent); margin-bottom: 8px; font-weight: bold;
-            animation: pulse-hint 2s infinite;
-        }
+        .scroll-hint { display: none; text-align: center; font-size: 0.8rem; color: var(--accent); margin-bottom: 8px; font-weight: bold; animation: pulse-hint 2s infinite; }
+        @keyframes pulse-hint { 0%, 100% { opacity: 0.6; transform: translateX(0); } 50% { opacity: 1; transform: translateX(-5px); } }
 
-        @keyframes pulse-hint {
-            0%, 100% { opacity: 0.6; transform: translateX(0); }
-            50% { opacity: 1; transform: translateX(-5px); }
-        }
-
-        .table-fade-edge {
-            position: absolute; top: 0; left: 0; bottom: 15px; width: 30px;
-            background: linear-gradient(to right, var(--bento-bg), transparent);
-            pointer-events: none; z-index: 2; opacity: 0;
-            border-top-left-radius: 16px; border-bottom-left-radius: 16px;
-            transition: opacity 0.3s ease;
-        }
-
-        .table-responsive { 
-            width: 100%; overflow-x: auto; border-radius: 16px; border: 1px solid var(--bento-border); 
-            margin-bottom: 15px; background-color: transparent; 
-            scrollbar-width: thin; scrollbar-color: var(--accent) transparent; 
-        }
-        .table-responsive::-webkit-scrollbar { height: 6px; } 
-        .table-responsive::-webkit-scrollbar-track { background: transparent; } 
-        .table-responsive::-webkit-scrollbar-thumb { background-color: var(--accent); border-radius: 8px; }
+        .table-fade-edge { position: absolute; top: 0; left: 0; bottom: 15px; width: 30px; background: linear-gradient(to right, var(--bento-bg), transparent); pointer-events: none; z-index: 2; opacity: 0; border-top-left-radius: 16px; border-bottom-left-radius: 16px; transition: opacity 0.3s ease; }
+        .table-responsive { width: 100%; overflow-x: auto; border-radius: 16px; border: 1px solid var(--bento-border); margin-bottom: 15px; background-color: transparent; scrollbar-width: thin; scrollbar-color: var(--accent) transparent; }
+        .table-responsive::-webkit-scrollbar { height: 6px; } .table-responsive::-webkit-scrollbar-track { background: transparent; } .table-responsive::-webkit-scrollbar-thumb { background-color: var(--accent); border-radius: 8px; }
         
         .exam-table { width: 100%; border-collapse: collapse; min-width: 600px; text-align: center; }
         .exam-table th { background: var(--accordion-header-bg); color: var(--text-primary); padding: 16px; font-weight: 800; border-bottom: 1px solid var(--bento-border); white-space: nowrap; }
@@ -334,6 +359,8 @@
             
             .scroll-hint { display: block; }
             .table-fade-edge { opacity: 1; }
+            .task-header { flex-direction: column; gap: 4px; align-items: flex-start; }
+            .task-card { padding: 15px 12px; }
         }
     </style>
 </head>
@@ -344,7 +371,6 @@
             <div class="shield-ripple"></div>
             <div class="shield-ripple"></div>
             <div class="shield-ripple"></div>
-            <!-- استبدال الأيقونة برسمة SVG مدمجة لتجنب مشكلة التحميل المربع "x" -->
             <svg id="splash-shield" class="splash-shield-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor">
                 <path d="M256 0c-2.4 0-4.7 .3-7 .9C149.7 27 49 53 49 53c-15.3 4.8-25 19.3-25 35V224c0 131.4 87.8 249.7 213 283.5c6.2 1.7 12.8 1.7 19 0C381.2 473.7 469 355.4 469 224V88c0-15.7-9.7-30.2-25-35c0 0-100.7-26-200-52.1c-2.3-.6-4.6-.9-7-.9zM256 464c-2.2-.6-4.4-1.2-6.6-1.9C137.4 429.5 64 330.4 64 224V98.1C132 77.2 216.7 53.6 256 42.4V464z"/>
             </svg>
@@ -369,6 +395,18 @@
                     </div>
                 </div>
                 <div id="current-date" class="date-display">جاري التحميل...</div>
+            </div>
+
+            <!-- لوحة الإعلانات والمهام (تتفاعل زمنياً) -->
+            <div class="bento-box" id="tasks-board">
+                <div class="bento-title">
+                    <div class="title-main-part">
+                        <i class="fa-solid fa-thumbtack"></i> الإعلانات والمهام
+                    </div>
+                </div>
+                <div class="tasks-container" id="tasks-container">
+                    <!-- سيتم حقن المهام هنا عبر الجافاسكربت -->
+                </div>
             </div>
 
             <div class="sections-slider no-tap-highlight">
@@ -499,8 +537,6 @@
                                 <g class="cloud cloud-1"><path d="M 20,15 Q 25,5 35,10 Q 45,0 55,10 Q 65,5 70,15 Q 75,25 65,25 L 25,25 Q 15,25 20,15 Z" /></g>
                                 <g class="cloud cloud-2"><path d="M 20,15 Q 25,5 35,10 Q 45,0 55,10 Q 65,5 70,15 Q 75,25 65,25 L 25,25 Q 15,25 20,15 Z" /></g>
                                 <g class="bee-container"><g class="bee-body"><ellipse cx="0" cy="0" rx="4" ry="3" fill="#fbbf24" /><line x1="-2" y1="-2.5" x2="-2" y2="2.5" stroke="#1e293b" stroke-width="1.5" /><line x1="1" y1="-2.8" x2="1" y2="2.8" stroke="#1e293b" stroke-width="1.5" /><ellipse cx="1" cy="-3" rx="2.5" ry="1.5" fill="#fff" opacity="0.6" transform="rotate(-20)" /></g></g>
-                                <g class="butterfly-container-1"><rect x="-0.5" y="-3" width="1" height="6" rx="0.5" fill="#334155" /><path d="M 0,0 Q -8,-8 -6,-2 Q -8,4 0,0 Z" fill="#ec4899" class="butterfly-wing left" /><path d="M 0,0 Q 8,-8 6,-2 Q 8,4 0,0 Z" fill="#f472b6" class="butterfly-wing right" /></g>
-                                <g class="butterfly-container-2"><rect x="-0.5" y="-3" width="1" height="6" rx="0.5" fill="#334155" /><path d="M 0,0 Q -8,-8 -6,-2 Q -8,4 0,0 Z" fill="#3b82f6" class="butterfly-wing left" /><path d="M 0,0 Q 8,-8 6,-2 Q 8,4 0,0 Z" fill="#60a5fa" class="butterfly-wing right" /></g>
                                 <g class="birds-group"><g class="birds-container"><g class="bird-wrapper-1"><path d="M 0,-3 Q 3,-6 6,0 Q 9,-6 12,-3" class="bird-path" transform="translate(40, 30)" /></g><g class="bird-wrapper-2"><path d="M 0,-3 Q 3,-6 6,0 Q 9,-6 12,-3" class="bird-path" transform="translate(53, 38) scale(0.8)" /></g><g class="bird-wrapper-3"><path d="M 0,-3 Q 3,-6 6,0 Q 9,-6 12,-3" class="bird-path" transform="translate(142, 25) scale(0.9)" /></g></g></g>
                             </g>
                         </svg>
@@ -524,7 +560,7 @@
         </div>
 
         <footer class="page-footer" id="page-footer">
-            <div class="version-badge">V.1.5</div>
+            <div class="version-badge">V.1.7</div>
             <div class="contact-pill no-tap-highlight" id="contact-pill">
                 <button class="envelope-btn no-tap-highlight" id="envelope-btn" title="تواصل معنا">
                     <i class="fa-solid fa-envelope"></i>
@@ -538,6 +574,47 @@
     </div>
 
     <script>
+        // =========================================================
+        // --- إدارة الإعلانات والمهام (تتفاعل زمنياً) ---
+        // =========================================================
+        const dateNowForTasks = new Date();
+        const quizEndTime = new Date('2026-02-25T23:00:00'); // نهاية الكويز (11 مساءً الأربعاء)
+        const quizHideTime = new Date('2026-02-26T00:00:00'); // وقت إخفاء الإعلان (بداية الخميس)
+
+        let announcements = [];
+
+        // شرط: إذا لم ندخل في يوم الخميس بعد، أظهر الإعلان
+        if (dateNowForTasks < quizHideTime) {
+            const isQuizEnded = dateNowForTasks >= quizEndTime; // هل انتهى الوقت؟
+            
+            announcements.push({
+                type: isQuizEnded ? 'ended' : 'urgent', // تتغير الحالة بناء على الوقت
+                icon: 'fa-solid fa-stopwatch',
+                title: `Quiz 1 ${isQuizEnded ? '<span class="task-ended-badge">انتهى الاختبار</span>' : ''}`,
+                course: 'أساسيات الأمن السيبراني',
+                desc: `الأربعاء 25 فبراير (10:00 م - 11:00 م) عبر بلاك بورد. المحتوى: <a href="https://drive.google.com/file/d/1Als7w3U1kW_TDdfeA1WP1K1X2ulKD1sB/view?usp=drivesdk" target="_blank" class="task-link" onclick="event.stopPropagation()">Chapter ( 1 )</a>. الاختبار: 5 أسئلة اختيار من متعدد (5 درجات).`
+            });
+        }
+
+        const tasksBoard = document.getElementById('tasks-board');
+        const tasksContainer = document.getElementById('tasks-container');
+
+        if (announcements.length > 0) {
+            tasksBoard.style.display = 'block';
+            tasksContainer.innerHTML = announcements.map(task => `
+                <div class="task-card ${task.type}">
+                    <div class="task-icon"><i class="${task.icon}"></i></div>
+                    <div class="task-content">
+                        <div class="task-header">
+                            <h4 class="task-title">${task.title}</h4>
+                            <span class="task-course">${task.course}</span>
+                        </div>
+                        <p class="task-desc">${task.desc}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
         // =========================================================
         // --- نظام السحب واختيار البطاقات (Slider Cards) ---
         // =========================================================
@@ -575,7 +652,7 @@
         }
 
         // =========================================================
-        // --- الأنيميشن البطل (Hero Animation) (2 ثانية) ---
+        // --- الأنيميشن البطل (Hero Animation) ---
         // =========================================================
         window.addEventListener('load', () => {
             const splash = document.getElementById('cyber-splash');
@@ -706,17 +783,23 @@
 
         const professorMap = { "ADIT_1110": "د. محمود عبدالمنعم", "ADCY_1111": "د. عبدالعزيز الدمراني", "ADEN_1110": "د. جلال الربيع", "ADCY_1112": "د. عمرو أبوزيد", "ADCY_1113": "د. أسامة شاهين" };
         
-        // إصلاح الإجازة: تم إضافة endDateObj لضمان ظهور الإجازة طوال يوم الأحد حتى منتصف الليل
-        const upcomingHolidays = [ 
-            { 
-                dateObj: new Date('2026-02-22T00:00:00'), 
-                endDateObj: new Date('2026-02-22T23:59:59'), 
+        const upcomingHolidays = [];
+        const nowInit = new Date();
+
+        // منطق الإجازة المطولة: تظهر في الموقع فقط بداية من يوم الجمعة وتختفي بنهاية يوم الأحد
+        const longWeekendShowTime = new Date('2026-02-26T23:59:59'); // بنهاية الخميس
+        const longWeekendHideTime = new Date('2026-03-01T23:59:59'); // بنهاية الأحد
+
+        if (nowInit > longWeekendShowTime && nowInit <= longWeekendHideTime) {
+            upcomingHolidays.push({ 
+                dateObj: new Date('2026-03-01T00:00:00'), 
+                endDateObj: new Date('2026-03-01T23:59:59'), 
                 targetDay: "Sunday", 
-                title: "يوم التأسيس السعودي", 
-                desc: "إجازة رسمية لكافة الطلاب والمنسوبين", 
-                icon: "fa-solid fa-chess-rook" 
-            } 
-        ];
+                title: "إجازة مطولة", 
+                desc: "إجازة نهاية أسبوع مطولة لجميع الطلاب والمنسوبين", 
+                icon: "fa-solid fa-bed" 
+            });
+        }
         
         const dayMapping = { "Sunday": 0, "Monday": 1, "Tuesday": 2, "Wednesday": 3, "Thursday": 4 };
         const arabicDayNames = { "Sunday": "الأحد", "Monday": "الاثنين", "Tuesday": "الثلاثاء", "Wednesday": "الأربعاء", "Thursday": "الخميس" };
@@ -732,7 +815,6 @@
         updateDateDisplay();
 
         const accordionContainer = document.getElementById('accordion-container');
-        const nowInit = new Date();
         const currentDayIndexInit = nowInit.getDay();
         const currentMinutesInit = (nowInit.getHours() * 60) + nowInit.getMinutes();
         
@@ -781,7 +863,6 @@
             const dayName = arabicDayNames[englishDay]; const dayIndex = dayMapping[englishDay];
             let contentHTML = ''; let isHolidayDay = false; let displayTitle = dayName;
             
-            // تحقق من وجود إجازة في هذا اليوم بناءً على وقت الانتهاء (ليتم تفعيلها طوال اليوم)
             const activeHoliday = upcomingHolidays.find(h => h.targetDay === englishDay && nowInit <= h.endDateObj);
 
             if (activeHoliday) {
