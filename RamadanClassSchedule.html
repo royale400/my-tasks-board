@@ -68,7 +68,7 @@
             background-color: var(--bg-main);
             background-image: radial-gradient(circle at 50% 0%, #1e293b 0%, #0f172a 100%);
             color: var(--text-primary);
-            padding: 20px;
+            padding: 65px 20px 20px 20px; /* تم تعديل المسافة العلوية لتناسب الشريط */
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -77,6 +77,71 @@
         }
         body.light-mode { background-image: none; }
         body.no-scroll { overflow: hidden; }
+
+        /* ========================================= */
+        /* --- شريط الأخبار العلوي --- */
+        /* ========================================= */
+        .news-ticker {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 45px; /* زيادة الارتفاع لمنع قص الحروف العربية */
+            background: rgba(15, 23, 42, 0.95);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.3);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 90000;
+            display: flex;
+            align-items: center;
+            overflow: hidden; /* لمنع ظهور النص خارج الشريط */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        body.light-mode .news-ticker {
+            background: rgba(255, 255, 255, 0.95);
+            border-bottom-color: #dbeafe;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .ticker-text {
+            position: absolute;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            height: 100%;
+            padding-bottom: 2px; /* لحماية الحروف السفلية */
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: default;
+            animation: scroll-left-to-right 20s linear infinite;
+        }
+        
+        .ticker-text:hover { animation-play-state: paused; } 
+        
+        .ticker-badge {
+            background: var(--accent-red);
+            color: white;
+            padding: 3px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            margin-left: 12px;
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
+        }
+
+        /* حركة رياضية دقيقة:
+           تبدأ الشريحة والطرف الأيمن منها يلامس يسار الشاشة تماماً (-100%)
+           وتنتهي عندما يلامس طرفها الأيسر يمين الشاشة تماماً (0)
+        */
+        @keyframes scroll-left-to-right {
+            0% {
+                left: 0;
+                transform: translateX(-100%);
+            }
+            100% {
+                left: 100%;
+                transform: translateX(0);
+            }
+        }
 
         /* ========================================= */
         /* --- شاشة الدخول (الدرع الطائر والموجات) --- */
@@ -365,6 +430,14 @@
     </style>
 </head>
 <body class="preload no-scroll"> 
+
+    <!-- الشريط الإخباري العلوي النظيف - بدون تكرار -->
+    <div class="news-ticker no-tap-highlight">
+        <div class="ticker-text">
+            <span class="ticker-badge">تحديث هام</span>
+            <span>تم إدراج الفصل الثالث (Chapter 3) ضمن مقررات اختبار مادة "رياضيات الحاسب" .. يرجى الاطلاع على الروابط في جدول الاختبارات.</span>
+        </div>
+    </div>
 
     <div id="cyber-splash" class="cyber-splash">
         <div class="shield-wrapper">
