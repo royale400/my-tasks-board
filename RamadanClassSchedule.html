@@ -68,7 +68,7 @@
             background-color: var(--bg-main);
             background-image: radial-gradient(circle at 50% 0%, #1e293b 0%, #0f172a 100%);
             color: var(--text-primary);
-            padding: 65px 20px 20px 20px; /* تم تعديل المسافة العلوية لتناسب الشريط */
+            padding: 65px 20px 20px 20px; 
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -84,7 +84,7 @@
         .news-ticker {
             position: fixed;
             top: 0; left: 0; right: 0;
-            height: 45px; /* زيادة الارتفاع لمنع قص الحروف العربية */
+            height: 45px;
             background: rgba(15, 23, 42, 0.95);
             border-bottom: 1px solid rgba(59, 130, 246, 0.3);
             backdrop-filter: blur(10px);
@@ -92,7 +92,7 @@
             z-index: 90000;
             display: flex;
             align-items: center;
-            overflow: hidden; /* لمنع ظهور النص خارج الشريط */
+            overflow: hidden;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
         body.light-mode .news-ticker {
@@ -107,7 +107,7 @@
             display: flex;
             align-items: center;
             height: 100%;
-            padding-bottom: 2px; /* لحماية الحروف السفلية */
+            padding-bottom: 2px;
             color: var(--text-primary);
             font-weight: 600;
             font-size: 0.95rem;
@@ -128,19 +128,9 @@
             box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
         }
 
-        /* حركة رياضية دقيقة:
-           تبدأ الشريحة والطرف الأيمن منها يلامس يسار الشاشة تماماً (-100%)
-           وتنتهي عندما يلامس طرفها الأيسر يمين الشاشة تماماً (0)
-        */
         @keyframes scroll-left-to-right {
-            0% {
-                left: 0;
-                transform: translateX(-100%);
-            }
-            100% {
-                left: 100%;
-                transform: translateX(0);
-            }
+            0% { left: 0; transform: translateX(-100%); }
+            100% { left: 100%; transform: translateX(0); }
         }
 
         /* ========================================= */
@@ -236,18 +226,33 @@
         body.light-mode .date-display { background: #eff6ff; color: #1d4ed8; border-color: #dbeafe; }
 
         /* ========================================= */
-        /* --- لوحة الإعلانات والمهام --- */
+        /* --- لوحة الإعلانات والمهام (مع السلايدر) --- */
         /* ========================================= */
         #tasks-board { display: none; }
-        .tasks-container { display: flex; flex-direction: column; gap: 12px; }
+        
+        .tasks-container { 
+            display: flex; 
+            gap: 15px; 
+            overflow-x: auto; 
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+            padding-bottom: 5px;
+        }
+        .tasks-container::-webkit-scrollbar { display: none; }
+
         .task-card {
             display: flex; gap: 15px; padding: 18px; border-radius: 16px;
             background: rgba(255, 255, 255, 0.02); border: 1px solid var(--bento-border);
-            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
             position: relative; overflow: hidden;
+            
+            /* إعدادات البطاقة للسلايدر لضمان عدم التمدد */
+            flex: 0 0 100%; 
+            max-width: 100%;
+            scroll-snap-align: start;
         }
         body.light-mode .task-card { background: #ffffff; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
-        .task-card:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         
         .task-card.urgent { border-right: 4px solid var(--accent-red); background: linear-gradient(90deg, rgba(239, 68, 68, 0.05) 0%, transparent 100%); }
         .task-card.info { border-right: 4px solid var(--accent); background: linear-gradient(90deg, rgba(59, 130, 246, 0.05) 0%, transparent 100%); }
@@ -269,17 +274,56 @@
         .ended .task-icon { background: rgba(0,0,0,0.2); color: var(--text-secondary); }
         body.light-mode .ended .task-icon { background: rgba(0,0,0,0.05); }
 
-        .task-content { flex-grow: 1; display: flex; flex-direction: column; gap: 8px; justify-content: center; }
+        .task-content { 
+            flex-grow: 1; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 8px; 
+            justify-content: center; 
+            min-width: 0; 
+        }
+        
         .task-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px;}
         .task-title { font-weight: 800; font-size: 1.1rem; color: var(--text-primary); margin: 0; line-height: 1.4; display: flex; align-items: center; gap: 8px;}
         .task-course { font-size: 0.8rem; background: var(--bento-bg); padding: 4px 10px; border-radius: 8px; border: 1px solid var(--bento-border); font-family: monospace; font-weight: bold; color: var(--text-secondary); white-space: nowrap; }
         body.light-mode .task-course { background: #f8fafc; }
-        .task-desc { font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6; margin: 0; font-weight: 500; }
         
-        /* تأثيرات الرابط والشارة داخل المهام */
+        .task-desc { 
+            font-size: 0.95rem; 
+            color: var(--text-secondary); 
+            line-height: 1.6; 
+            margin: 0; 
+            font-weight: 500; 
+            white-space: normal; 
+            word-wrap: break-word; 
+        }
+        
         .task-link { color: var(--accent); font-weight: 800; text-decoration: none; border-bottom: 1px dashed var(--accent); padding-bottom: 1px; transition: color 0.3s, border-color 0.3s; }
         .task-link:hover { color: var(--accent-orange); border-bottom-color: var(--accent-orange); }
         .task-ended-badge { background: var(--accent-red); color: #fff; font-size: 0.7rem; padding: 3px 8px; border-radius: 6px; font-weight: bold; vertical-align: middle; }
+
+        /* نقاط التنقل (Dots) للسلايدر */
+        .slider-dots {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-top: 15px;
+        }
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--text-muted);
+            opacity: 0.4;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .dot.active {
+            background-color: var(--accent);
+            opacity: 1;
+            transform: scale(1.3);
+        }
 
         /* ========================================= */
         /* --- بطاقات السحب للأقسام (Slider Cards) --- */
@@ -431,7 +475,6 @@
 </head>
 <body class="preload no-scroll"> 
 
-    <!-- الشريط الإخباري العلوي النظيف - بدون تكرار -->
     <div class="news-ticker no-tap-highlight">
         <div class="ticker-text">
             <span class="ticker-badge">تحديث هام</span>
@@ -470,7 +513,6 @@
                 <div id="current-date" class="date-display">جاري التحميل...</div>
             </div>
 
-            <!-- لوحة الإعلانات والمهام (تتفاعل زمنياً) -->
             <div class="bento-box" id="tasks-board">
                 <div class="bento-title">
                     <div class="title-main-part">
@@ -480,6 +522,7 @@
                 <div class="tasks-container" id="tasks-container">
                     <!-- سيتم حقن المهام هنا عبر الجافاسكربت -->
                 </div>
+                <!-- نقاط التنقل -->
             </div>
 
             <div class="sections-slider no-tap-highlight">
@@ -634,7 +677,7 @@
         </div>
 
         <footer class="page-footer" id="page-footer">
-            <div class="version-badge">V.1.6</div>
+            <div class="version-badge">V.1.9</div>
             <div class="contact-pill no-tap-highlight" id="contact-pill">
                 <button class="envelope-btn no-tap-highlight" id="envelope-btn" title="تواصل معنا">
                     <i class="fa-solid fa-envelope"></i>
@@ -652,21 +695,37 @@
         // --- إدارة الإعلانات والمهام (تتفاعل زمنياً) ---
         // =========================================================
         const dateNowForTasks = new Date();
-        const quizEndTime = new Date('2026-02-25T23:00:00'); // نهاية الكويز (11 مساءً الأربعاء)
-        const quizHideTime = new Date('2026-02-26T00:00:00'); // وقت إخفاء الإعلان (بداية الخميس)
+        
+        // أوقات إعلان الاختبار
+        const quizEndTime = new Date('2026-02-25T23:00:00'); 
+        const quizHideTime = new Date('2026-02-26T00:00:00'); 
+        
+        // وقت اختفاء إعلان الساعات المكتبية (الأحد 1 مارس 2026 الساعة 11:00 مساءً)
+        const officeHoursHideTime = new Date('2026-03-01T23:00:00');
 
         let announcements = [];
 
-        // شرط: إذا لم ندخل في يوم الخميس بعد، أظهر الإعلان
+        // 1. إعلان الاختبار
         if (dateNowForTasks < quizHideTime) {
-            const isQuizEnded = dateNowForTasks >= quizEndTime; // هل انتهى الوقت؟
+            const isQuizEnded = dateNowForTasks >= quizEndTime; 
             
             announcements.push({
-                type: isQuizEnded ? 'ended' : 'urgent', // تتغير الحالة بناء على الوقت
+                type: isQuizEnded ? 'ended' : 'urgent', 
                 icon: 'fa-solid fa-stopwatch',
                 title: `Quiz 1 ${isQuizEnded ? '<span class="task-ended-badge">انتهى الاختبار</span>' : ''}`,
                 course: 'أساسيات الأمن السيبراني',
                 desc: `الأربعاء 25 فبراير (10:00 م - 11:00 م) عبر بلاك بورد. المحتوى: <a href="https://drive.google.com/file/d/1Als7w3U1kW_TDdfeA1WP1K1X2ulKD1sB/view?usp=drivesdk" target="_blank" class="task-link" onclick="event.stopPropagation()">Chapter ( 1 )</a>. الاختبار: 5 أسئلة اختيار من متعدد (5 درجات).`
+            });
+        }
+
+        // 2. إعلان الساعات المكتبية
+        if (dateNowForTasks < officeHoursHideTime) {
+            announcements.push({
+                type: 'info',
+                icon: 'fa-solid fa-chalkboard-user',
+                title: 'الساعات المكتبية',
+                course: 'رياضيات الحاسب - مراجعة عامة',
+                desc: 'جلسة نقاش مفتوحة لمراجعة الشروحات السابقة.<br><strong style="color: var(--accent-orange);">* الحضور اختياري (غير إلزامي)</strong>.<br><i class="fa-regular fa-clock" style="margin-left: 4px;"></i>الموعد: الأحد الساعة 10:00 مساءً.'
             });
         }
 
@@ -675,6 +734,7 @@
 
         if (announcements.length > 0) {
             tasksBoard.style.display = 'block';
+            
             tasksContainer.innerHTML = announcements.map(task => `
                 <div class="task-card ${task.type}">
                     <div class="task-icon"><i class="${task.icon}"></i></div>
@@ -687,10 +747,50 @@
                     </div>
                 </div>
             `).join('');
+
+            if (announcements.length > 1) {
+                const dotsContainer = document.createElement('div');
+                dotsContainer.className = 'slider-dots';
+                
+                announcements.forEach((_, index) => {
+                    dotsContainer.innerHTML += `<div class="dot ${index === 0 ? 'active' : ''}" data-index="${index}"></div>`;
+                });
+                
+                tasksBoard.appendChild(dotsContainer);
+
+                const dots = document.querySelectorAll('.slider-dots .dot');
+                
+                tasksContainer.addEventListener('scroll', () => {
+                    const scrollLeft = Math.abs(tasksContainer.scrollLeft);
+                    const cardWidth = tasksContainer.clientWidth;
+                    const gap = 15; // المسافة بين البطاقات
+                    const currentIndex = Math.round(scrollLeft / (cardWidth + gap));
+
+                    dots.forEach((dot, index) => {
+                        if (index === currentIndex) {
+                            dot.classList.add('active');
+                        } else {
+                            dot.classList.remove('active');
+                        }
+                    });
+                });
+
+                dots.forEach(dot => {
+                    dot.addEventListener('click', (e) => {
+                        const index = parseInt(e.target.getAttribute('data-index'));
+                        const cardWidth = tasksContainer.clientWidth;
+                        const gap = 15; 
+                        tasksContainer.scrollTo({
+                            left: (document.dir === 'rtl' ? -1 : 1) * (index * (cardWidth + gap)),
+                            behavior: 'smooth'
+                        });
+                    });
+                });
+            }
         }
 
         // =========================================================
-        // --- نظام السحب واختيار البطاقات (Slider Cards) ---
+        // --- نظام السحب واختيار البطاقات (Slider Cards للأسفل) ---
         // =========================================================
         const sectionCards = document.querySelectorAll('.section-card');
         const tabContents = document.querySelectorAll('.tab-content-section');
@@ -860,9 +960,8 @@
         const upcomingHolidays = [];
         const nowInit = new Date();
 
-        // منطق الإجازة المطولة: تظهر في الموقع فقط بداية من يوم الجمعة وتختفي بنهاية يوم الأحد
-        const longWeekendShowTime = new Date('2026-02-26T23:59:59'); // بنهاية الخميس
-        const longWeekendHideTime = new Date('2026-03-01T23:59:59'); // بنهاية الأحد
+        const longWeekendShowTime = new Date('2026-02-26T23:59:59'); 
+        const longWeekendHideTime = new Date('2026-03-01T23:59:59'); 
 
         if (nowInit > longWeekendShowTime && nowInit <= longWeekendHideTime) {
             upcomingHolidays.push({ 
@@ -1027,4 +1126,4 @@
 
     </script>
 </body>
-</html>
+                </html>
