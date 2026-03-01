@@ -11,30 +11,34 @@
 
     <style>
         /* ========================================= */
-        /* --- متغيرات الألوان --- */
+        /* --- متغيرات الألوان (الثيم الحديث) --- */
         /* ========================================= */
         :root {
-            --bg-main: #0f172a;       
+            --bg-main: #020617;       
             --bg-panel: #0f172a;      
             --timeline-line: #334155; 
             
-            --accent: #3b82f6;        
-            --accent-glow: rgba(59, 130, 246, 0.4); 
+            --accent: #38bdf8;        
+            --accent-glow: rgba(56, 189, 248, 0.3); 
             --accent-green: #10b981;  
             --accent-red: #ef4444;    
             --accent-orange: #f59e0b;
             
-            --text-primary: #ffffff;
+            --accent-exam: #8b5cf6;
+            --accent-exam-glow: rgba(139, 92, 246, 0.4);
+            --accent-exam-bg: rgba(139, 92, 246, 0.1);
+            
+            --text-primary: #f8fafc;
             --text-secondary: #94a3b8;
             --text-muted: #64748b;
             
             --bento-bg: #0f172a;
             --bento-border: rgba(255, 255, 255, 0.1);
-            --bento-radius: 24px;
-            --bento-shadow: none; 
+            --bento-radius: 32px;
+            --bento-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5); 
             
-            --accordion-header-bg: rgba(0, 0, 0, 0.2);
-            --links-card-bg: rgba(59, 130, 246, 0.05); 
+            --accordion-header-bg: rgba(0, 0, 0, 0.3);
+            --links-card-bg: rgba(56, 189, 248, 0.05); 
         }
 
         body.light-mode {
@@ -42,21 +46,25 @@
             --bg-panel: #ffffff;
             --timeline-line: #cbd5e1;
             
-            --accent: #2563eb;
-            --accent-glow: rgba(37, 99, 235, 0.2);
+            --accent: #0284c7;
+            --accent-glow: rgba(2, 132, 199, 0.2);
             --accent-green: #059669;
             --accent-red: #dc2626;
             --accent-orange: #d97706;
             
-            --text-primary: #1e293b;
+            --accent-exam: #6d28d9;
+            --accent-exam-glow: rgba(109, 40, 217, 0.3);
+            --accent-exam-bg: #f3e8ff;
+            
+            --text-primary: #0f172a;
             --text-secondary: #64748b;
             --text-muted: #94a3b8;
             
             --bento-bg: #ffffff;
-            --bento-border: #f1f5f9;
-            --bento-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --bento-border: #e2e8f0;
+            --bento-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
             --accordion-header-bg: #f8fafc;
-            --links-card-bg: #ffffff;
+            --links-card-bg: #f0f9ff;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -66,79 +74,37 @@
         body {
             font-family: 'Tajawal', sans-serif;
             background-color: var(--bg-main);
-            background-image: radial-gradient(circle at 50% 0%, #1e293b 0%, #0f172a 100%);
             color: var(--text-primary);
             padding: 65px 20px 20px 20px; 
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            transition: background-color 0.8s ease, background-image 0.8s ease, color 0.8s ease; 
+            transition: background-color 0.8s ease, color 0.8s ease; 
         }
-        body.light-mode { background-image: none; }
         body.no-scroll { overflow: hidden; }
 
         /* ========================================= */
         /* --- شريط الأخبار العلوي --- */
         /* ========================================= */
         .news-ticker {
-            position: fixed;
-            top: 0; left: 0; right: 0;
-            height: 45px;
-            background: rgba(15, 23, 42, 0.95);
-            border-bottom: 1px solid rgba(59, 130, 246, 0.3);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            z-index: 90000;
-            display: flex;
-            align-items: center;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            position: fixed; top: 0; left: 0; right: 0; height: 45px;
+            background: rgba(15, 23, 42, 0.95); border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            z-index: 90000; display: flex; align-items: center; overflow: hidden; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
-        body.light-mode .news-ticker {
-            background: rgba(255, 255, 255, 0.95);
-            border-bottom-color: #dbeafe;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        }
-        
-        .ticker-text {
-            position: absolute;
-            white-space: nowrap;
-            display: flex;
-            align-items: center;
-            height: 100%;
-            padding-bottom: 2px;
-            color: var(--text-primary);
-            font-weight: 600;
-            font-size: 0.95rem;
-            cursor: default;
-            animation: scroll-left-to-right 20s linear infinite;
-        }
-        
+        body.light-mode .news-ticker { background: rgba(255, 255, 255, 0.95); border-bottom-color: #e0f2fe; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); }
+        .ticker-text { position: absolute; white-space: nowrap; display: flex; align-items: center; height: 100%; padding-bottom: 2px; color: var(--text-primary); font-weight: 600; font-size: 0.95rem; cursor: default; animation: scroll-left-to-right 20s linear infinite; }
         .ticker-text:hover { animation-play-state: paused; } 
-        
-        .ticker-badge {
-            background: var(--accent-red);
-            color: white;
-            padding: 3px 12px;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            font-weight: 800;
-            margin-left: 12px;
-            box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
-        }
-
-        @keyframes scroll-left-to-right {
-            0% { left: 0; transform: translateX(-100%); }
-            100% { left: 100%; transform: translateX(0); }
-        }
+        .ticker-badge { background: var(--accent-red); color: white; padding: 3px 12px; border-radius: 12px; font-size: 0.8rem; font-weight: 800; margin-left: 12px; box-shadow: 0 0 10px rgba(239, 68, 68, 0.4); }
+        @keyframes scroll-left-to-right { 0% { left: 0; transform: translateX(-100%); } 100% { left: 100%; transform: translateX(0); } }
 
         /* ========================================= */
         /* --- شاشة الدخول (الدرع الطائر والموجات) --- */
         /* ========================================= */
         .cyber-splash {
             position: fixed; inset: 0; 
-            background: #0f172a;
+            background: #020617;
             z-index: 99999; display: flex; align-items: center; justify-content: center;
             transition: background-color 0.8s ease, backdrop-filter 0.8s ease;
         }
@@ -162,44 +128,19 @@
         }
         
         @keyframes shield-beat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); filter: drop-shadow(0 0 30px rgba(16, 185, 129, 0.9)); } }
-        .splash-shield-icon.flying { animation: none !important; filter: drop-shadow(0 0 5px rgba(59, 130, 246, 0.5)) !important; color: var(--accent) !important; }
+        .splash-shield-icon.flying { animation: none !important; filter: drop-shadow(0 0 5px rgba(56, 189, 248, 0.5)) !important; color: var(--accent) !important; }
 
         /* ========================================= */
         /* --- هيكل الـ Bento Grid الرئيسي --- */
         /* ========================================= */
-        .bento-container {
-            width: 100%; max-width: 800px;
-            display: flex; flex-direction: column; 
-            gap: 24px; margin-top: 10px; margin-bottom: 30px;
-            opacity: 0; transform: translateY(20px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
-        }
+        .bento-container { width: 100%; max-width: 800px; display: flex; flex-direction: column; gap: 24px; margin-top: 10px; margin-bottom: 30px; opacity: 0; transform: translateY(20px); transition: opacity 0.8s ease, transform 0.8s ease; }
         .bento-container.visible { opacity: 1; transform: translateY(0); }
-
-        .bento-box {
-            position: relative; background: var(--bento-bg); 
-            border-radius: var(--bento-radius); padding: 28px; 
-            border: 1px solid var(--bento-border); box-shadow: var(--bento-shadow); 
-            z-index: 1; overflow: hidden; transition: transform 0.4s ease, box-shadow 0.4s ease;
-        }
-        
-        .bento-box::before {
-            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: radial-gradient(circle, rgba(59,130,246,0.1) 0%, transparent 60%);
-            z-index: -1; pointer-events: none; transition: opacity 0.4s;
-        }
-        body.light-mode .bento-box::before { opacity: 0; }
-
-        .bento-title {
-            display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: space-between;
-            font-size: 1.2rem; font-weight: 800; color: var(--text-primary);
-            margin-bottom: 24px; padding-bottom: 15px; border-bottom: 1px solid var(--bento-border);
-        }
+        .bento-box { position: relative; background: var(--bento-bg); border-radius: var(--bento-radius); padding: 30px; border: 1px solid var(--bento-border); box-shadow: var(--bento-shadow); z-index: 1; overflow: hidden; transition: transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s, background-color 0.4s; }
+        .bento-title { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: space-between; font-size: 1.2rem; font-weight: 800; color: var(--text-primary); margin-bottom: 24px; padding-bottom: 15px; border-bottom: 1px solid var(--bento-border); }
         .title-main-part { display: flex; align-items: center; gap: 10px; }
         .title-main-part i { color: var(--accent); font-size: 1.4rem; }
-        
-        .ramadan-note { font-size: 0.85rem; color: var(--accent); background: rgba(59, 130, 246, 0.1); padding: 4px 12px; border-radius: 8px; font-weight: 700; }
-        body.light-mode .ramadan-note { background: #eff6ff; }
+        .ramadan-note { font-size: 0.85rem; color: var(--accent); background: rgba(56, 189, 248, 0.1); padding: 4px 12px; border-radius: 8px; font-weight: 700; }
+        body.light-mode .ramadan-note { background: #e0f2fe; }
 
         /* ========================================= */
         /* --- صندوق الترحيب --- */
@@ -208,221 +149,141 @@
         .welcome-info { display: flex; align-items: center; gap: 20px; }
         
         .header-icon { 
-            width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; 
-            flex-shrink: 0; border-radius: 16px; background: rgba(59, 130, 246, 0.1); 
-            border: 1px solid rgba(59, 130, 246, 0.3); color: #60a5fa; opacity: 0; transition: opacity 0.3s;
+            width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; 
+            flex-shrink: 0; border-radius: 20px; background: rgba(56, 189, 248, 0.1); 
+            color: var(--accent); opacity: 0; transition: opacity 0.3s;
         }
-        body.light-mode .header-icon { border-radius: 50%; background: #eff6ff; border: 1px solid #dbeafe; color: #2563eb; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
-        .header-icon.visible { opacity: 1; animation: float-icon 3s ease-in-out infinite;  }
+        body.light-mode .header-icon { background: #e0f2fe; box-shadow: 0 2px 10px rgba(2, 132, 199, 0.1); }
+        
+        /* تأثير الطفو للأيقونة بعد الاستقرار */
+        .header-icon.visible { opacity: 1; animation: float-icon 3s ease-in-out infinite; }
         @keyframes float-icon { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
 
-        .welcome-text h1 { font-size: 1.6rem; font-weight: 800; margin: 0 0 5px 0; color: var(--text-primary); }
-        .welcome-text p { color: var(--text-secondary); font-size: 1rem; margin: 0; font-weight: 600; opacity: 0.8; }
-        
-        .style-badge { color: #60a5fa; font-size: 0.75rem; font-family: monospace; letter-spacing: 0.1em; font-weight: 800; margin-bottom: 4px; display: block; }
-        body.light-mode .style-badge { color: #94a3b8; }
-
-        .date-display { background: rgba(59, 130, 246, 0.2); color: #93c5fd; font-size: 0.9rem; font-weight: 700; padding: 10px 20px; border-radius: 12px; border: 1px solid rgba(59, 130, 246, 0.2); flex-shrink: 0; }
-        body.light-mode .date-display { background: #eff6ff; color: #1d4ed8; border-color: #dbeafe; }
+        .welcome-text h1 { font-size: 1.5rem; font-weight: 900; margin: 0 0 5px 0; color: var(--text-primary); }
+        .welcome-text p { color: var(--text-secondary); font-size: 0.95rem; margin: 0; font-weight: 600; opacity: 0.8; }
+        .style-badge { color: var(--accent); font-size: 0.75rem; font-family: monospace; letter-spacing: 0.1em; font-weight: 800; margin-bottom: 4px; display: block; }
+        .date-display { background: rgba(56, 189, 248, 0.1); color: var(--accent); font-size: 0.85rem; font-weight: 800; padding: 10px 20px; border-radius: 16px; flex-shrink: 0; }
+        body.light-mode .date-display { background: #e0f2fe; }
 
         /* ========================================= */
-        /* --- لوحة الإعلانات والمهام (مع السلايدر) --- */
+        /* --- لوحة الإعلانات والمهام --- */
         /* ========================================= */
         #tasks-board { display: none; }
-        
-        .tasks-container { 
-            display: flex; 
-            gap: 15px; 
-            overflow-x: auto; 
-            scroll-snap-type: x mandatory;
-            scroll-behavior: smooth;
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-            padding-bottom: 5px;
-        }
+        .tasks-container { display: flex; gap: 15px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; -ms-overflow-style: none; scrollbar-width: none; padding-bottom: 5px; }
         .tasks-container::-webkit-scrollbar { display: none; }
-
-        .task-card {
-            display: flex; gap: 15px; padding: 18px; border-radius: 16px;
-            background: rgba(255, 255, 255, 0.02); border: 1px solid var(--bento-border);
-            position: relative; overflow: hidden;
-            
-            /* إعدادات البطاقة للسلايدر لضمان عدم التمدد */
-            flex: 0 0 100%; 
-            max-width: 100%;
-            scroll-snap-align: start;
-        }
+        .task-card { display: flex; gap: 15px; padding: 20px; border-radius: 20px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--bento-border); position: relative; overflow: hidden; flex: 0 0 100%; max-width: 100%; scroll-snap-align: start; }
         body.light-mode .task-card { background: #ffffff; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
-        
         .task-card.urgent { border-right: 4px solid var(--accent-red); background: linear-gradient(90deg, rgba(239, 68, 68, 0.05) 0%, transparent 100%); }
-        .task-card.info { border-right: 4px solid var(--accent); background: linear-gradient(90deg, rgba(59, 130, 246, 0.05) 0%, transparent 100%); }
-        .task-card.warning { border-right: 4px solid var(--accent-orange); background: linear-gradient(90deg, rgba(245, 158, 11, 0.05) 0%, transparent 100%); }
-        .task-card.ended { opacity: 0.6; filter: grayscale(80%); border-right: 4px solid var(--text-muted); background: rgba(255,255,255,0.02); }
+        .task-card.info { border-right: 4px solid var(--accent); background: linear-gradient(90deg, rgba(56, 189, 248, 0.05) 0%, transparent 100%); }
         
-        body.light-mode .task-card.urgent { background: linear-gradient(90deg, #fef2f2 0%, transparent 100%); }
-        body.light-mode .task-card.info { background: linear-gradient(90deg, #eff6ff 0%, transparent 100%); }
-        body.light-mode .task-card.warning { background: linear-gradient(90deg, #fffbeb 0%, transparent 100%); }
-        body.light-mode .task-card.ended { background: #f1f5f9; }
-
-        .task-icon { 
-            width: 45px; height: 45px; border-radius: 12px; display: flex; 
-            align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; 
-        }
+        .task-icon { width: 45px; height: 45px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
         .urgent .task-icon { background: rgba(239, 68, 68, 0.1); color: var(--accent-red); }
-        .info .task-icon { background: rgba(59, 130, 246, 0.1); color: var(--accent); }
-        .warning .task-icon { background: rgba(245, 158, 11, 0.1); color: var(--accent-orange); }
-        .ended .task-icon { background: rgba(0,0,0,0.2); color: var(--text-secondary); }
-        body.light-mode .ended .task-icon { background: rgba(0,0,0,0.05); }
-
-        .task-content { 
-            flex-grow: 1; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 8px; 
-            justify-content: center; 
-            min-width: 0; 
-        }
-        
+        .info .task-icon { background: rgba(56, 189, 248, 0.1); color: var(--accent); }
+        .task-content { flex-grow: 1; display: flex; flex-direction: column; gap: 8px; justify-content: center; min-width: 0; }
         .task-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px;}
         .task-title { font-weight: 800; font-size: 1.1rem; color: var(--text-primary); margin: 0; line-height: 1.4; display: flex; align-items: center; gap: 8px;}
-        .task-course { font-size: 0.8rem; background: var(--bento-bg); padding: 4px 10px; border-radius: 8px; border: 1px solid var(--bento-border); font-family: monospace; font-weight: bold; color: var(--text-secondary); white-space: nowrap; }
-        body.light-mode .task-course { background: #f8fafc; }
-        
-        .task-desc { 
-            font-size: 0.95rem; 
-            color: var(--text-secondary); 
-            line-height: 1.6; 
-            margin: 0; 
-            font-weight: 500; 
-            white-space: normal; 
-            word-wrap: break-word; 
-        }
-        
-        .task-link { color: var(--accent); font-weight: 800; text-decoration: none; border-bottom: 1px dashed var(--accent); padding-bottom: 1px; transition: color 0.3s, border-color 0.3s; }
-        .task-link:hover { color: var(--accent-orange); border-bottom-color: var(--accent-orange); }
-        .task-ended-badge { background: var(--accent-red); color: #fff; font-size: 0.7rem; padding: 3px 8px; border-radius: 6px; font-weight: bold; vertical-align: middle; }
-
-        /* نقاط التنقل (Dots) للسلايدر */
-        .slider-dots {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-            margin-top: 15px;
-        }
-        .dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background-color: var(--text-muted);
-            opacity: 0.4;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        .dot.active {
-            background-color: var(--accent);
-            opacity: 1;
-            transform: scale(1.3);
-        }
+        .task-course { font-size: 0.75rem; background: var(--bento-bg); padding: 4px 10px; border-radius: 8px; border: 1px solid var(--bento-border); font-family: monospace; font-weight: bold; color: var(--text-secondary); white-space: nowrap; }
+        .task-desc { font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6; margin: 0; font-weight: 500; white-space: normal; word-wrap: break-word; }
+        .task-link { color: var(--accent); font-weight: 800; text-decoration: none; border-bottom: 1px dashed var(--accent); padding-bottom: 1px; transition: color 0.3s; }
 
         /* ========================================= */
-        /* --- بطاقات السحب للأقسام (Slider Cards) --- */
+        /* --- بطاقات السحب للأقسام --- */
         /* ========================================= */
-        .sections-slider {
-            display: flex; gap: 16px; overflow-x: auto; padding: 5px 5px 20px 5px; margin-bottom: -10px;
-            scroll-behavior: smooth; -ms-overflow-style: none; scrollbar-width: none;
-            scroll-snap-type: x mandatory; 
-        }
+        .sections-slider { display: flex; gap: 16px; overflow-x: auto; padding: 5px 5px 20px 5px; margin-bottom: -10px; scroll-behavior: smooth; -ms-overflow-style: none; scrollbar-width: none; scroll-snap-type: x mandatory; }
         .sections-slider::-webkit-scrollbar { display: none; }
-        
-        .section-card {
-            display: flex; align-items: center; gap: 15px;
-            min-width: 260px; 
-            background: var(--bento-bg); border: 1px solid var(--bento-border);
-            padding: 20px; border-radius: 20px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            scroll-snap-align: center; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            flex-shrink: 0; position: relative; overflow: hidden;
-        }
-
-        .section-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: transparent; transition: background 0.3s; }
+        .section-card { display: flex; align-items: center; gap: 15px; min-width: 260px; background: var(--bento-bg); border: 1px solid var(--bento-border); padding: 20px; border-radius: 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); scroll-snap-align: center; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); flex-shrink: 0; }
         .section-card:hover { transform: translateY(-3px); border-color: var(--accent); }
-        
-        .section-card.active {
-            border-color: var(--accent); background: var(--links-card-bg);
-            box-shadow: 0 10px 20px var(--accent-glow); transform: translateY(-3px);
-        }
-        .section-card.active::after { background: var(--accent); }
-
-        .sc-icon { width: 50px; height: 50px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; transition: all 0.3s; background: rgba(59, 130, 246, 0.1); color: var(--accent); }
+        .section-card.active { border-color: var(--accent); background: var(--links-card-bg); box-shadow: 0 10px 25px var(--accent-glow); transform: translateY(-3px); }
+        .sc-icon { width: 50px; height: 50px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; transition: all 0.3s; background: rgba(56, 189, 248, 0.1); color: var(--accent); }
         .section-card[data-target="exams-view"] .sc-icon { background: rgba(245, 158, 11, 0.1); color: var(--accent-orange); }
         .section-card.active .sc-icon { transform: scale(1.1); }
-
-        .sc-text h4 { font-size: 1.1rem; font-weight: 800; color: var(--text-primary); margin: 0 0 4px 0; transition: color 0.3s; }
+        .sc-text h4 { font-size: 1.1rem; font-weight: 800; color: var(--text-primary); margin: 0 0 4px 0; }
         .sc-text span { font-size: 0.85rem; color: var(--text-secondary); font-weight: 500; }
-        
         .tab-content-section { display: none; animation: fadeInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
         .tab-content-section.active { display: block; }
         @keyframes fadeInUp { 0% { opacity: 0; transform: translateY(15px); } 100% { opacity: 1; transform: translateY(0); } }
 
         /* ========================================= */
-        /* --- الأكورديون (الجدول الدراسي) --- */
+        /* --- الأكورديون والتايم لاين والتنبيهات --- */
         /* ========================================= */
         .accordion-container { display: flex; flex-direction: column; gap: 15px; }
         .accordion-item { background: transparent; border: 1px solid var(--bento-border); border-radius: 20px; overflow: hidden; transition: all 0.4s; }
-        .accordion-header { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 20px; background: var(--accordion-header-bg); border: none; border-bottom: 1px solid transparent; color: var(--text-primary); font-family: inherit; font-size: 1.1rem; font-weight: 600; cursor: pointer; user-select: none; transition: all 0.3s; }
+        .accordion-header { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 20px; background: var(--accordion-header-bg); border: none; color: var(--text-primary); font-family: inherit; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: all 0.3s; }
         .icon-plus { color: var(--accent); transition: transform 0.4s ease; font-size: 1.2rem; }
         .accordion-panel { max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
         .panel-content { padding: 15px 20px 25px 20px; } 
-        .accordion-item.active { border-color: var(--accent); background: rgba(59, 130, 246, 0.02); }
-        .accordion-item.active .accordion-header { font-weight: 800; border-bottom-color: var(--bento-border); }
+        .accordion-item.active { border-color: var(--accent); background: rgba(56, 189, 248, 0.02); }
+        .accordion-item.active .accordion-header { font-weight: 900; }
         .accordion-item.active .icon-plus { transform: rotate(45deg); color: var(--accent-red); }
         .today-badge { font-size: 0.75rem; background: var(--accent); color: #ffffff; padding: 4px 12px; border-radius: 10px; margin-right: 10px; font-weight: bold; display: inline-block; }
 
-        /* التايم لاين والأحداث */
+        /* --- تنسيقات الإجازة (يوم الأحد) --- */
+        .accordion-item.is-holiday-day { border: 1px solid var(--accent-green) !important; background: rgba(16, 185, 129, 0.03) !important; }
+        .accordion-item.is-holiday-day .accordion-header { color: var(--accent-green) !important; background: transparent !important;}
+        .accordion-item.is-holiday-day .icon-plus { color: var(--accent-green) !important; }
+        .holiday-card { background: transparent; padding: 10px 0; display: flex; align-items: center; gap: 20px; }
+        .holiday-icon-box { width: 55px; height: 55px; border-radius: 14px; background: rgba(16, 185, 129, 0.15); display: flex; align-items: center; justify-content: center; color: var(--accent-green); font-size: 2rem; flex-shrink: 0; }
+        .holiday-content h3 { color: var(--accent-green); margin-bottom: 5px; font-size: 1.1rem; font-weight: 700; }
+        .holiday-content p { color: var(--text-secondary); font-size: 0.9rem; margin: 0; }
+        .holiday-date { background: rgba(0,0,0,0.2); padding: 5px 12px; border-radius: 6px; border: 1px solid rgba(16,185,129,0.2); font-size: 0.8rem; color: var(--text-primary); display: inline-block; margin-top: 8px; font-weight: bold; }
+        body.light-mode .holiday-date { background: rgba(255,255,255,0.5); color: var(--text-primary); }
+
+        .accordion-item.has-exam { border-color: var(--accent-exam); box-shadow: 0 0 15px var(--accent-exam-glow); }
+        .accordion-item.has-exam .accordion-header { color: var(--accent-exam); background: var(--accent-exam-bg); }
+        .accordion-item.has-exam.active .accordion-header { background: var(--accent-exam-bg); font-weight: 900; }
+        .accordion-item.has-exam .icon-plus { color: var(--accent-exam); }
+        
+        .exam-day-badge { background-color: var(--accent-exam); color: white; font-size: 0.75rem; padding: 4px 10px; border-radius: 8px; margin-right: 10px; font-weight: bold; display: inline-flex; align-items: center; gap: 4px; animation: pulse-exam 2s infinite; }
+        @keyframes pulse-exam { 0%, 100% { opacity: 1; box-shadow: 0 0 0 rgba(139, 92, 246, 0); } 50% { opacity: 0.85; box-shadow: 0 0 8px var(--accent-exam-glow); } }
+        
+        .exam-alert-banner { background: var(--accent-exam-bg); border: 1px dashed var(--accent-exam); border-radius: 16px; padding: 15px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+        .eab-text { color: var(--accent-exam); font-weight: 800; font-size: 0.95rem; display: flex; align-items: center; gap: 8px; }
+        .eab-btn { background: var(--accent-exam); color: white; border: none; padding: 10px 18px; border-radius: 12px; font-family: inherit; font-weight: bold; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: transform 0.2s, box-shadow 0.2s; white-space: nowrap; }
+        .eab-btn:active { transform: scale(0.95); }
+        .eab-btn:hover { box-shadow: 0 5px 15px var(--accent-exam-glow); }
+
         .timeline-wrapper { position: relative; padding-right: 45px; margin-top: 5px; }
         .timeline-container { display: flex; flex-direction: column; gap: 25px; border: none; position: relative;}
         .timeline-track-bg { position: absolute; right: 22.5px; top: 16px; bottom: 16px; width: 2px; background-image: linear-gradient(to bottom, var(--timeline-line) 50%, transparent 0%); background-size: 2px 8px; transform: translateX(50%); z-index: 1; }
         .timeline-track-fill { position: absolute; right: 22.5px; top: 16px; width: 2px; height: 0%; background-color: var(--accent); transform: translateX(50%); z-index: 2; transition: height 1s linear, background-color 0.5s ease; box-shadow: 0 0 10px var(--accent-glow); }
         .timeline-item { position: relative; display: flex; flex-direction: column; gap: 6px; transition: all 0.5s ease; }
         .timeline-item::before { content: ''; position: absolute; right: -22.5px; top: 9px; width: 14px; height: 14px; border-radius: 50%; background: var(--bento-bg); border: 3px solid var(--accent); transform: translateX(50%); z-index: 3; box-sizing: border-box; transition: all 0.5s ease; }
-        .timeline-pulsing-dot { position: absolute; right: 22.5px; top: 16px; width: 14px; height: 14px; background-color: var(--accent); border-radius: 50%; transform: translate(50%, -50%); z-index: 4; opacity: 0; transition: top 1s linear, opacity 0.5s ease, background-color 0.5s ease; box-sizing: border-box; margin-top: 0; }
+        .timeline-pulsing-dot { position: absolute; right: 22.5px; top: 16px; width: 14px; height: 14px; background-color: var(--accent); border-radius: 50%; transform: translate(50%, -50%); z-index: 4; opacity: 0; transition: top 1s linear, opacity 0.5s ease; }
         .timeline-pulsing-dot::after { content: ''; position: absolute; top: -4px; left: -4px; right: -4px; bottom: -4px; border-radius: 50%; border: 2px solid var(--accent); animation: radar-pulse-blue 1.5s infinite; }
         @keyframes radar-pulse-blue { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(2.5); opacity: 0; } }
         .timeline-pulsing-dot.resting::after { animation: none !important; opacity: 0 !important; }
+        
         .timeline-wrapper.is-live-track .timeline-track-fill { background-color: var(--accent-red); box-shadow: 0 0 10px rgba(239, 68, 68, 0.4); }
         .timeline-wrapper.is-live-track .timeline-pulsing-dot { background-color: var(--accent-red); }
         .timeline-wrapper.is-live-track .timeline-pulsing-dot::after { border-color: var(--accent-red); animation: radar-pulse-red 1.5s infinite; }
-        @keyframes radar-pulse-red { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(2.5); opacity: 0; } }
+        
         .time-header { display: flex; align-items: center; gap: 10px; font-family: monospace; font-weight: 800; font-size: 1rem; color: var(--accent); direction: rtl; }
-        .course-title { font-size: 1.05rem; font-weight: 500; color: var(--text-primary); margin: 0; line-height: 1.5; }
+        .course-title { font-size: 1.05rem; font-weight: 700; color: var(--text-primary); margin: 0; line-height: 1.5; }
         .course-note { font-size: 0.85rem; color: var(--text-muted); font-weight: 400; }
         .course-meta { display: flex; align-items: center; gap: 12px; font-size: 0.85rem; color: var(--text-secondary); font-weight: 600; margin-top: 2px; flex-wrap: wrap; }
-        .course-meta > span { display: flex; align-items: center; gap: 6px; white-space: nowrap; }
-        .course-meta i { color: var(--text-muted); font-size: 0.9rem; }
-        .course-code { background: rgba(255, 255, 255, 0.05); color: var(--text-secondary); padding: 3px 8px; border-radius: 6px; font-family: monospace; font-weight: 600; border: 1px solid var(--bento-border); }
+        .course-code { background: rgba(255, 255, 255, 0.05); color: var(--text-secondary); padding: 3px 8px; border-radius: 6px; font-family: monospace; border: 1px solid var(--bento-border); }
         body.light-mode .course-code { background: rgba(0, 0, 0, 0.03); color: var(--text-muted); }
-        .past-item { opacity: 0.45; filter: grayscale(100%); } .past-item::before { border-color: var(--text-muted); background: var(--bento-bg); } .past-item .time-header { color: var(--text-muted); font-weight: 600; }
-        .badge-past { background: rgba(255,255,255,0.05); border: 1px solid var(--bento-border); color: var(--text-secondary); font-family: 'Tajawal', sans-serif; font-size: 0.75rem; padding: 2px 8px; border-radius: 6px; margin-right: 8px; font-weight: bold; }
-        .live-item { opacity: 1; } .live-item::before { opacity: 0; } .live-item .time-header { color: var(--accent-red); font-family: 'Tajawal', sans-serif; font-size: 0.95rem; }
-        .countdown-clock { background: rgba(239, 68, 68, 0.15); color: var(--accent-red); padding: 3px 10px; border-radius: 8px; font-weight: 800; font-family: monospace; border: 1px solid rgba(239, 68, 68, 0.3); display: inline-flex; align-items: center; direction: ltr; font-size: 1.05rem; letter-spacing: 1px; box-shadow: 0 0 10px rgba(239, 68, 68, 0.1); }
+        
+        .past-item { opacity: 0.45; filter: grayscale(100%); } 
+        .past-item::before { border-color: var(--text-muted); background: var(--bento-bg); } 
+        .past-item .time-header { color: var(--text-muted); font-weight: 600; }
+        .badge-past { background: rgba(255,255,255,0.05); border: 1px solid var(--bento-border); font-family: 'Tajawal', sans-serif; font-size: 0.75rem; padding: 2px 8px; border-radius: 6px; margin-right: 8px; font-weight: bold; }
+        .live-item { opacity: 1; } 
+        .live-item::before { opacity: 0; } 
+        .live-item .time-header { color: var(--accent-red); font-family: 'Tajawal', sans-serif; font-size: 0.95rem; }
+        .countdown-clock { background: rgba(239, 68, 68, 0.15); color: var(--accent-red); padding: 3px 10px; border-radius: 8px; font-weight: 800; font-family: monospace; border: 1px solid rgba(239, 68, 68, 0.3); display: inline-flex; align-items: center; direction: ltr; font-size: 1.05rem; }
         .countdown-label { font-size: 0.8rem; font-weight: bold; margin: 0 4px; }
         .future-item { opacity: 0.9; }
-        .accordion-item.is-holiday-day { border: 1px solid var(--accent-green) !important; background: rgba(16, 185, 129, 0.03) !important; }
-        .accordion-item.is-holiday-day .accordion-header { color: var(--accent-green) !important; background: transparent !important;} .accordion-item.is-holiday-day .icon-plus { color: var(--accent-green) !important; }
-        .holiday-card { background: transparent; padding: 10px 0; display: flex; align-items: center; gap: 20px; } .holiday-icon-box { width: 55px; height: 55px; border-radius: 14px; background: rgba(16, 185, 129, 0.15); display: flex; align-items: center; justify-content: center; color: var(--accent-green); font-size: 2rem; flex-shrink: 0; }
-        .holiday-content h3 { color: var(--accent-green); margin-bottom: 5px; font-size: 1.1rem; font-weight: 700; } .holiday-content p { color: var(--text-secondary); font-size: 0.9rem; margin: 0; }
-        .holiday-date { background: rgba(0,0,0,0.2); padding: 5px 12px; border-radius: 6px; border: 1px solid rgba(16,185,129,0.2); font-size: 0.8rem; color: var(--text-primary); display: inline-block; margin-top: 8px; font-weight: bold; } body.light-mode .holiday-date { background: rgba(255,255,255,0.5); color: var(--text-primary); }
 
         /* ========================================= */
-        /* --- جدول الاختبارات وتلميح السحب --- */
+        /* --- جدول الاختبارات --- */
         /* ========================================= */
         .table-scroll-container { position: relative; width: 100%; }
-
         .scroll-hint { display: none; text-align: center; font-size: 0.8rem; color: var(--accent); margin-bottom: 8px; font-weight: bold; animation: pulse-hint 2s infinite; }
         @keyframes pulse-hint { 0%, 100% { opacity: 0.6; transform: translateX(0); } 50% { opacity: 1; transform: translateX(-5px); } }
-
-        .table-fade-edge { position: absolute; top: 0; left: 0; bottom: 15px; width: 30px; background: linear-gradient(to right, var(--bento-bg), transparent); pointer-events: none; z-index: 2; opacity: 0; border-top-left-radius: 16px; border-bottom-left-radius: 16px; transition: opacity 0.3s ease; }
-        .table-responsive { width: 100%; overflow-x: auto; border-radius: 16px; border: 1px solid var(--bento-border); margin-bottom: 15px; background-color: transparent; scrollbar-width: thin; scrollbar-color: var(--accent) transparent; }
+        .table-fade-edge { position: absolute; top: 0; left: 0; bottom: 15px; width: 30px; background: linear-gradient(to right, var(--bento-bg), transparent); pointer-events: none; z-index: 2; opacity: 0; transition: opacity 0.3s; }
+        
+        .table-responsive { width: 100%; overflow-x: auto; border-radius: 20px; border: 1px solid var(--bento-border); margin-bottom: 15px; scrollbar-width: thin; scrollbar-color: var(--accent) transparent; }
         .table-responsive::-webkit-scrollbar { height: 6px; } .table-responsive::-webkit-scrollbar-track { background: transparent; } .table-responsive::-webkit-scrollbar-thumb { background-color: var(--accent); border-radius: 8px; }
         
         .exam-table { width: 100%; border-collapse: collapse; min-width: 600px; text-align: center; }
@@ -431,49 +292,121 @@
         .exam-table tr:last-child td { border-bottom: none; }
         .exam-table tbody tr { transition: background-color 0.3s; }
         .exam-table tbody tr:hover { background: var(--links-card-bg); }
+        
         .subject-name { font-weight: 800; color: var(--accent); display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 1.1rem; white-space: nowrap; }
         .date-main { font-weight: 800; color: var(--text-primary); white-space: nowrap; }
         .date-sub { font-size: 0.85rem; color: var(--text-secondary); margin-top: 5px; display: flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap; }
-        .time-badge { background: rgba(245, 158, 11, 0.1); color: var(--accent-orange); padding: 5px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: bold; display: inline-flex; align-items: center; gap: 6px; border: 1px solid rgba(245, 158, 11, 0.2); white-space: nowrap; } body.light-mode .time-badge { background: #fffbeb; border-color: #fef3c7; }
+        .time-badge { background: rgba(245, 158, 11, 0.1); color: var(--accent-orange); padding: 5px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: bold; border: 1px solid rgba(245, 158, 11, 0.2); white-space: nowrap; display: inline-flex; align-items: center; gap: 6px;} 
+        body.light-mode .time-badge { background: #fffbeb; border-color: #fef3c7; }
+
+        .exam-countdown { background: rgba(56, 189, 248, 0.1); color: var(--accent); padding: 5px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 800; border: 1px dashed rgba(56, 189, 248, 0.4); white-space: nowrap; transition: all 0.3s; font-family: monospace; margin-top: 5px; }
+        body.light-mode .exam-countdown { background: #e0f2fe; border-color: #bae6fd; }
+        .exam-countdown.urgent { background: rgba(239, 68, 68, 0.1); color: var(--accent-red); border-color: var(--accent-red); animation: pulse-hint 2s infinite; }
+        body.light-mode .exam-countdown.urgent { background: #fef2f2; }
+        .exam-countdown.ended { background: rgba(0,0,0,0.1); color: var(--text-muted); border-color: var(--text-muted); text-decoration: line-through; }
+        
         .links-flex { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
-        .table-link { background: var(--bento-bg); color: var(--text-primary); border: 1px solid var(--bento-border); padding: 6px 14px; border-radius: 8px; text-decoration: none; font-size: 0.85rem; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; transition: all 0.3s; white-space: nowrap; } .table-link:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); box-shadow: 0 4px 10px var(--accent-glow); }
-        .exam-footer-note { background: var(--links-card-bg); padding: 12px; border-radius: 12px; text-align: center; font-size: 0.9rem; color: var(--text-secondary); display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 8px; border: 1px solid var(--bento-border); } .exam-footer-note strong { color: var(--text-primary); } .exam-footer-note i { color: var(--accent); }
+        .table-link { background: var(--bento-bg); color: var(--text-primary); border: 1px solid var(--bento-border); padding: 6px 14px; border-radius: 10px; text-decoration: none; font-size: 0.85rem; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; transition: all 0.3s; white-space: nowrap; } 
+        .table-link:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); box-shadow: 0 4px 10px var(--accent-glow); }
+        
+        .exam-footer-note { background: var(--links-card-bg); padding: 15px; border-radius: 16px; text-align: center; font-size: 0.9rem; color: var(--text-secondary); display: flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid var(--bento-border); }
 
         /* ========================================= */
-        /* --- صندوق المظهر و الروابط --- */
+        /* --- أزرار البوابة السريعة --- */
         /* ========================================= */
-        .bento-box.theme-elevated { z-index: 10000; position: relative; transform: scale(1.03); box-shadow: 0 25px 60px rgba(0,0,0,0.8); border-color: var(--accent); }
-        .scenery-bento-content { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; gap: 15px;}
-        .scenery-toggle { --local-sky: #020617; --local-hill-back: #0f172a; --local-hill-front: #020617; width: 100%; max-width: 320px; height: 150px; position: relative; cursor: pointer; overflow: hidden; border-radius: 20px; background: var(--local-sky); box-shadow: inset 0 4px 15px rgba(0,0,0,0.4); transition: background 1.2s ease; border: 2px solid var(--bento-border); }
-        .scenery-toggle.is-day { --local-sky: #87ceeb; --local-hill-back: #4ade80; --local-hill-front: #22c55e; }
-        .scenery-elements { pointer-events: none; width: 100%; height: 100%; } .hill-back { fill: var(--local-hill-back); transition: fill 1.2s ease; } .hill-front { fill: var(--local-hill-front); transition: fill 1.2s ease; } .night-elements { opacity: 1; transition: opacity 1.2s ease; } .scenery-toggle.is-day .night-elements { opacity: 0; } .meteor { opacity: 0; stroke-linecap: round; } .meteor-1 { animation: meteor-fall-1 14s infinite linear; } .meteor-2 { animation: meteor-fall-2 22s infinite linear; animation-delay: 5s; } @keyframes meteor-fall-1 { 0% { transform: translate(240px, -20px); opacity: 0; } 2% { opacity: 1; filter: drop-shadow(0 0 4px white); } 10% { transform: translate(60px, 140px); opacity: 0; } 100% { transform: translate(60px, 140px); opacity: 0; } } @keyframes meteor-fall-2 { 0% { transform: translate(140px, -30px); opacity: 0; } 2% { opacity: 1; filter: drop-shadow(0 0 4px white); } 10% { transform: translate(-20px, 130px); opacity: 0; } 100% { transform: translate(-20px, 130px); opacity: 0; } } .airplane-container { animation: fly-plane 20s linear infinite; } @keyframes fly-plane { 0% { transform: translate(-50px, 25px) scale(0.4); } 100% { transform: translate(320px, 15px) scale(0.4); } } .plane-light-red { animation: blink-red 1s infinite; } .plane-light-white { animation: blink-white 1.5s infinite; } @keyframes blink-red { 0%, 40% { opacity: 1; } 41%, 100% { opacity: 0; } } @keyframes blink-white { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } } .firefly { fill: #bef264; opacity: 0; animation: float-up 6s infinite ease-in; } .ff-1 { animation-delay: 0s; } .ff-2 { animation-delay: 2s; } .ff-3 { animation-delay: 4s; } @keyframes float-up { 0% { transform: translate(0, 0); opacity: 0; } 50% { opacity: 0.8; filter: drop-shadow(0 0 3px #bef264); } 100% { transform: translate(-10px, -40px); opacity: 0; } } .day-elements { opacity: 0; transition: opacity 1.2s ease; } .scenery-toggle.is-day .day-elements { opacity: 1; } .cloud { fill: #ffffff; opacity: 0.7; } .cloud-1 { animation: cloud-move-1 35s linear infinite; } .cloud-2 { animation: cloud-move-2 50s linear infinite; animation-delay: -15s; } @keyframes cloud-move-1 { 0% { transform: translate(-60px, 20px) scale(1); } 100% { transform: translate(360px, 20px) scale(1); } } @keyframes cloud-move-2 { 0% { transform: translate(-60px, 40px) scale(0.6); } 100% { transform: translate(360px, 40px) scale(0.6); } } .flower-group { transform-origin: bottom center; transform: scale(0); transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); } .scenery-toggle.is-day .flower-group { transform: scale(1); } .flower-group:nth-child(1) { transition-delay: 0.1s; } .flower-group:nth-child(2) { transition-delay: 0.3s; } .flower-group:nth-child(3) { transition-delay: 0.5s; } .bee-container { animation: bee-fly 15s linear infinite; } .bee-body { animation: bee-hover 1s ease-in-out infinite alternate; transform-origin: center; } @keyframes bee-fly { 0% { transform: translate(-30px, 80px); } 20% { transform: translate(50px, 60px); } 40% { transform: translate(100px, 90px); } 60% { transform: translate(150px, 60px); } 80% { transform: translate(200px, 80px); } 100% { transform: translate(320px, 50px); } } @keyframes bee-hover { 0% { transform: translateY(0) rotate(-10deg); } 100% { transform: translateY(-5px) rotate(10deg); } } .birds-group { opacity: 0; transition: opacity 1s ease; } .scenery-toggle.is-day .birds-group { opacity: 1; } .bird-path { fill: none; stroke: #475569; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; } @keyframes flap-wings { 0% { d: path("M 0,-3 Q 3,-6 6,0 Q 9,-6 12,-3"); } 50% { d: path("M 0,4 Q 3,1 6,0 Q 9,1 12,4"); } 100% { d: path("M 0,-3 Q 3,-6 6,0 Q 9,-6 12,-3"); } } @keyframes hover-bird { 0% { transform: translateY(0px); } 100% { transform: translateY(4px); } } .birds-container { animation: fly-across 30s linear infinite; } @keyframes fly-across { 0% { transform: translateX(-40px); } 50% { transform: translateX(30px); } 100% { transform: translateX(-40px); } } .bird-wrapper-1 { animation: hover-bird 3s ease-in-out infinite alternate; transform-origin: 46px 30px;} .bird-wrapper-1 .bird-path { animation: flap-wings 0.8s infinite linear; } .bird-wrapper-2 { animation: hover-bird 3.5s ease-in-out infinite alternate; animation-delay: -1s; transform-origin: 59px 38px;} .bird-wrapper-2 .bird-path { animation: flap-wings 0.9s infinite linear; animation-delay: -0.2s;} .bird-wrapper-3 { animation: hover-bird 2.8s ease-in-out infinite alternate; animation-delay: -2s; transform-origin: 148px 25px;} .bird-wrapper-3 .bird-path { animation: flap-wings 0.85s infinite linear; animation-delay: -0.1s;} .pivot-sun, .pivot-moon { position: absolute; bottom: 25px; left: 50%; width: 0; height: 100px; transform-origin: bottom center; z-index: 2; transition: opacity 0.5s ease; } .pivot-sun { opacity: 0; } .scenery-toggle.is-day .pivot-sun { opacity: 1; } .pivot-moon { opacity: 1; } .scenery-toggle.is-day .pivot-moon { opacity: 0; } .has-transition { transition: transform 1.2s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.8s ease; } .pos-top { transform: rotate(0deg); } .pos-left { transform: rotate(-100deg); } .pos-right { transform: rotate(100deg); } .celestial-body { position: absolute; top: -20px; left: -20px; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; transition: box-shadow 0.8s ease; } .celestial-body.sun { background: #f59e0b; color: #fff; box-shadow: 0 0 30px #f59e0b, inset 0 0 10px rgba(255,255,255,0.5); } .celestial-body.moon { background: #e2e8f0; color: #1e293b; box-shadow: 0 0 25px rgba(255,255,255,0.6), inset 0 0 10px rgba(0,0,0,0.2); }
-        .theme-instruction { font-size: 0.85rem; color: var(--text-muted); margin: 0; font-weight: 500; }
-
         .modern-btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .modern-btn { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; background: var(--links-card-bg); border: 1px solid var(--bento-border); padding: 20px 10px; border-radius: 20px; text-decoration: none; overflow: hidden; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
-        .modern-btn:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: 0 10px 25px var(--accent-glow); } .modern-btn:active, .modern-btn.clicked { transform: scale(0.94); background: var(--accent) !important; border-color: var(--accent); }
-        .btn-icon-box { width: 50px; height: 50px; border-radius: 50%; background: rgba(59, 130, 246, 0.15); display: flex; align-items: center; justify-content: center; color: var(--accent); font-size: 1.4rem; transition: all 0.2s; } .modern-btn:hover .btn-icon-box { transform: scale(1.1); } .modern-btn.clicked .btn-icon-box { background: rgba(255, 255, 255, 0.2); color: white; transform: scale(1.1); }
-        .btn-title { font-weight: 700; font-size: 1.05rem; color: var(--text-primary); transition: color 0.2s; text-align: center; } .modern-btn.clicked .btn-title { color: white !important; }
+        .modern-btn { 
+            position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; 
+            background: var(--bento-bg); border: 1px solid var(--bento-border); padding: 25px 10px; border-radius: 32px; 
+            text-decoration: none; overflow: hidden; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; box-shadow: var(--bento-shadow);
+        }
+        .modern-btn:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: 0 15px 30px var(--accent-glow); } 
+        .modern-btn:active, .modern-btn.clicked { transform: scale(0.94); background: var(--accent) !important; border-color: var(--accent); }
+        
+        .btn-icon-box { width: 55px; height: 55px; border-radius: 20px; background: rgba(56, 189, 248, 0.1); display: flex; align-items: center; justify-content: center; color: var(--accent); font-size: 1.6rem; transition: all 0.2s; } 
+        .modern-btn:hover .btn-icon-box { transform: scale(1.1); } 
+        .modern-btn.clicked .btn-icon-box { background: rgba(255, 255, 255, 0.2); color: white; transform: scale(1.1); }
+        
+        .btn-title { font-weight: 800; font-size: 1.1rem; color: var(--text-primary); transition: color 0.2s; text-align: center; } 
+        .modern-btn.clicked .btn-title { color: white !important; }
 
-        .page-footer { text-align: center; padding-bottom: 40px; display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; max-width: 800px; opacity: 0; transition: opacity 0.8s ease; } .page-footer.visible { opacity: 1; }
-        .version-badge { color: var(--accent); font-size: 0.95rem; font-weight: 800; font-family: monospace; letter-spacing: 2px; margin-bottom: 5px; }
-        .contact-pill { display: flex; align-items: center; background: var(--bento-bg); border-radius: 25px; padding: 4px; overflow: hidden; transition: max-width 0.4s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s; max-width: 44px; box-shadow: var(--bento-shadow); border: 1px solid var(--bento-border); direction: ltr; } .contact-pill.open { max-width: 300px; border-color: var(--accent); }
-        .envelope-btn { min-width: 36px; height: 36px; border-radius: 50%; background: transparent; color: var(--text-secondary); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.3s, color 0.3s; } .contact-pill.open .envelope-btn { background: var(--accent); color: white; } .envelope-btn i { font-size: 1.1rem; }
-        .email-slider { opacity: 0; transform: translateX(-10px); transition: all 0.4s ease; white-space: nowrap; } .contact-pill.open .email-slider { opacity: 1; transform: translateX(0); padding: 0 12px; } .email-slider a { color: var(--text-primary); font-family: monospace; font-weight: bold; font-size: 0.9rem; text-decoration: none; }
+        /* ========================================= */
+        /* --- صندوق المظهر الحديث --- */
+        /* ========================================= */
+        .modern-theme-card { padding: 15px !important; display: flex; justify-content: center; align-items: center; }
+        
+        .scenery-toggle {
+            width: 100%; height: 90px; background: #020617; border-radius: 24px;
+            position: relative; cursor: pointer; border: 1px solid var(--bento-border);
+            overflow: hidden; display: flex; align-items: center; justify-content: center;
+            transition: background 1s ease, border-color 0.4s; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .scenery-toggle.is-day { background: #bae6fd; border-color: #7dd3fc;}
+        
+        .theme-icon-container { position: relative; width: 40px; height: 40px; z-index: 10; }
+        .moon-icon, .sun-icon { 
+            position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; 
+            font-size: 32px; transition: 1s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+        
+        .moon-icon { color: #f8fafc; transform: translateY(0); opacity: 1; text-shadow: 0 0 20px rgba(255,255,255,0.5); }
+        .sun-icon { color: #f59e0b; transform: translateY(40px); opacity: 0; text-shadow: 0 0 30px rgba(245, 158, 11, 0.6); }
+        
+        .is-day .moon-icon { transform: translateY(-40px); opacity: 0; }
+        .is-day .sun-icon { transform: translateY(0); opacity: 1; }
+        
+        .star { position: absolute; background: white; border-radius: 50%; }
+        .star-1 { width: 3px; height: 3px; top: 25px; left: 30%; animation: pulse-star 2s infinite; }
+        .star-2 { width: 4px; height: 4px; top: 45px; right: 25%; animation: pulse-star 2s infinite 1s; }
+        .is-day .star { opacity: 0; }
+        @keyframes pulse-star { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; box-shadow: 0 0 5px white; } }
+
+        /* ========================================= */
+        /* --- الفوتر --- */
+        /* ========================================= */
+        .page-footer { text-align: center; padding-bottom: 40px; display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; max-width: 800px; opacity: 0; transition: opacity 0.8s ease; } 
+        .page-footer.visible { opacity: 1; }
+        .version-badge { color: var(--accent); font-size: 0.95rem; font-weight: 900; font-family: monospace; letter-spacing: 2px; margin-bottom: 5px; }
+        
+        .contact-pill { display: flex; align-items: center; background: var(--bento-bg); border-radius: 30px; padding: 5px; overflow: hidden; transition: max-width 0.4s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s; max-width: 46px; box-shadow: var(--bento-shadow); border: 1px solid var(--bento-border); direction: ltr; } 
+        .contact-pill.open { max-width: 300px; border-color: var(--accent); }
+        
+        .envelope-btn { min-width: 36px; height: 36px; border-radius: 50%; background: transparent; color: var(--text-secondary); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.3s, color 0.3s; } 
+        .contact-pill.open .envelope-btn { background: var(--accent); color: white; } 
+        .envelope-btn i { font-size: 1.1rem; }
+        
+        .email-slider { opacity: 0; transform: translateX(-10px); transition: all 0.4s ease; white-space: nowrap; } 
+        .contact-pill.open .email-slider { opacity: 1; transform: translateX(0); padding: 0 15px; } 
+        .email-slider a { color: var(--text-primary); font-family: monospace; font-weight: bold; font-size: 0.9rem; text-decoration: none; }
 
         @media (max-width: 600px) {
-            .bento-box { padding: 20px 15px; } .welcome-bento { flex-direction: column; align-items: flex-start; gap: 15px; } .header-icon { width: 60px; height: 60px; font-size: 1.5rem; } .welcome-text h1 { font-size: 1.3rem; }
-            .section-card { min-width: 240px; padding: 15px; } .sc-icon { width: 45px; height: 45px; font-size: 1.2rem; }
-            .exam-table th, .exam-table td { padding: 12px 10px; font-size: 0.9rem; } .subject-name { font-size: 1rem; } .time-badge { padding: 4px 8px; font-size: 0.8rem; } .table-link { padding: 5px 10px; font-size: 0.8rem; }
-            
+            .bento-box { padding: 25px 20px; border-radius: 28px; } 
+            .welcome-bento { flex-direction: column; align-items: flex-start; gap: 15px; } 
+            .header-icon { width: 60px; height: 60px; font-size: 1.5rem; } 
+            .welcome-text h1 { font-size: 1.3rem; }
+            .section-card { min-width: 240px; padding: 20px; border-radius: 20px; } 
+            .sc-icon { width: 45px; height: 45px; font-size: 1.2rem; }
+            .exam-table th, .exam-table td { padding: 12px 10px; font-size: 0.9rem; } 
+            .subject-name { font-size: 1rem; } 
+            .time-badge { padding: 4px 8px; font-size: 0.8rem; } 
+            .table-link { padding: 5px 10px; font-size: 0.8rem; }
             .scroll-hint { display: block; }
             .table-fade-edge { opacity: 1; }
             .task-header { flex-direction: column; gap: 4px; align-items: flex-start; }
             .task-card { padding: 15px 12px; }
+            .modern-btn-grid { gap: 10px; }
+            .eab-text { font-size: 0.85rem; }
+            .eab-btn { padding: 8px 14px; font-size: 0.85rem; width: 100%; justify-content: center; }
         }
     </style>
 </head>
 <body class="preload no-scroll"> 
+
+    <script>
+        if ((localStorage.getItem('theme') || 'light') === 'light') {
+            document.body.classList.add('light-mode');
+        }
+    </script>
 
     <div class="news-ticker no-tap-highlight">
         <div class="ticker-text">
@@ -519,10 +452,7 @@
                         <i class="fa-solid fa-thumbtack"></i> الإعلانات والمهام
                     </div>
                 </div>
-                <div class="tasks-container" id="tasks-container">
-                    <!-- سيتم حقن المهام هنا عبر الجافاسكربت -->
-                </div>
-                <!-- نقاط التنقل -->
+                <div class="tasks-container" id="tasks-container"></div>
             </div>
 
             <div class="sections-slider no-tap-highlight">
@@ -549,7 +479,7 @@
                         <div class="title-main-part">
                             <i class="fa-regular fa-clock"></i> توقيت المحاضرات
                         </div>
-                        <span class="ramadan-note">( توقيت شهر رمضان المبارك )</span>
+                        <span class="ramadan-note">( توقيت شهر رمضان )</span>
                     </div>
                     <div id="accordion-container" class="accordion-container"></div>
                 </div>
@@ -561,7 +491,7 @@
                         <div class="title-main-part">
                             <i class="fa-solid fa-file-signature"></i> جدول الاختبارات الفترية
                         </div>
-                        <span class="ramadan-note">الوزن: 15% من المجموع</span>
+                        <span class="ramadan-note">الوزن: 15%</span>
                     </div>
                     
                     <div class="table-scroll-container">
@@ -587,7 +517,12 @@
                                             <div class="date-main">١٣ رمضان</div>
                                             <div class="date-sub"><i class="fa-regular fa-calendar"></i> ٢ مارس</div>
                                         </td>
-                                        <td><span class="time-badge"><i class="fa-regular fa-clock"></i> سيحدد لاحقاً</span></td>
+                                        <td>
+                                            <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                                                <span class="time-badge"><i class="fa-regular fa-clock"></i> 02:50 م - 04:05 م</span>
+                                                <div class="exam-countdown" data-exam-date="2026-03-02T14:50:00">جاري الحساب...</div>
+                                            </div>
+                                        </td>
                                         <td>
                                             <div class="links-flex">
                                                 <a href="https://drive.google.com/file/d/1Als7w3U1kW_TDdfeA1WP1K1X2ulKD1sB/view?usp=drivesdk" target="_blank" class="table-link no-tap-highlight"><i class="fa-solid fa-link"></i> Ch 1</a>
@@ -604,7 +539,12 @@
                                             <div class="date-main">١٥ رمضان</div>
                                             <div class="date-sub"><i class="fa-regular fa-calendar"></i> ٤ مارس</div>
                                         </td>
-                                        <td><span class="time-badge"><i class="fa-regular fa-clock"></i> سيحدد لاحقاً</span></td>
+                                        <td>
+                                            <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                                                <span class="time-badge"><i class="fa-regular fa-clock"></i> 03:30 م - 04:05 م</span>
+                                                <div class="exam-countdown" data-exam-date="2026-03-04T15:30:00">جاري الحساب...</div>
+                                            </div>
+                                        </td>
                                         <td>
                                             <div class="links-flex">
                                                 <a href="https://drive.google.com/file/d/10Q-z3Xkh_XsYhuOnVzGzmCaEofWAF5vc/view?usp=drivesdk" target="_blank" class="table-link no-tap-highlight"><i class="fa-solid fa-link"></i> Ch 1</a>
@@ -620,14 +560,14 @@
                     </div>
 
                     <div class="exam-footer-note">
-                        <i class="fa-solid fa-globe"></i> الاختبارات ستقام <strong>عن بُعد</strong> | يرجى متابعة التحديثات لمعرفة الوقت المحدد.
+                        <i class="fa-solid fa-globe"></i> الاختبارات ستقام <strong>عن بُعد</strong> | يرجى الحضور في موعد المحاضرة تماماً.
                     </div>
                 </div>
             </div>
 
             <div class="modern-btn-grid">
                 <a href="https://lms.ju.edu.sa/" class="modern-btn" onclick="handleLinkClick(event, this)">
-                    <div class="btn-icon-box"><i class="fa-solid fa-chalkboard-user"></i></div>
+                    <div class="btn-icon-box"><i class="fa-solid fa-graduation-cap"></i></div>
                     <span class="btn-title">بلاك بورد</span>
                 </a>
                 <a href="https://edug.ju.edu.sa/ju/init" class="modern-btn" onclick="handleLinkClick(event, this)">
@@ -636,48 +576,21 @@
                 </a>
             </div>
 
-            <div class="bento-box" id="theme-card">
-                <div class="bento-title">
-                    <div class="title-main-part"><i class="fa-solid fa-palette"></i> المظهر</div>
-                </div>
-                <div class="scenery-bento-content">
-                    <div class="scenery-toggle no-tap-highlight" id="theme-toggle" title="اضغط لتغيير المظهر">
-                         <svg class="scenery-elements" viewBox="0 0 260 140" preserveAspectRatio="none">
-                            <defs><linearGradient id="meteorGrad" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1" /><stop offset="100%" stop-color="#ffffff" stop-opacity="0" /></linearGradient></defs>
-                            <g class="night-elements">
-                                <circle cx="40" cy="30" r="1.5" fill="#fff" opacity="0.6" /><circle cx="180" cy="25" r="2" fill="#fff" opacity="0.8" /><circle cx="120" cy="50" r="1" fill="#fff" opacity="0.4" /><circle cx="80" cy="20" r="1.5" fill="#fff" opacity="0.7" /><circle cx="210" cy="60" r="1" fill="#fff" opacity="0.5" /><circle cx="20" cy="65" r="1.5" fill="#fff" opacity="0.9" />
-                                <g class="meteor meteor-1"><line x1="0" y1="0" x2="35" y2="-35" stroke="url(#meteorGrad)" stroke-width="1.5" /><circle cx="0" cy="0" r="1.5" fill="#ffffff" /></g><g class="meteor meteor-2"><line x1="0" y1="0" x2="35" y2="-35" stroke="url(#meteorGrad)" stroke-width="1.5" /><circle cx="0" cy="0" r="1.5" fill="#ffffff" /></g>
-                                <g class="airplane-container"><path d="M -12 0 L 8 0 L 12 2 L 8 4 L -12 4 L -14 2 Z" fill="#64748b" /><path d="M 0 0 L -5 -6 L 4 0 Z" fill="#475569" /><path d="M 0 4 L -5 10 L 4 4 Z" fill="#334155" /><path d="M -12 0 L -16 -5 L -8 0 Z" fill="#475569" /><circle cx="-1" cy="5" r="1.5" fill="#ef4444" class="plane-light-red" /><circle cx="-14" cy="-5" r="1.5" fill="#ffffff" class="plane-light-white" /></g>
-                                <circle cx="60" cy="110" r="1.5" class="firefly ff-1" /><circle cx="140" cy="120" r="2" class="firefly ff-2" /><circle cx="200" cy="115" r="1.5" class="firefly ff-3" />
-                            </g>
-                            <g class="day-elements">
-                                <g class="cloud cloud-1"><path d="M 20,15 Q 25,5 35,10 Q 45,0 55,10 Q 65,5 70,15 Q 75,25 65,25 L 25,25 Q 15,25 20,15 Z" /></g>
-                                <g class="cloud cloud-2"><path d="M 20,15 Q 25,5 35,10 Q 45,0 55,10 Q 65,5 70,15 Q 75,25 65,25 L 25,25 Q 15,25 20,15 Z" /></g>
-                                <g class="bee-container"><g class="bee-body"><ellipse cx="0" cy="0" rx="4" ry="3" fill="#fbbf24" /><line x1="-2" y1="-2.5" x2="-2" y2="2.5" stroke="#1e293b" stroke-width="1.5" /><line x1="1" y1="-2.8" x2="1" y2="2.8" stroke="#1e293b" stroke-width="1.5" /><ellipse cx="1" cy="-3" rx="2.5" ry="1.5" fill="#fff" opacity="0.6" transform="rotate(-20)" /></g></g>
-                                <g class="birds-group"><g class="birds-container"><g class="bird-wrapper-1"><path d="M 0,-3 Q 3,-6 6,0 Q 9,-6 12,-3" class="bird-path" transform="translate(40, 30)" /></g><g class="bird-wrapper-2"><path d="M 0,-3 Q 3,-6 6,0 Q 9,-6 12,-3" class="bird-path" transform="translate(53, 38) scale(0.8)" /></g><g class="bird-wrapper-3"><path d="M 0,-3 Q 3,-6 6,0 Q 9,-6 12,-3" class="bird-path" transform="translate(142, 25) scale(0.9)" /></g></g></g>
-                            </g>
-                        </svg>
-                        <div class="pivot-sun" id="pivot-sun"><div class="celestial-body sun"><i class="fa-solid fa-sun"></i></div></div>
-                        <div class="pivot-moon" id="pivot-moon"><div class="celestial-body moon"><i class="fa-solid fa-moon"></i></div></div>
-                        <svg class="scenery-elements" style="position: absolute; bottom: -2px; left: 0; width: 100%; height: 60px; z-index: 10;" viewBox="0 0 260 60" preserveAspectRatio="none">
-                            <path d="M -20,60 Q 40,10 130,40 T 280,60 Z" class="hill-back" />
-                            <path d="M -20,60 Q 60,30 160,50 T 280,60 Z" class="hill-front" />
-                            <g class="day-elements">
-                                <g class="flower-group" style="transform-origin: 50px 60px;"><line x1="50" y1="60" x2="50" y2="40" stroke="#16a34a" stroke-width="2" stroke-linecap="round" /><circle cx="50" cy="40" r="4" fill="#fef08a" /><circle cx="45" cy="40" r="3" fill="#f87171" /><circle cx="55" cy="40" r="3" fill="#f87171" /><circle cx="50" cy="35" r="3" fill="#f87171" /><circle cx="50" cy="45" r="3" fill="#f87171" /></g>
-                                <g class="flower-group" style="transform-origin: 200px 60px;"><line x1="200" y1="60" x2="200" y2="45" stroke="#16a34a" stroke-width="1.5" stroke-linecap="round" /><circle cx="200" cy="45" r="3" fill="#fef08a" /><circle cx="196" cy="45" r="2.5" fill="#a78bfa" /><circle cx="204" cy="45" r="2.5" fill="#a78bfa" /><circle cx="200" cy="41" r="2.5" fill="#a78bfa" /><circle cx="200" cy="49" r="2.5" fill="#a78bfa" /></g>
-                                <g class="flower-group" style="transform-origin: 130px 60px;"><line x1="130" y1="60" x2="130" y2="50" stroke="#16a34a" stroke-width="1.5" stroke-linecap="round" /><circle cx="130" cy="50" r="2" fill="#fef08a" /><circle cx="127" cy="50" r="2" fill="#60a5fa" /><circle cx="133" cy="50" r="2" fill="#60a5fa" /><circle cx="130" cy="47" r="2" fill="#60a5fa" /><circle cx="130" cy="53" r="2" fill="#60a5fa" /></g>
-                            </g>
-                            <rect x="0" y="58" width="260" height="5" class="hill-front" />
-                        </svg>
+            <div class="bento-box modern-theme-card">
+                <div class="scenery-toggle no-tap-highlight" id="theme-toggle" title="انقر لتغيير المظهر">
+                    <div class="theme-icon-container">
+                        <i class="fa-solid fa-moon moon-icon"></i>
+                        <i class="fa-solid fa-sun sun-icon"></i>
                     </div>
-                    <p class="theme-instruction">انقر للتبديل</p>
+                    <div class="star star-1"></div>
+                    <div class="star star-2"></div>
                 </div>
             </div>
 
         </div>
 
         <footer class="page-footer" id="page-footer">
-            <div class="version-badge">V.1.9</div>
+            <div class="version-badge">V.2.0</div>
             <div class="contact-pill no-tap-highlight" id="contact-pill">
                 <button class="envelope-btn no-tap-highlight" id="envelope-btn" title="تواصل معنا">
                     <i class="fa-solid fa-envelope"></i>
@@ -692,23 +605,25 @@
 
     <script>
         // =========================================================
-        // --- إدارة الإعلانات والمهام (تتفاعل زمنياً) ---
+        // --- وظيفة الانتقال السريع لجدول الاختبارات ---
+        // =========================================================
+        window.goToExamsView = function(e) {
+            if(e) e.stopPropagation();
+            const examCard = document.querySelector('.section-card[data-target="exams-view"]');
+            if(examCard) examCard.click();
+        };
+
+        // =========================================================
+        // --- إدارة الإعلانات والمهام ---
         // =========================================================
         const dateNowForTasks = new Date();
-        
-        // أوقات إعلان الاختبار
         const quizEndTime = new Date('2026-02-25T23:00:00'); 
         const quizHideTime = new Date('2026-02-26T00:00:00'); 
-        
-        // وقت اختفاء إعلان الساعات المكتبية (الأحد 1 مارس 2026 الساعة 11:00 مساءً)
         const officeHoursHideTime = new Date('2026-03-01T23:00:00');
-
         let announcements = [];
 
-        // 1. إعلان الاختبار
         if (dateNowForTasks < quizHideTime) {
             const isQuizEnded = dateNowForTasks >= quizEndTime; 
-            
             announcements.push({
                 type: isQuizEnded ? 'ended' : 'urgent', 
                 icon: 'fa-solid fa-stopwatch',
@@ -718,13 +633,9 @@
             });
         }
 
-        // 2. إعلان الساعات المكتبية
         if (dateNowForTasks < officeHoursHideTime) {
             announcements.push({
-                type: 'info',
-                icon: 'fa-solid fa-chalkboard-user',
-                title: 'الساعات المكتبية',
-                course: 'رياضيات الحاسب - مراجعة عامة',
+                type: 'info', icon: 'fa-solid fa-chalkboard-user', title: 'الساعات المكتبية', course: 'رياضيات الحاسب - مراجعة عامة',
                 desc: 'جلسة نقاش مفتوحة لمراجعة الشروحات السابقة.<br><strong style="color: var(--accent-orange);">* الحضور اختياري (غير إلزامي)</strong>.<br><i class="fa-regular fa-clock" style="margin-left: 4px;"></i>الموعد: الأحد الساعة 10:00 مساءً.'
             });
         }
@@ -734,63 +645,36 @@
 
         if (announcements.length > 0) {
             tasksBoard.style.display = 'block';
-            
             tasksContainer.innerHTML = announcements.map(task => `
                 <div class="task-card ${task.type}">
                     <div class="task-icon"><i class="${task.icon}"></i></div>
                     <div class="task-content">
-                        <div class="task-header">
-                            <h4 class="task-title">${task.title}</h4>
-                            <span class="task-course">${task.course}</span>
-                        </div>
+                        <div class="task-header"><h4 class="task-title">${task.title}</h4><span class="task-course">${task.course}</span></div>
                         <p class="task-desc">${task.desc}</p>
                     </div>
-                </div>
-            `).join('');
+                </div>`).join('');
 
             if (announcements.length > 1) {
                 const dotsContainer = document.createElement('div');
                 dotsContainer.className = 'slider-dots';
-                
-                announcements.forEach((_, index) => {
-                    dotsContainer.innerHTML += `<div class="dot ${index === 0 ? 'active' : ''}" data-index="${index}"></div>`;
-                });
-                
+                announcements.forEach((_, index) => { dotsContainer.innerHTML += `<div class="dot ${index === 0 ? 'active' : ''}" data-index="${index}"></div>`; });
                 tasksBoard.appendChild(dotsContainer);
 
                 const dots = document.querySelectorAll('.slider-dots .dot');
-                
                 tasksContainer.addEventListener('scroll', () => {
-                    const scrollLeft = Math.abs(tasksContainer.scrollLeft);
-                    const cardWidth = tasksContainer.clientWidth;
-                    const gap = 15; // المسافة بين البطاقات
-                    const currentIndex = Math.round(scrollLeft / (cardWidth + gap));
-
-                    dots.forEach((dot, index) => {
-                        if (index === currentIndex) {
-                            dot.classList.add('active');
-                        } else {
-                            dot.classList.remove('active');
-                        }
-                    });
+                    const currentIndex = Math.round(Math.abs(tasksContainer.scrollLeft) / (tasksContainer.clientWidth + 15));
+                    dots.forEach((dot, index) => dot.classList.toggle('active', index === currentIndex));
                 });
-
                 dots.forEach(dot => {
                     dot.addEventListener('click', (e) => {
-                        const index = parseInt(e.target.getAttribute('data-index'));
-                        const cardWidth = tasksContainer.clientWidth;
-                        const gap = 15; 
-                        tasksContainer.scrollTo({
-                            left: (document.dir === 'rtl' ? -1 : 1) * (index * (cardWidth + gap)),
-                            behavior: 'smooth'
-                        });
+                        tasksContainer.scrollTo({ left: (document.dir === 'rtl' ? -1 : 1) * (parseInt(e.target.getAttribute('data-index')) * (tasksContainer.clientWidth + 15)), behavior: 'smooth' });
                     });
                 });
             }
         }
 
         // =========================================================
-        // --- نظام السحب واختيار البطاقات (Slider Cards للأسفل) ---
+        // --- نظام السحب واختيار البطاقات ---
         // =========================================================
         const sectionCards = document.querySelectorAll('.section-card');
         const tabContents = document.querySelectorAll('.tab-content-section');
@@ -804,29 +688,21 @@
                 const targetId = card.getAttribute('data-target');
                 document.getElementById(targetId).classList.add('active');
                 card.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-
-                if(targetId === 'classes-view') { setTimeout(updateLiveTimeline, 50); }
+                if(targetId === 'classes-view') setTimeout(updateLiveTimeline, 50);
             });
         });
 
-        // =========================================================
-        // --- منطق إخفاء ظل الجدول عند السحب لأقصى اليسار ---
-        // =========================================================
         const tableWrapper = document.getElementById('exam-table-wrapper');
         const tableFade = document.getElementById('table-fade');
-        
         if (tableWrapper && tableFade) {
             tableWrapper.addEventListener('scroll', () => {
-                if (tableWrapper.scrollLeft <= -(tableWrapper.scrollWidth - tableWrapper.clientWidth - 10)) {
-                    tableFade.style.opacity = '0';
-                } else {
-                    if(window.innerWidth <= 600) { tableFade.style.opacity = '1'; }
-                }
+                if (tableWrapper.scrollLeft <= -(tableWrapper.scrollWidth - tableWrapper.clientWidth - 10)) tableFade.style.opacity = '0';
+                else if(window.innerWidth <= 600) tableFade.style.opacity = '1';
             });
         }
 
         // =========================================================
-        // --- الأنيميشن البطل (Hero Animation) ---
+        // --- الأنيميشن البطل (من الإصدار 1.8) ---
         // =========================================================
         window.addEventListener('load', () => {
             const splash = document.getElementById('cyber-splash');
@@ -856,8 +732,7 @@
                 splashShield.style.transition = 'transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.8s';
                 splashShield.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(${scale})`;
                 
-                document.body.classList.remove('preload');
-                document.body.classList.remove('no-scroll');
+                document.body.classList.remove('preload', 'no-scroll');
 
                 setTimeout(() => {
                     headerShield.style.opacity = '1';
@@ -869,7 +744,7 @@
         });
 
         // =========================================================
-        // --- الروابط والمظهر ---
+        // --- الروابط والمظهر الحديث ---
         // =========================================================
         function handleLinkClick(event, element) {
             event.preventDefault(); 
@@ -879,55 +754,24 @@
         }
 
         const contactPill = document.getElementById('contact-pill');
-        const envelopeBtn = document.getElementById('envelope-btn');
-        envelopeBtn.addEventListener('click', (e) => { e.stopPropagation(); contactPill.classList.toggle('open'); });
-        document.addEventListener('click', (e) => { if (!contactPill.contains(e.target) && contactPill.classList.contains('open')) { contactPill.classList.remove('open'); } });
+        document.getElementById('envelope-btn').addEventListener('click', (e) => { e.stopPropagation(); contactPill.classList.toggle('open'); });
+        document.addEventListener('click', (e) => { if (!contactPill.contains(e.target)) contactPill.classList.remove('open'); });
 
-        const skyToggle = document.getElementById('theme-toggle');
-        const themeCard = document.getElementById('theme-card');
-        const pivotSun = document.getElementById('pivot-sun');
-        const pivotMoon = document.getElementById('pivot-moon');
+        const themeToggle = document.getElementById('theme-toggle');
         const body = document.body;
-        let isThemeAnimating = false;
-        
-        const currentTheme = localStorage.getItem('theme') || 'dark'; 
-        let isLight = (currentTheme === 'light');
+        let isLight = ((localStorage.getItem('theme') || 'light') === 'light');
 
-        if (isLight) {
-            body.classList.add('light-mode'); skyToggle.classList.add('is-day');
-            pivotSun.className = 'pivot-sun pos-top has-transition'; pivotMoon.className = 'pivot-moon pos-right has-transition';
-        } else {
-            skyToggle.classList.remove('is-day');
-            pivotSun.className = 'pivot-sun pos-right has-transition'; pivotMoon.className = 'pivot-moon pos-top has-transition';
-        }
+        if (isLight) themeToggle.classList.add('is-day');
 
-        skyToggle.addEventListener('click', () => {
-            if (isThemeAnimating) return; 
-            isThemeAnimating = true; isLight = !isLight; 
-            themeCard.classList.add('theme-elevated');
-            
-            if (isLight) {
-                skyToggle.classList.add('is-day');
-                pivotSun.classList.remove('pos-right'); pivotSun.classList.add('pos-top');
-                pivotMoon.classList.remove('pos-top'); pivotMoon.classList.add('pos-left');
-                setTimeout(() => { pivotMoon.classList.remove('has-transition'); pivotMoon.classList.remove('pos-left'); pivotMoon.classList.add('pos-right'); void pivotMoon.offsetWidth; pivotMoon.classList.add('has-transition'); }, 850);
-            } else {
-                skyToggle.classList.remove('is-day');
-                pivotMoon.classList.remove('pos-right'); pivotMoon.classList.add('pos-top');
-                pivotSun.classList.remove('pos-top'); pivotSun.classList.add('pos-left');
-                setTimeout(() => { pivotSun.classList.remove('has-transition'); pivotSun.classList.remove('pos-left'); pivotSun.classList.add('pos-right'); void pivotSun.offsetWidth; pivotSun.classList.add('has-transition'); }, 850);
-            }
-
-            setTimeout(() => {
-                if (isLight) { body.classList.add('light-mode'); localStorage.setItem('theme', 'light'); } 
-                else { body.classList.remove('light-mode'); localStorage.setItem('theme', 'dark'); }
-                themeCard.classList.remove('theme-elevated');
-                isThemeAnimating = false;
-            }, 2500); 
+        themeToggle.addEventListener('click', () => {
+            isLight = !isLight; 
+            themeToggle.classList.toggle('is-day');
+            if (isLight) { body.classList.add('light-mode'); localStorage.setItem('theme', 'light'); } 
+            else { body.classList.remove('light-mode'); localStorage.setItem('theme', 'dark'); }
         });
 
         // =========================================================
-        // --- بناء الجدول والتايم لاين ---
+        // --- بناء الجدول والتايم لاين والتنبيه بالاختبارات ---
         // =========================================================
         const rawScheduleJSON = {
           "schedule": {
@@ -957,6 +801,11 @@
 
         const professorMap = { "ADIT_1110": "د. محمود عبدالمنعم", "ADCY_1111": "د. عبدالعزيز الدمراني", "ADEN_1110": "د. جلال الربيع", "ADCY_1112": "د. عمرو أبوزيد", "ADCY_1113": "د. أسامة شاهين" };
         
+        const upcomingExams = [
+            { day: "Monday", name: "أساسيات الأمن السيبراني", dateObj: new Date('2026-03-02T14:50:00') },
+            { day: "Wednesday", name: "رياضيات الحاسب", dateObj: new Date('2026-03-04T15:30:00') }
+        ];
+
         const upcomingHolidays = [];
         const nowInit = new Date();
 
@@ -965,12 +814,8 @@
 
         if (nowInit > longWeekendShowTime && nowInit <= longWeekendHideTime) {
             upcomingHolidays.push({ 
-                dateObj: new Date('2026-03-01T00:00:00'), 
-                endDateObj: new Date('2026-03-01T23:59:59'), 
-                targetDay: "Sunday", 
-                title: "إجازة مطولة", 
-                desc: "إجازة نهاية أسبوع مطولة لجميع الطلاب والمنسوبين", 
-                icon: "fa-solid fa-bed" 
+                dateObj: new Date('2026-03-01T00:00:00'), endDateObj: new Date('2026-03-01T23:59:59'), 
+                targetDay: "Sunday", title: "إجازة مطولة", desc: "إجازة نهاية أسبوع مطولة لجميع الطلاب والمنسوبين", icon: "fa-solid fa-bed" 
             });
         }
         
@@ -980,12 +825,7 @@
         const formatTime = (t) => { const [h, m] = t.split(':').map(Number); const suffix = h >= 12 ? 'م' : 'ص'; let H = h > 12 ? h - 12 : h; if (H === 0 && h !== 12) H = 12; if (h === 12) H = 12; return `${H}:${m.toString().padStart(2,'0')} ${suffix}`; };
         const timeToMins = (t) => { const [h, m] = t.split(':').map(Number); return (h * 60) + m; };
 
-        const updateDateDisplay = () => {
-            const now = new Date();
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            document.getElementById('current-date').innerText = now.toLocaleDateString('ar-SA', options);
-        };
-        updateDateDisplay();
+        document.getElementById('current-date').innerText = nowInit.toLocaleDateString('ar-SA', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
         const accordionContainer = document.getElementById('accordion-container');
         const currentDayIndexInit = nowInit.getDay();
@@ -1001,23 +841,17 @@
         }
         if (targetDayIndex === 5 || targetDayIndex === 6 || targetDayIndex > 6) targetDayIndex = 0;
 
-        function createAccordionItem(title, contentHTML, isHolidayDay = false, isHighlight = false, badgeText = "") {
+        function createAccordionItem(title, contentHTML, isHolidayDay = false, isHighlight = false, badgeText = "", hasExam = false) {
             const item = document.createElement('div');
-            item.className = `accordion-item ${isHolidayDay ? 'is-holiday-day' : ''}`;
-            if (isHighlight) item.classList.add('highlight-day');
+            item.className = `accordion-item ${isHolidayDay ? 'is-holiday-day' : ''} ${hasExam ? 'has-exam' : ''}`;
             
             const header = document.createElement('button');
             header.className = 'accordion-header';
-            let titleHTML = `<span>${title}</span>`;
-            if (badgeText) titleHTML = `<span>${title} <span class="today-badge">${badgeText}</span></span>`;
-            header.innerHTML = `${titleHTML}<i class="fa-solid fa-plus icon-plus"></i>`;
+            header.innerHTML = `<span>${title} ${badgeText ? `<span class="today-badge">${badgeText}</span>` : ''}</span><i class="fa-solid fa-chevron-down icon-plus"></i>`;
 
             const panel = document.createElement('div');
             panel.className = 'accordion-panel';
-            const panelContent = document.createElement('div');
-            panelContent.className = 'panel-content';
-            panelContent.innerHTML = contentHTML;
-            panel.appendChild(panelContent);
+            panel.innerHTML = `<div class="panel-content">${contentHTML}</div>`;
 
             header.addEventListener('click', function() {
                 const isActive = item.classList.contains('active');
@@ -1030,27 +864,41 @@
             item.appendChild(header); item.appendChild(panel); return item;
         }
 
-        const sortedDays = Object.entries(rawScheduleJSON.schedule).sort((a, b) => dayMapping[a[0]] - dayMapping[b[0]]);
-
-        sortedDays.forEach(([englishDay, courses]) => {
+        Object.entries(rawScheduleJSON.schedule).sort((a, b) => dayMapping[a[0]] - dayMapping[b[0]]).forEach(([englishDay, courses]) => {
             const dayName = arabicDayNames[englishDay]; const dayIndex = dayMapping[englishDay];
             let contentHTML = ''; let isHolidayDay = false; let displayTitle = dayName;
             
             const activeHoliday = upcomingHolidays.find(h => h.targetDay === englishDay && nowInit <= h.endDateObj);
+            const activeExam = upcomingExams.find(e => e.day === englishDay && nowInit < e.dateObj);
+            let hasExam = false; let examBanner = '';
+            
+            if (activeExam) {
+                hasExam = true;
+                displayTitle = `${dayName} <span class="exam-day-badge"><i class="fa-solid fa-star"></i> اختبار</span>`;
+                examBanner = `
+                    <div class="exam-alert-banner">
+                        <div class="eab-text">
+                            <i class="fa-solid fa-star"></i>
+                            <span>يوجد اختبار في مادة <strong>${activeExam.name}</strong> هذا اليوم.</span>
+                        </div>
+                        <button class="eab-btn no-tap-highlight" onclick="goToExamsView(event)">
+                            التفاصيل والوقت <i class="fa-solid fa-arrow-left"></i>
+                        </button>
+                    </div>`;
+            }
 
             if (activeHoliday) {
                 isHolidayDay = true; displayTitle = `${dayName} (إجازة)`;
                 contentHTML = `<div class="holiday-card"><div class="holiday-icon-box"><i class="${activeHoliday.icon}"></i></div><div class="holiday-content"><h3>${activeHoliday.title}</h3><p>${activeHoliday.desc}</p><span class="holiday-date">${activeHoliday.dateObj.toLocaleDateString('ar-SA', { month: 'long', day: 'numeric' })}</span></div></div>`;
             } else {
                 courses.sort((a, b) => a.start_time.localeCompare(b.start_time));
-                contentHTML = `<div class="timeline-wrapper" data-day="${dayIndex}"><div class="timeline-track-bg"></div><div class="timeline-track-fill"></div><div class="timeline-pulsing-dot" style="opacity: 0;"></div><div class="timeline-container">`;
+                contentHTML = examBanner + `<div class="timeline-wrapper" data-day="${dayIndex}"><div class="timeline-track-bg"></div><div class="timeline-track-fill"></div><div class="timeline-pulsing-dot" style="opacity: 0;"></div><div class="timeline-container">`;
                 
                 contentHTML += courses.map(course => {
                     const profName = professorMap[course.course_code.split(' ')[0]] || "";
                     const formattedCode = course.course_code.replace('_', ' ');
                     let displayName = course.course_name.replace(/(\(.*?\))/g, '<span class="course-note">$1</span>');
                     const timeHeaderHTML = `${formatTime(course.start_time)} - ${formatTime(course.end_time)}`;
-
                     return `<div class="timeline-item" data-start="${timeToMins(course.start_time)}" data-end="${timeToMins(course.end_time)}" data-original-time="${timeHeaderHTML}"><div class="time-header">${timeHeaderHTML}</div><h3 class="course-title">${displayName}</h3><div class="course-meta"><span><span class="course-code">${formattedCode}</span></span><span><i class="fa-solid fa-user-tie"></i> ${profName}</span></div></div>`;
                 }).join('');
                 contentHTML += `</div></div>`;
@@ -1058,19 +906,16 @@
 
             let isHighlight = (dayIndex === targetDayIndex);
             let badgeText = isHighlight ? ((currentDayIndexInit === dayIndex) ? "اليوم" : "القادم") : "";
-            const item = createAccordionItem(displayTitle, contentHTML, isHolidayDay, isHighlight, badgeText);
+            const item = createAccordionItem(displayTitle, contentHTML, isHolidayDay, isHighlight, badgeText, hasExam);
             accordionContainer.appendChild(item);
 
-            if(isHighlight) { setTimeout(() => { item.querySelector('.accordion-header').click(); }, 2000); }
+            if(isHighlight) setTimeout(() => item.querySelector('.accordion-header').click(), 2000);
         });
 
         function updateLiveTimeline() {
             if(!document.getElementById('classes-view').classList.contains('active')) return;
-
-            const dateNow = new Date();
-            const currentDayIndex = dateNow.getDay();
-            const currentMins = dateNow.getHours() * 60 + dateNow.getMinutes();
-            const currentSecs = currentMins * 60 + dateNow.getSeconds();
+            const dateNow = new Date(); const currentDayIndex = dateNow.getDay();
+            const currentSecs = (dateNow.getHours() * 60 + dateNow.getMinutes()) * 60 + dateNow.getSeconds();
             
             document.querySelectorAll('.timeline-wrapper').forEach(wrapper => {
                 const dayIndex = parseInt(wrapper.getAttribute('data-day'));
@@ -1099,7 +944,6 @@
                             const diffSec = endSecs - currentSecs;
                             const h = Math.floor(diffSec / 3600); const m = Math.floor((diffSec % 3600) / 60); const s = diffSec % 60;
                             let timeStr = h > 0 ? `${h}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}` : `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-                            
                             timeHeader.innerHTML = `<i class="fa-solid fa-satellite-dish fa-beat-fade"></i><span class="countdown-label">مباشر ·</span><span class="countdown-clock" dir="ltr">${timeStr}</span>`;
                             const progress = (currentSecs - startSecs) / (endSecs - startSecs);
                             dotY = itemTop + ((itemBottom - itemTop) * progress);
@@ -1116,7 +960,6 @@
                     else if (allPast) { wrapper.classList.remove('is-live-track'); pulsingDot.classList.add('resting'); dotY = wrapper.offsetHeight - 16; fillHeight = dotY - 16; pulsingDot.style.opacity = '1'; } 
                     else if (firstFutureTop !== null) { wrapper.classList.remove('is-live-track'); pulsingDot.classList.add('resting'); dotY = firstFutureTop; fillHeight = Math.max(0, dotY - 16); pulsingDot.style.opacity = fillHeight > 0 ? '1' : '0'; } 
                     else { fillHeight = 0; dotY = 16; pulsingDot.style.opacity = '0'; }
-                    
                     trackFill.style.height = `${Math.min(fillHeight, wrapper.offsetHeight - 32)}px`;
                     pulsingDot.style.top = `${Math.min(dotY, wrapper.offsetHeight - 16)}px`; 
                 } else { wrapper.classList.remove('is-live-track'); trackFill.style.height = `0`; pulsingDot.style.opacity = `0`; }
@@ -1124,6 +967,37 @@
         }
         updateLiveTimeline(); setInterval(updateLiveTimeline, 1000);
 
+        // --- تحديث العداد التنازلي لجدول الاختبارات ---
+        function updateExamCountdowns() {
+            const elements = document.querySelectorAll('.exam-countdown');
+            const now = new Date().getTime();
+            elements.forEach(el => {
+                const examDateString = el.getAttribute('data-exam-date');
+                if(!examDateString) return;
+                const distance = new Date(examDateString).getTime() - now;
+                if (distance < 0) {
+                    el.innerHTML = '<i class="fa-solid fa-check"></i> انتهى الاختبار';
+                    el.classList.add('ended'); el.classList.remove('urgent'); return;
+                }
+                const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                let text = 'متبقي: ';
+                if (d > 0) {
+                    text += (d === 1 ? 'يوم' : d === 2 ? 'يومان' : d <= 10 ? d + ' أيام' : d + ' يوماً');
+                    if (h > 0) text += ' و ' + (h === 1 ? 'ساعة' : h === 2 ? 'ساعتان' : h <= 10 ? h + ' ساعات' : h + ' ساعة');
+                } else if (h > 0) {
+                    text += (h === 1 ? 'ساعة' : h === 2 ? 'ساعتان' : h <= 10 ? h + ' ساعات' : h + ' ساعة');
+                    el.classList.add('urgent'); 
+                } else {
+                    text += (m === 1 ? 'دقيقة' : m === 2 ? 'دقيقتان' : m <= 10 ? m + ' دقائق' : m + ' دقيقة');
+                    el.classList.add('urgent');
+                }
+                el.innerHTML = '<i class="fa-solid fa-hourglass-half fa-spin-pulse" style="margin-left:6px; font-size:0.8rem;"></i> ' + text;
+            });
+        }
+        updateExamCountdowns(); setInterval(updateExamCountdowns, 60000);
+
     </script>
 </body>
-                </html>
+    </html>
