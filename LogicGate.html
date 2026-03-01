@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>أساسيات المنطق الرقمي - نسخة المصانع</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: '#020617', // Slate 950
+                        surface: '#0f172a', // Slate 900
+                        glass: 'rgba(30, 41, 59, 0.7)',
+                        primary: '#6366f1', // Indigo 500
+                        accent: '#a855f7', // Purple 500
+                        success: '#10b981', // Emerald 500
+                        danger: '#f43f5e', // Rose 500
+                    },
+                    fontFamily: {
+                        sans: ['Tajawal', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'neon': '0 0 15px rgba(99, 102, 241, 0.5)',
+                        'neon-green': '0 0 15px rgba(16, 185, 129, 0.5)',
+                        'neon-gold': '0 0 20px rgba(251, 191, 36, 0.6)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-image: radial-gradient(circle at 50% 0%, #1e1b4b 0%, #020617 60%);
+            background-attachment: fixed;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .overline { text-decoration: overline; }
+        .gate-eq-font { font-family: 'Times New Roman', serif; letter-spacing: 2px; }
+        .wire { fill: none; stroke-linecap: round; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .gate-body { fill: #0f172a; stroke: #94a3b8; stroke-width: 2.5; }
+        .wire-off { stroke: #334155; stroke-width: 3; }
+        .wire-on { stroke: #10b981; stroke-width: 3; filter: drop-shadow(0 0 6px #10b981); }
+        .rtl-flip { transform: scaleX(-1); transform-origin: center; }
+    </style>
+</head>
+<body class="text-slate-100 font-sans min-h-screen flex flex-col antialiased selection:bg-primary selection:text-white">
+
+    <!-- 1. شريط التنقل -->
+    <nav class="sticky top-0 z-50 bg-dark/60 backdrop-blur-xl border-b border-white/10 py-3">
+        <div class="flex gap-2 overflow-x-auto hide-scrollbar px-4 max-w-lg mx-auto" id="navContainer">
+            <!-- سيتم إضافة الأزرار هنا -->
+        </div>
+    </nav>
+
+    <main class="flex-1 p-4 max-w-lg mx-auto w-full flex flex-col gap-5 pb-10">
+
+        <!-- 2. بطاقة الشرح (الأعلى) -->
+        <section class="bg-glass rounded-3xl p-6 border border-white/10 shadow-2xl relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50"></div>
+            
+            <div class="flex justify-between items-start mb-4">
+                <div>
+                    <h1 class="text-4xl font-black tracking-tight text-white mb-1 drop-shadow-lg" id="gateTitle">AND</h1>
+                    <span class="text-xs font-semibold text-primary uppercase tracking-widest bg-primary/10 px-2 py-1 rounded">Logic Gate</span>
+                </div>
+                <div class="gate-eq-font text-2xl bg-black/50 px-5 py-2 rounded-xl border border-white/10 shadow-inner text-indigo-300" id="gateEq">
+                    Y = AB
+                </div>
+            </div>
+            
+            <div class="text-sm text-slate-300 leading-relaxed bg-slate-900/50 p-4 rounded-2xl border border-white/5 mb-4" id="gateDesc">
+                <!-- الوصف -->
+            </div>
+
+            <!-- مثال المصنع -->
+            <div class="bg-indigo-900/20 p-3 rounded-xl border border-indigo-500/20 flex gap-3 items-start">
+                <div class="bg-indigo-500/20 p-2 rounded-lg shrink-0">
+                    <svg class="w-5 h-5 text-indigo-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                </div>
+                <div>
+                    <h3 class="text-xs font-bold text-indigo-300 mb-1">تطبيق في المصنع / الحياة اليومية:</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed" id="gateExample">مثال...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. الرسم والمحاكاة (الوسط) -->
+        <section class="bg-glass rounded-3xl p-1 border border-white/10 shadow-2xl relative">
+            <div class="flex flex-col items-center p-5 gap-6">
+                
+                <div class="w-full flex items-center justify-between gap-1">
+                    
+                    <!-- أزرار التحكم (يمين) -->
+                    <div class="flex flex-col gap-8 z-20 w-24">
+                        <div class="relative group">
+                            <span class="absolute -right-6 top-1/2 -translate-y-1/2 text-sm font-bold text-slate-500 group-hover:text-white transition-colors">A</span>
+                            <label class="block cursor-pointer">
+                                <input type="checkbox" id="swA" class="sr-only peer" onchange="updateSim()">
+                                <div class="w-14 h-8 bg-slate-800 rounded-full border border-slate-600 peer-focus:ring-2 peer-focus:ring-primary peer-checked:bg-success/20 peer-checked:border-success transition-all relative overflow-hidden shadow-inner">
+                                    <div class="absolute top-1 left-1 bg-slate-400 w-6 h-6 rounded-full transition-all peer-checked:translate-x-6 peer-checked:bg-success peer-checked:shadow-[0_0_10px_#10b981]"></div>
+                                </div>
+                            </label>
+                        </div>
+
+                        <div class="relative group" id="containerB">
+                            <span class="absolute -right-6 top-1/2 -translate-y-1/2 text-sm font-bold text-slate-500 group-hover:text-white transition-colors">B</span>
+                            <label class="block cursor-pointer">
+                                <input type="checkbox" id="swB" class="sr-only peer" onchange="updateSim()">
+                                <div class="w-14 h-8 bg-slate-800 rounded-full border border-slate-600 peer-focus:ring-2 peer-focus:ring-primary peer-checked:bg-success/20 peer-checked:border-success transition-all relative overflow-hidden shadow-inner">
+                                    <div class="absolute top-1 left-1 bg-slate-400 w-6 h-6 rounded-full transition-all peer-checked:translate-x-6 peer-checked:bg-success peer-checked:shadow-[0_0_10px_#10b981]"></div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- الرسم SVG (مقلوب RTL) -->
+                    <div class="flex-1 h-32 relative flex items-center justify-center">
+                        <svg id="mainSvg" viewBox="0 0 200 100" preserveAspectRatio="xMidYMid meet" class="w-full h-full rtl-flip svg-content">
+                            <!-- Draw Here -->
+                        </svg>
+                    </div>
+
+                    <!-- المخرج (يسار) -->
+                    <div class="flex flex-col items-center gap-2 z-20 w-16">
+                        <div id="bulbIndicator" class="w-10 h-10 rounded-full bg-slate-800 border-2 border-slate-600 flex items-center justify-center shadow-lg transition-all duration-500">
+                            <svg class="w-6 h-6 text-slate-500 transition-colors duration-300" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14c.015-.34.208-.646.477-.859a4 4 0 10-4.954 0c.27.213.462.519.476.859h4.002z" />
+                            </svg>
+                        </div>
+                        <div class="text-[10px] font-bold text-slate-500 bg-slate-900/80 px-2 py-1 rounded-md border border-white/5 transition-colors" id="outText">OFF</div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. جدول الحقيقة (الأسفل) -->
+        <section class="bg-glass rounded-3xl border border-white/10 overflow-hidden shadow-lg">
+            <div class="bg-slate-900/60 px-5 py-3 border-b border-white/5 flex justify-between items-center">
+                <h3 class="text-sm font-bold text-indigo-300">جدول الحقيقة</h3>
+                <span class="text-[10px] bg-indigo-500/20 text-indigo-300 px-2 py-1 rounded-full border border-indigo-500/20">Live</span>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-center text-sm">
+                    <thead>
+                        <tr class="text-slate-400 bg-slate-950/30">
+                            <th class="py-3 px-2 font-medium">A</th>
+                            <th class="py-3 px-2 font-medium" id="thB">B</th>
+                            <th class="py-3 px-2 font-medium text-white">النتيجة Y</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody" class="divide-y divide-slate-800/50"></tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+<script>
+    // بيانات مبسطة وواقعية (مصانع وآلات)
+    const GATES = {
+        'AND': {
+            eq: "Y = AB",
+            desc: "بوابة <strong>و (AND)</strong>. تشترط تحقق جميع الشروط لتعمل.",
+            example: "<strong>مكبس المصنع:</strong> لضمان سلامة يد العامل، يجب عليه ضغط الزر الأيمن (A) **و** الزر الأيسر (B) معاً حتى يعمل المكبس.",
+            func: (a, b) => a && b
+        },
+        'OR': {
+            eq: "Y = A + B",
+            desc: "بوابة <strong>أو (OR)</strong>. يكفي تحقق شرط واحد لتعمل.",
+            example: "<strong>إنذار الحريق:</strong> يطلق الإنذار (1) إذا اكتشف دخاناً (A) **أو** اكتشف حرارة عالية (B). أي واحد يكفي.",
+            func: (a, b) => a || b
+        },
+        'NOT': {
+            eq: "Y = <span class='overline'>A</span>",
+            desc: "بوابة <strong>العاكس (NOT)</strong>. تقلب الحالة.",
+            example: "<strong>زر الإيقاف الطارئ (Emergency Stop):</strong> عندما تضغط الزر (1)، تتوقف الآلة (0). وعندما تحرر الزر (0)، تعمل الآلة (1).",
+            func: (a) => !a,
+            single: true
+        },
+        'NAND': {
+            eq: "Y = <span class='overline'>AB</span>",
+            desc: "نفي و (NAND). تفصل الكهرباء إذا اجتمع شرطان.",
+            example: "<strong>حماية الخزان من الفيضان:</strong> إذا كان الحساس العلوي ممتلئاً (A) **و** الحساس الاحتياطي ممتلئاً (B)، تتوقف المضخة فوراً (0) لمنع الفيضان.",
+            func: (a, b) => !(a && b)
+        },
+        'NOR': {
+            eq: "Y = <span class='overline'>A + B</span>",
+            desc: "نفي أو (NOR). تعمل فقط إذا كان كل شيء مطفأ.",
+            example: "<strong>مؤشر الأمان:</strong> الضوء الأخضر (Safe) يضيء (1) فقط إذا لم يكن هناك حرارة (A=0) **و** لم يكن هناك ضغط زائد (B=0).",
+            func: (a, b) => !(a || b)
+        },
+        'XOR': {
+            eq: "Y = A ⊕ B",
+            desc: "بوابة <strong>الاختلاف</strong>. تعمل إذا اختلف المفتاحان.",
+            example: "<strong>مفتاح السلم (Two-way Switch):</strong> يمكنك تشغيل أو إطفاء اللمبة من الطابق الأرضي أو العلوي. تغيير وضع أي مفتاح يغير حالة اللمبة.",
+            func: (a, b) => (!!a) !== (!!b)
+        },
+        'XNOR': {
+            eq: "Y = <span class='overline'>A ⊕ B</span>",
+            desc: "بوابة <strong>التشابه</strong>. تعمل إذا تشابه المفتاحان.",
+            example: "<strong>مراقبة الجودة:</strong> في خط الإنتاج، تمر العلبة (1) فقط إذا كان وزنها الفعلي (A) مساوياً للوزن المطلوب (B).",
+            func: (a, b) => (!!a) === (!!b)
+        }
+    };
+
+    let currentType = 'AND';
+
+    function initNav() {
+        const container = document.getElementById('navContainer');
+        Object.keys(GATES).forEach(key => {
+            const btn = document.createElement('button');
+            btn.innerText = key;
+            btn.className = `px-5 py-2 rounded-full text-sm font-bold transition-all whitespace-nowrap border border-white/5
+                             hover:bg-white/10 hover:text-white text-slate-400 gate-btn backdrop-blur-sm`;
+            btn.onclick = () => loadGate(key, btn);
+            container.appendChild(btn);
+        });
+        loadGate('AND', container.firstChild);
+    }
+
+    function loadGate(type, btn) {
+        currentType = type;
+        const data = GATES[type];
+
+        document.getElementById('gateTitle').innerText = type;
+        document.getElementById('gateEq').innerHTML = data.eq;
+        document.getElementById('gateDesc').innerHTML = data.desc;
+        document.getElementById('gateExample').innerHTML = data.example;
+
+        document.querySelectorAll('.gate-btn').forEach(b => {
+            b.classList.remove('bg-primary', 'text-white', 'shadow-neon', 'border-primary/50');
+            b.classList.add('text-slate-400');
+        });
+        btn.classList.remove('text-slate-400', 'hover:bg-white/10');
+        btn.classList.add('bg-primary', 'text-white', 'shadow-neon', 'border-primary/50');
+        btn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+
+        const containerB = document.getElementById('containerB');
+        const thB = document.getElementById('thB');
+        if (data.single) {
+            containerB.style.visibility = 'hidden'; 
+            containerB.style.opacity = '0';
+            thB.style.display = 'none';
+        } else {
+            containerB.style.visibility = 'visible';
+            containerB.style.opacity = '1';
+            thB.style.display = 'table-cell';
+        }
+
+        updateSim();
+    }
+
+    function updateSim() {
+        const a = document.getElementById('swA').checked;
+        const b = document.getElementById('swB').checked;
+        const data = GATES[currentType];
+        
+        const out = data.single ? data.func(a) : data.func(a, b);
+
+        const bulb = document.getElementById('bulbIndicator');
+        const outText = document.getElementById('outText');
+        
+        if (out) {
+            bulb.className = "w-10 h-10 rounded-full bg-amber-400 border-2 border-amber-300 flex items-center justify-center shadow-neon-gold scale-110 transition-all duration-300";
+            bulb.innerHTML = `<svg class="w-6 h-6 text-amber-900 animate-pulse" fill="currentColor" viewBox="0 0 20 20"><path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14c.015-.34.208-.646.477-.859a4 4 0 10-4.954 0c.27.213.462.519.476.859h4.002z" /></svg>`;
+            outText.innerText = "ON (1)";
+            outText.className = "text-[10px] font-bold text-amber-400 bg-amber-900/40 px-2 py-1 rounded-md border border-amber-500/30 transition-colors";
+        } else {
+            bulb.className = "w-10 h-10 rounded-full bg-slate-800 border-2 border-slate-600 flex items-center justify-center shadow-lg transition-all duration-300";
+            bulb.innerHTML = `<svg class="w-6 h-6 text-slate-600" fill="currentColor" viewBox="0 0 20 20"><path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14c.015-.34.208-.646.477-.859a4 4 0 10-4.954 0c.27.213.462.519.476.859h4.002z" /></svg>`;
+            outText.innerText = "OFF (0)";
+            outText.className = "text-[10px] font-bold text-slate-500 bg-slate-900/80 px-2 py-1 rounded-md border border-white/5 transition-colors";
+        }
+
+        drawSVG(currentType, a, b, out);
+        renderTable(currentType, a, b, out);
+    }
+
+    function drawSVG(type, a, b, out) {
+        const svg = document.getElementById('mainSvg');
+        const sOn = "#10b981"; 
+        const sOff = "#334155";
+        const strokeA = a ? sOn : sOff;
+        const strokeB = b ? sOn : sOff;
+        const strokeOut = out ? "#fbbf24" : sOff;
+        
+        let paths = "";
+        
+        if (GATES[type].single) {
+            paths += `<path d="M10,50 L70,50" class="${a?'wire-on':'wire-off'} wire" />`; 
+            paths += `<path d="M70,20 L70,80 L130,50 Z" class="gate-body" />`; 
+            paths += `<circle cx="136" cy="50" r="6" class="gate-body" />`; 
+            paths += `<path d="M142,50 L190,50" class="${out?'wire-on':'wire-off'} wire" />`; 
+        } else {
+            paths += `<path d="M10,30 L70,30" class="${a?'wire-on':'wire-off'} wire" />`; 
+            paths += `<path d="M10,70 L70,70" class="${b?'wire-on':'wire-off'} wire" />`; 
+            
+            let body = "";
+            let bub = false;
+            let outX = 130;
+
+            switch(type) {
+                case 'AND': case 'NAND':
+                    body = "M70,10 L100,10 Q130,10 130,50 Q130,90 100,90 L70,90 Z";
+                    if(type === 'NAND') { bub = true; outX = 142; }
+                    break;
+                case 'OR': case 'NOR':
+                    body = "M70,10 Q90,50 70,90 Q120,90 140,50 Q120,10 70,10";
+                    outX = 140;
+                    if(type === 'NOR') { bub = true; outX = 152; }
+                    break;
+                case 'XOR': case 'XNOR':
+                    paths += `<path d="M60,10 Q80,50 60,90" fill="none" stroke="#64748b" stroke-width="2"/>`;
+                    body = "M70,10 Q90,50 70,90 Q120,90 140,50 Q120,10 70,10";
+                    outX = 140;
+                    if(type === 'XNOR') { bub = true; outX = 152; }
+                    break;
+            }
+            
+            paths += `<path d="${body}" class="gate-body" />`;
+            if (bub) paths += `<circle cx="146" cy="50" r="6" class="gate-body" />`;
+            paths += `<path d="M${outX},50 L190,50" class="${out?'wire-on':'wire-off'} wire" />`;
+        }
+        svg.innerHTML = paths;
+    }
+
+    function renderTable(type, curA, curB, curOut) {
+        const tbody = document.getElementById('tableBody');
+        tbody.innerHTML = "";
+        const data = GATES[type];
+        const combos = data.single ? [[0], [1]] : [[0,0], [0,1], [1,0], [1,1]];
+
+        combos.forEach(row => {
+            const rA = row[0];
+            const rB = row[1];
+            let res;
+            let active = false;
+
+            if (data.single) {
+                res = data.func(rA);
+                if (!!rA === curA) active = true;
+            } else {
+                res = data.func(rA, rB);
+                if (!!rA === curA && !!rB === curB) active = true;
+            }
+
+            const tr = document.createElement('tr');
+            tr.className = `transition-all duration-300 ${active ? 'bg-indigo-500/20 text-white font-bold scale-[1.02] shadow-sm border-l-2 border-primary' : 'text-slate-400'}`;
+            
+            let html = `<td class="py-3 px-1">${rA}</td>`;
+            if (!data.single) html += `<td class="py-3 px-1">${rB}</td>`;
+            else html += `<td class="hidden"></td>`;
+            
+            html += `<td class="py-3 px-1 ${res ? 'text-amber-400' : ''}">${res ? 1 : 0}</td>`;
+            tr.innerHTML = html;
+            tbody.appendChild(tr);
+        });
+    }
+
+    initNav();
+</script>
+
+</body>
+</html>
+
