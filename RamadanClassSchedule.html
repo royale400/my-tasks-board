@@ -24,6 +24,10 @@
             --accent-red: #ef4444;    
             --accent-orange: #f59e0b;
             
+            --accent-exam: #8b5cf6;
+            --accent-exam-glow: rgba(139, 92, 246, 0.4);
+            --accent-exam-bg: rgba(139, 92, 246, 0.1);
+            
             --text-primary: #f8fafc;
             --text-secondary: #94a3b8;
             --text-muted: #64748b;
@@ -146,10 +150,12 @@
         .tasks-container { display: flex; gap: 15px; flex-direction: column; padding-bottom: 5px; }
         .task-card { display: flex; gap: 15px; padding: 20px; border-radius: 20px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--bento-border); position: relative; overflow: hidden; width: 100%; }
         body.light-mode .task-card { background: #ffffff; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+        .task-card.exam { border-right: 4px solid var(--accent-exam); background: linear-gradient(90deg, rgba(139, 92, 246, 0.05) 0%, transparent 100%); }
         .task-card.info { border-right: 4px solid var(--accent); background: linear-gradient(90deg, rgba(56, 189, 248, 0.05) 0%, transparent 100%); }
         .task-card.holiday { border-right: 4px solid var(--accent-green); background: linear-gradient(90deg, rgba(16, 185, 129, 0.05) 0%, transparent 100%); }
         
         .task-icon { width: 45px; height: 45px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
+        .exam .task-icon { background: rgba(139, 92, 246, 0.1); color: var(--accent-exam); }
         .info .task-icon { background: rgba(56, 189, 248, 0.1); color: var(--accent); }
         .holiday .task-icon { background: rgba(16, 185, 129, 0.1); color: var(--accent-green); }
         .task-content { flex-grow: 1; display: flex; flex-direction: column; gap: 8px; justify-content: center; min-width: 0; }
@@ -249,13 +255,7 @@
         .accordion-item.is-holiday-day { border: 1px solid var(--accent-green) !important; background: rgba(16, 185, 129, 0.03) !important; }
         .accordion-item.is-holiday-day .accordion-header { color: var(--accent-green) !important; background: transparent !important;}
         .accordion-item.is-holiday-day .icon-plus { color: var(--accent-green) !important; }
-        .holiday-card { background: transparent; padding: 10px 0; display: flex; align-items: center; gap: 20px; }
-        .holiday-icon-box { width: 55px; height: 55px; border-radius: 14px; background: rgba(16, 185, 129, 0.15); display: flex; align-items: center; justify-content: center; color: var(--accent-green); font-size: 2rem; flex-shrink: 0; }
-        .holiday-content h3 { color: var(--accent-green); margin-bottom: 5px; font-size: 1.1rem; font-weight: 700; }
-        .holiday-content p { color: var(--text-secondary); font-size: 0.9rem; margin: 0; }
-        .holiday-date { background: rgba(0,0,0,0.2); padding: 5px 12px; border-radius: 6px; border: 1px solid rgba(16,185,129,0.2); font-size: 0.8rem; color: var(--text-primary); display: inline-block; margin-top: 8px; font-weight: bold; }
-        body.light-mode .holiday-date { background: rgba(255,255,255,0.5); color: var(--text-primary); }
-
+        
         .timeline-wrapper { position: relative; padding-right: 45px; margin-top: 5px; }
         .timeline-container { display: flex; flex-direction: column; gap: 25px; border: none; position: relative;}
         .timeline-track-bg { position: absolute; right: 22.5px; top: 16px; bottom: 16px; width: 2px; background-image: linear-gradient(to bottom, var(--timeline-line) 50%, transparent 0%); background-size: 2px 8px; transform: translateX(50%); z-index: 1; }
@@ -564,7 +564,7 @@
         // =========================================================
         setTimeout(() => {
             document.body.classList.remove('preload', 'no-scroll');
-        }, 3500); // وقت أطول بقليل كصمام أمان
+        }, 3500);
 
         // =========================================================
         // --- بيانات التقويم الجامعي الموحدة ---
@@ -660,20 +660,23 @@
         let todayAccordionElement = null; 
 
         // =========================================================
-        // --- دالة النزول الذكي للجدول ---
+        // --- دالة النزول الذكي للجدول (مخفية للفتح التلقائي) ---
         // =========================================================
         function openAndScrollToToday() {
             if (todayAccordionElement) {
-                const header = todayAccordionElement.querySelector('.accordion-header');
-                if (!todayAccordionElement.classList.contains('active')) {
-                    header.click();
+                const scheduleSection = document.getElementById('classes-view');
+                if (scheduleSection && scheduleSection.classList.contains('active')) {
+                    const header = todayAccordionElement.querySelector('.accordion-header');
+                    if (!todayAccordionElement.classList.contains('active')) {
+                        header.click();
+                    }
+                    
+                    setTimeout(() => {
+                        const yOffset = -20; 
+                        const y = todayAccordionElement.getBoundingClientRect().top + window.scrollY + yOffset;
+                        window.scrollTo({ top: y, behavior: 'smooth' });
+                    }, 300);
                 }
-                
-                setTimeout(() => {
-                    const yOffset = -20; 
-                    const y = todayAccordionElement.getBoundingClientRect().top + window.scrollY + yOffset;
-                    window.scrollTo({ top: y, behavior: 'smooth' });
-                }, 300);
             }
         }
 
@@ -691,7 +694,7 @@
 
                 if (isActive) {
                     if (targetId === 'classes-view') {
-                        // إذا تم الضغط على الجدول وهو مفتوح أصلاً، قم بالنزول لليوم الحالي
+                        // النزول للجدول فقط عند الضغط المتعمد من المستخدم
                         openAndScrollToToday();
                     }
                     return;
@@ -707,10 +710,9 @@
 
                 if (targetId === 'classes-view') {
                     setTimeout(updateLiveTimeline, 50);
-                    // عند فتح الجدول يتم النزول لجدول اليوم
+                    // عند التبديل، يتم النزول لجدول اليوم
                     setTimeout(openAndScrollToToday, 100); 
                 } 
-                // لا يوجد نزول لقسم التقويم
             });
         });
 
@@ -726,7 +728,6 @@
         }, {passive: true});
 
         document.addEventListener('touchend', e => {
-            // تجاهل السحب إذا تم فوق منطقة مخصصة للتمرير الأفقي (مثل المهام)
             if(e.target.closest('.tasks-container')) return;
             
             const touchEndX = e.changedTouches[0].screenX;
@@ -735,7 +736,6 @@
             const diffX = touchStartX - touchEndX;
             const diffY = touchStartY - touchEndY;
 
-            // تحديد أن السحب أفقي وبمسافة كافية (أكثر من 50 بكسل)
             if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
                 const scheduleBtn = document.querySelector('.tab-button[data-target="classes-view"]');
                 const calendarBtn = document.querySelector('.tab-button[data-target="calendar-view"]');
@@ -744,10 +744,6 @@
 
                 const isScheduleActive = scheduleBtn.classList.contains('active');
 
-                // بما أن الموقع باللغة العربية (RTL):
-                // سحب لليسار (diffX > 0) يفتح التقويم إذا كان الجدول مفتوحاً
-                // سحب لليمين (diffX < 0) يفتح الجدول إذا لم يكن مفتوحاً
-                
                 if (diffX > 0 && isScheduleActive) {
                     calendarBtn.click();
                 } else if (diffX < 0 && !isScheduleActive) {
@@ -794,9 +790,13 @@
                 if (headerShield) headerShield.style.opacity = '1';
                 if (headerContainer) headerContainer.classList.add('visible');
                 if (splash) splash.remove();
+                
+                // تحديث التايم لاين بدون نزول الشاشة
+                setTimeout(updateLiveTimeline, 50);
+
             }, 800);
 
-        }, 2500); // وقت ظهور الشاشة 2.5 ثانية
+        }, 2500); 
 
         // =========================================================
         // --- الروابط والمظهر الحديث ---
@@ -910,55 +910,73 @@
             item.appendChild(header); item.appendChild(panel); return item;
         }
 
-        Object.entries(rawScheduleJSON.schedule).sort((a, b) => dayMapping[a[0]] - dayMapping[b[0]]).forEach(([englishDay, courses]) => {
-            const dayName = arabicDayNames[englishDay]; const dayIndex = dayMapping[englishDay];
-            let contentHTML = ''; let isHolidayDay = false; let displayTitle = dayName;
-            
-            let distance = dayIndex - currentDayIndexInit;
-            if (distance < 0) distance += 7;
-            if (distance === 0 && isTodayOverGlobally) distance += 7;
-            
-            const renderedDate = new Date(nowInit);
-            renderedDate.setDate(nowInit.getDate() + distance);
-            renderedDate.setHours(12, 0, 0, 0); 
+        // بناء الجدول والتحقق الذكي من الإجازات لجمعها في بطاقة واحدة
+        const currentActiveHoliday = upcomingHolidays.find(h => nowInit >= h.start && nowInit <= h.end);
 
-            const activeHoliday = upcomingHolidays.find(h => renderedDate >= h.start && renderedDate <= h.end);
-            
-            if (activeHoliday) {
-                isHolidayDay = true; displayTitle = `${dayName} (إجازة)`;
-                contentHTML = `<div class="holiday-card"><div class="holiday-icon-box"><i class="${activeHoliday.icon}"></i></div><div class="holiday-content"><h3>${activeHoliday.title}</h3><p>يوافق هذا اليوم عطلة رسمية بالتقويم الجامعي.</p><span class="holiday-date">${formatMiladi(renderedDate)}</span></div></div>`;
-            } else {
-                courses.sort((a, b) => a.start_time.localeCompare(b.start_time));
-                contentHTML = `<div class="timeline-wrapper" data-day="${dayIndex}"><div class="timeline-track-bg"></div><div class="timeline-track-fill"></div><div class="timeline-pulsing-dot" style="opacity: 0;"></div><div class="timeline-container">`;
+        if (currentActiveHoliday) {
+            // نحن الآن في إجازة، نعرض رسالة واحدة فقط وتختفي قائمة الأيام تماماً
+            accordionContainer.innerHTML = `
+                <div style="background: var(--bento-bg); border: 1px solid var(--accent-green); padding: 35px 20px; border-radius: 24px; text-align: center; box-shadow: 0 10px 25px rgba(16,185,129,0.1);">
+                    <i class="${currentActiveHoliday.icon}" style="font-size: 3.5rem; color: var(--accent-green); margin-bottom: 20px; display: block;"></i>
+                    <h3 style="color: var(--accent-green); margin-bottom: 12px; font-size: 1.4rem; font-weight: 900;">إجازة سعيدة!</h3>
+                    <p style="color: var(--text-primary); font-weight: 600; line-height: 1.8; font-size: 1.1rem; margin: 0;">
+                        لا توجد محاضرات حالياً لتزامنها مع <strong>${currentActiveHoliday.title}</strong>.<br>
+                        ستعود المحاضرات لأوقاتها المعتادة بعد انتهاء الإجازة بمشيئة الله.
+                    </p>
+                </div>
+            `;
+        } else {
+            // عرض الجدول المعتاد
+            Object.entries(rawScheduleJSON.schedule).sort((a, b) => dayMapping[a[0]] - dayMapping[b[0]]).forEach(([englishDay, courses]) => {
+                const dayName = arabicDayNames[englishDay]; const dayIndex = dayMapping[englishDay];
+                let contentHTML = ''; let isHolidayDay = false; let displayTitle = dayName;
                 
-                contentHTML += courses.map(course => {
-                    const profName = professorMap[course.course_code.split(' ')[0]] || "";
-                    const formattedCode = course.course_code.replace('_', ' ');
-                    let displayName = course.course_name.replace(/(\(.*?\))/g, '<span class="course-note">$1</span>');
-                    const timeHeaderHTML = `${formatTime(course.start_time)} - ${formatTime(course.end_time)}`;
-                    return `<div class="timeline-item" data-start="${timeToMins(course.start_time)}" data-end="${timeToMins(course.end_time)}" data-original-time="${timeHeaderHTML}"><div class="time-header">${timeHeaderHTML}</div><h3 class="course-title">${displayName}</h3><div class="course-meta"><span><span class="course-code">${formattedCode}</span></span><span><i class="fa-solid fa-user-tie"></i> ${profName}</span></div></div>`;
-                }).join('');
-                contentHTML += `</div></div>`;
-            }
+                let distance = dayIndex - currentDayIndexInit;
+                if (distance < 0) distance += 7;
+                if (distance === 0 && isTodayOverGlobally) distance += 7;
+                
+                const renderedDate = new Date(nowInit);
+                renderedDate.setDate(nowInit.getDate() + distance);
+                renderedDate.setHours(12, 0, 0, 0); 
 
-            let isHighlight = (dayIndex === targetDayIndex);
-            let badgeText = isHighlight ? ((currentDayIndexInit === dayIndex) ? "اليوم" : "القادم") : "";
-            const item = createAccordionItem(displayTitle, contentHTML, isHolidayDay, isHighlight, badgeText);
-            accordionContainer.appendChild(item);
+                const holidayForDay = upcomingHolidays.find(h => renderedDate >= h.start && renderedDate <= h.end);
+                
+                if (holidayForDay) {
+                    // إذا صادف يوم معين إجازة (وهذا لا ينطبق على الإجازة الطويلة التي تغطي الأسبوع كامل)
+                    isHolidayDay = true; displayTitle = `${dayName} (إجازة)`;
+                    contentHTML = `<div class="holiday-card"><div class="holiday-icon-box"><i class="${holidayForDay.icon}"></i></div><div class="holiday-content"><h3>${holidayForDay.title}</h3><p>لا توجد محاضرات في هذا اليوم.</p><span class="holiday-date">${formatMiladi(renderedDate)}</span></div></div>`;
+                } else {
+                    courses.sort((a, b) => a.start_time.localeCompare(b.start_time));
+                    contentHTML = `<div class="timeline-wrapper" data-day="${dayIndex}"><div class="timeline-track-bg"></div><div class="timeline-track-fill"></div><div class="timeline-pulsing-dot" style="opacity: 0;"></div><div class="timeline-container">`;
+                    
+                    contentHTML += courses.map(course => {
+                        const profName = professorMap[course.course_code.split(' ')[0]] || "";
+                        const formattedCode = course.course_code.replace('_', ' ');
+                        let displayName = course.course_name.replace(/(\(.*?\))/g, '<span class="course-note">$1</span>');
+                        const timeHeaderHTML = `${formatTime(course.start_time)} - ${formatTime(course.end_time)}`;
+                        return `<div class="timeline-item" data-start="${timeToMins(course.start_time)}" data-end="${timeToMins(course.end_time)}" data-original-time="${timeHeaderHTML}"><div class="time-header">${timeHeaderHTML}</div><h3 class="course-title">${displayName}</h3><div class="course-meta"><span><span class="course-code">${formattedCode}</span></span><span><i class="fa-solid fa-user-tie"></i> ${profName}</span></div></div>`;
+                    }).join('');
+                    contentHTML += `</div></div>`;
+                }
 
-            // الفتح الصامت لمحاضرة اليوم عند الدخول بدون تمرير (No Scroll)
-            if(isHighlight) {
-                todayAccordionElement = item;
-                item.classList.add('active');
-                // نستخدم requestAnimationFrame لضمان حساب الارتفاع بدقة بعد إضافته للـ DOM
-                requestAnimationFrame(() => {
-                    setTimeout(() => {
-                        const panel = item.querySelector('.accordion-panel');
-                        if (panel) panel.style.maxHeight = panel.scrollHeight + "px";
-                    }, 50);
-                });
-            }
-        });
+                let isHighlight = (dayIndex === targetDayIndex);
+                let badgeText = isHighlight ? ((currentDayIndexInit === dayIndex) ? "اليوم" : "القادم") : "";
+                const item = createAccordionItem(displayTitle, contentHTML, isHolidayDay, isHighlight, badgeText);
+                accordionContainer.appendChild(item);
+
+                // فتح أكورديون محاضرة اليوم بصمت بدون تمرير الشاشة للأسفل
+                if(isHighlight && !holidayForDay) {
+                    todayAccordionElement = item;
+                    item.classList.add('active');
+                    requestAnimationFrame(() => {
+                        setTimeout(() => {
+                            const panel = item.querySelector('.accordion-panel');
+                            if (panel) panel.style.maxHeight = panel.scrollHeight + "px";
+                        }, 50);
+                    });
+                }
+            });
+        }
 
         function updateLiveTimeline() {
             if(!document.getElementById('classes-view').classList.contains('active')) return;
