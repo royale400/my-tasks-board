@@ -135,13 +135,11 @@
             display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 0 16px;
         }
         
-        /* إضافة المسافات السفلية لجميع العناوين بشكل افتراضي */
         .section-title { 
             font-size: 1.1rem; font-weight: 700; color: var(--ios-text-primary); 
             letter-spacing: -0.3px; margin-bottom: 12px; padding-right: 16px;
         }
         
-        /* إزالة المسافة السفلية للعنوان عندما يكون داخل حاوية بها أزرار أخرى (مثل صفحة اليوم) */
         .section-header-row .section-title {
             margin-bottom: 0; padding-right: 0;
         }
@@ -256,31 +254,23 @@
         .timeline-item:last-child { padding-bottom: 0; }
         
         .timeline-line { 
-            position: absolute; 
-            right: 15px; 
-            top: 10px; bottom: 20px; 
+            position: absolute; right: 15px; top: 10px; bottom: 20px; 
             width: 2px; background: var(--ios-separator); z-index: 1; 
         }
         .timeline-fill { 
-            position: absolute; 
-            right: 15px; 
-            top: 10px; 
+            position: absolute; right: 15px; top: 10px; 
             width: 2px; background: var(--ios-red); height: 0%; z-index: 2; transition: height 1s linear; 
         }
         
         .timeline-dot { 
-            position: absolute; 
-            right: 10px; 
-            top: 10px; 
+            position: absolute; right: 10px; top: 10px; 
             width: 12px; height: 12px; border-radius: 50%; 
             background: var(--ios-card); border: 2px solid var(--ios-separator); 
             z-index: 4; box-sizing: border-box;
         }
         
         .timeline-progress-dot { 
-            position: absolute; 
-            right: 10px; 
-            top: 10px; 
+            position: absolute; right: 10px; top: 10px; 
             width: 12px; height: 12px; border-radius: 50%; 
             background: var(--ios-red); z-index: 5; 
             opacity: 0; transition: top 1s linear; 
@@ -340,16 +330,32 @@
         .bg-red { background-color: var(--ios-red); }
         .bg-gray { background-color: var(--ios-text-tertiary); }
 
-        .row-content { flex: 1; display: flex; flex-direction: column; gap: 2px; }
-        .row-title { font-size: 1rem; font-weight: 600; color: var(--ios-text-primary); }
-        .row-subtitle { font-size: 0.8rem; font-weight: 400; color: var(--ios-text-secondary); font-family: -apple-system, sans-serif;}
+        .row-content { 
+            flex: 1; display: flex; flex-direction: column; gap: 3px; 
+            min-width: 0; 
+        }
+        
+        .row-title { 
+            font-size: 1rem; font-weight: 600; color: var(--ios-text-primary); 
+            line-height: 1.3; white-space: normal;
+        }
+        
+        .row-subtitle { 
+            font-size: 0.75rem; font-weight: 500; color: var(--ios-text-secondary); 
+            line-height: 1.4;
+        }
 
         .row-trailing { 
-            font-size: 0.85rem; font-weight: 600; color: var(--ios-text-secondary);
-            display: flex; align-items: center; gap: 8px; white-space: nowrap;
+            font-size: 0.8rem; font-weight: 700; color: var(--ios-text-secondary);
+            text-align: left; flex-shrink: 0;
         }
+        
         .row-trailing.active-holiday { color: var(--ios-green); }
-        .chevron { color: var(--ios-text-tertiary); font-size: 0.8rem; }
+
+        .section-subheader {
+            font-size: 0.85rem; font-weight: 700; color: var(--ios-text-secondary);
+            margin: 0 16px 8px; text-transform: uppercase; letter-spacing: -0.2px;
+        }
 
         /* ========================================= */
         /* --- 7. Banners & Disclaimer --- */
@@ -394,7 +400,6 @@
         .view-section.active { display: block; }
         @keyframes fade-in { from { opacity: 0; transform: scale(0.98);} to { opacity: 1; transform: scale(1);} }
 
-        /* ستايل النافذة المنبثقة للتلميح */
         .hint-modal-overlay {
             position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 9999;
             display: flex; justify-content: center; align-items: center;
@@ -504,7 +509,6 @@
             </div>
 
             <div id="view-links" class="view-section">
-                <!-- ستلاحظ هنا عودة المساحة المريحة للعنوان -->
                 <h3 class="section-title">الأنظمة الجامعية</h3>
                 <div class="ios-list">
                     <a href="https://lms.ju.edu.sa/" class="list-row" target="_blank">
@@ -527,9 +531,8 @@
             </div>
 
             <div id="view-calendar" class="view-section">
-                <!-- ستلاحظ هنا أيضاً عودة المساحة المريحة للعنوان -->
                 <h3 class="section-title">التقويم الجامعي</h3>
-                <div class="ios-list" id="calendar-container"></div>
+                <div id="calendar-container"></div>
             </div>
 
         </main>
@@ -642,16 +645,25 @@
             return `${y}/${m}/${d}`;
         };
 
-        const getDaysDiff = (targetDate) => {
+        // دالة مخصصة لكتابة العبارات التوضيحية لـ (تبدأ بعد / تنتهي بعد) بشكل ذكي
+        const getDaysDiff = (targetDate, context = "upcoming") => {
             const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
             const target = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
             const diff = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
             
-            if(diff === 0) return "اليوم";
-            if(diff === 1) return "غداً";
-            if(diff === 2) return "بعد يومين";
-            if(diff <= 10) return `بعد ${diff} أيام`;
-            return `بعد ${diff} يوماً`;
+            if (context === "upcoming") {
+                if(diff === 0) return "تبدأ اليوم";
+                if(diff === 1) return "تبدأ غداً";
+                if(diff === 2) return "تبدأ بعد يومين";
+                if(diff >= 3 && diff <= 10) return `تبدأ بعد ${diff} أيام`;
+                return `تبدأ بعد ${diff} يوماً`;
+            } else {
+                if(diff === 0) return "تنتهي اليوم";
+                if(diff === 1) return "تنتهي غداً";
+                if(diff === 2) return "تنتهي بعد يومين";
+                if(diff >= 3 && diff <= 10) return `تنتهي بعد ${diff} أيام`;
+                return `تنتهي بعد ${diff} يوماً`;
+            }
         }
 
         // --- Segmented Control Init ---
@@ -849,50 +861,91 @@
             pulsingDot.style.top = `${dotY}px`;
         }
 
+        // --- Calendar Rendering (Separated into Current and Upcoming) ---
         const calCont = document.getElementById('calendar-container');
         
-        const futureEvents = academicCalendar.filter(ev => {
+        const currentEvents = academicCalendar.filter(ev => {
             const eventEnd = new Date(ev.end);
             eventEnd.setHours(23, 59, 59, 999);
-            return eventEnd >= now;
-        }).sort((a, b) => a.start - b.start);
+            return now >= ev.start && now <= eventEnd;
+        }).sort((a, b) => a.end - b.end);
+
+        const upcomingEvents = academicCalendar.filter(ev => ev.start > now).sort((a, b) => a.start - b.start);
         
-        if (futureEvents.length > 0) {
-            calCont.innerHTML = futureEvents.map(e => {
-                let datesStr = '';
-                if (e.start.toDateString() === e.end.toDateString() || e.type === 'info') {
-                    datesStr = fmtDateClean(e.start);
-                } else {
-                    datesStr = `${fmtDateClean(e.start)} - ${fmtDateClean(e.end)}`;
-                }
+        // بناء وتصميم الصف الخاص بكل حدث
+        const createRowHTML = (e, type) => {
+            
+            // حساب مدة الحدث بالأيام
+            const startD = new Date(e.start.getFullYear(), e.start.getMonth(), e.start.getDate());
+            const endD = new Date(e.end.getFullYear(), e.end.getMonth(), e.end.getDate());
+            const durationDiff = Math.ceil((endD - startD) / (1000 * 60 * 60 * 24)) + 1;
+            
+            let durationTxt = '';
+            if(durationDiff === 1) durationTxt = 'يوم واحد';
+            else if(durationDiff === 2) durationTxt = 'يومان';
+            else if(durationDiff >= 3 && durationDiff <= 10) durationTxt = `${durationDiff} أيام`;
+            else durationTxt = `${durationDiff} يوماً`;
 
-                let trailingTxt = '';
-                let extraClass = '';
-                if (now < e.start) {
-                    trailingTxt = "القادم " + getDaysDiff(e.start);
-                } else if (now >= e.start && now <= e.end) {
-                    const diffTxt = getDaysDiff(e.end);
-                    trailingTxt = diffTxt === "اليوم" ? "تنتهي اليوم" : (diffTxt === "غداً" ? "تنتهي غداً" : `تنتهي ${diffTxt}`);
-                    extraClass = 'active-holiday';
-                }
+            // بناء السطر التفصيلي الجميل (مدة الحدث + التواريخ باتجاه RTL بشكل دائم)
+            let subtitleHTML = '';
+            if (e.start.toDateString() === e.end.toDateString() || e.type === 'info') {
+                subtitleHTML = `<span dir="rtl">${fmtDateClean(e.start)}</span>`;
+            } else {
+                subtitleHTML = `
+                    <span style="display:inline-block;">مدتها: ${durationTxt}</span> 
+                    <span style="opacity:0.5; margin:0 4px;">|</span> 
+                    <span dir="rtl" style="display:inline-block; font-family:-apple-system, sans-serif;">${fmtDateClean(e.start)} - ${fmtDateClean(e.end)}</span>
+                `;
+            }
 
-                return `
-                <div class="list-row">
-                    <div class="icon-box ${e.color}"><i class="fa-solid ${e.icon}"></i></div>
-                    <div class="row-content">
-                        <div class="row-title">${e.title}</div>
-                        <div class="row-subtitle" dir="rtl">${datesStr}</div>
-                    </div>
-                    <div class="row-trailing ${extraClass}">${trailingTxt}</div>
-                </div>`;
-            }).join('');
-        } else { calCont.innerHTML = '<p style="text-align:center; color:var(--ios-text-secondary); padding:20px;">لا توجد أحداث قادمة.</p>'; }
+            let trailingTxt = '';
+            let extraClass = '';
+            
+            if (type === 'current') {
+                trailingTxt = getDaysDiff(e.end, 'ending');
+                extraClass = 'active-holiday';
+            } else {
+                trailingTxt = getDaysDiff(e.start, 'upcoming');
+            }
+
+            return `
+            <div class="list-row">
+                <div class="icon-box ${e.color}"><i class="fa-solid ${e.icon}"></i></div>
+                <div class="row-content">
+                    <div class="row-title">${e.title}</div>
+                    <div class="row-subtitle">${subtitleHTML}</div>
+                </div>
+                <div class="row-trailing ${extraClass}">${trailingTxt}</div>
+            </div>`;
+        };
+
+        let calendarHTML = '';
+
+        if (currentEvents.length > 0) {
+            calendarHTML += `<h4 class="section-subheader">الإجازات والمواعيد الحالية</h4>`;
+            calendarHTML += `<div class="ios-list" style="margin-bottom: 20px;">`;
+            calendarHTML += currentEvents.map(e => createRowHTML(e, 'current')).join('');
+            calendarHTML += `</div>`;
+        }
+
+        if (upcomingEvents.length > 0) {
+            calendarHTML += `<h4 class="section-subheader">الإجازات والمواعيد القادمة</h4>`;
+            calendarHTML += `<div class="ios-list">`;
+            calendarHTML += upcomingEvents.map(e => createRowHTML(e, 'upcoming')).join('');
+            calendarHTML += `</div>`;
+        }
+
+        if (calendarHTML === '') {
+            calendarHTML = '<p style="text-align:center; color:var(--ios-text-secondary); padding:20px;">لا توجد أحداث في التقويم.</p>';
+        }
+
+        calCont.innerHTML = calendarHTML;
 
         renderSchedule(selDay);
         updateStatusWidget();
         setInterval(() => { updateStatusWidget(); updateTimelineProgress(); }, 60000);
 
-        // --- نظام الأنيميشن الذكي للسحب والمطابق لـ RTL ---
+        // --- Swipe Logic & Animations ---
         let scheduleTouchStartX = 0;
         let scheduleTouchStartY = 0;
         const scheduleCard = document.getElementById('schedule-card');
