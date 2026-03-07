@@ -36,6 +36,7 @@
             --radius-card: 14px;
             --radius-pill: 50px;
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-card: 0 4px 12px rgba(0,0,0,0.06);
             --shadow-thumb: 0 3px 8px rgba(0,0,0,0.12), 0 3px 1px rgba(0,0,0,0.04);
             
             --safe-bottom: env(safe-area-inset-bottom, 20px);
@@ -61,6 +62,7 @@
             --ios-segmented-thumb: #636366;
             
             --shadow-sm: none;
+            --shadow-card: none;
             --shadow-thumb: 0 3px 8px rgba(0,0,0,0.3);
         }
 
@@ -87,12 +89,9 @@
         }
 
         .header {
-            padding: 16px 20px 10px;
-            position: sticky; top: 0; z-index: 50;
-            background: var(--ios-nav-bg); 
-            backdrop-filter: saturate(180%) blur(20px); 
-            -webkit-backdrop-filter: saturate(180%) blur(20px);
-            border-bottom: 0.5px solid var(--ios-separator);
+            padding: 0 0 15px 0;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--ios-separator);
             display: flex; justify-content: space-between; align-items: flex-end;
         }
         
@@ -391,7 +390,7 @@
             display: flex; flex-direction: column; align-items: center; gap: 4px; 
             color: var(--ios-text-secondary); background: none; border: none; 
             font-family: inherit; font-size: 0.65rem; font-weight: 600; 
-            width: 33.3%; cursor: pointer; 
+            flex: 1; cursor: pointer; 
         }
         .tab-item i { font-size: 1.3rem; margin-bottom: 2px; }
         .tab-item.active { color: var(--ios-blue); }
@@ -426,11 +425,134 @@
         }
         .hint-modal-btn:active { background: var(--ios-segmented-bg); }
 
+        /* ========================================= */
+        /* --- 9. تنسيقات أداة تتبع الغياب الجديدة --- */
+        /* ========================================= */
+        .date-selectors-wrapper {
+            background: rgba(0, 0, 0, 0.03);
+            border-radius: 18px;
+            padding: 16px;
+            margin-bottom: 20px;
+            border: 1px solid var(--ios-separator);
+        }
+
+        .date-selectors { 
+            display: flex; gap: 12px; align-items: flex-end; justify-content: space-between;
+        }
+        
+        .date-col { flex: 1; display: flex; flex-direction: column; text-align: center; }
+        .input-label { display: block; font-size: 0.8rem; font-weight: 700; color: var(--ios-text-secondary); margin-bottom: 8px; }
+        
+        .ios-select {
+            width: 100%; padding: 14px 4px; border-radius: 12px;
+            background-color: #ffffff;
+            border: 1.5px solid transparent;
+            color: #000000; font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
+            font-size: 1.2rem; font-weight: 800;
+            outline: none; box-shadow: var(--shadow-card); 
+            transition: all 0.2s ease;
+            appearance: none; -webkit-appearance: none;
+            text-align: center; cursor: pointer;
+        }
+        body.dark-mode .ios-select { background-color: #2c2c2e; color: #ffffff; }
+        .ios-select:focus { border-color: var(--ios-blue); transform: scale(1.02); }
+        .date-separator { font-size: 1.5rem; font-weight: 800; color: var(--ios-text-tertiary); padding-bottom: 10px; }
+
+        .checkbox-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+        .checkbox-row {
+            display: flex; align-items: center; gap: 12px; background: var(--ios-card);
+            padding: 14px 16px; border-radius: 12px; border: 1px solid var(--ios-separator);
+            cursor: pointer; transition: background 0.2s;
+        }
+        .checkbox-row:active { background: var(--ios-segmented-bg); }
+        .checkbox-row input[type="checkbox"] {
+            appearance: none; -webkit-appearance: none; width: 22px; height: 22px;
+            border: 2px solid var(--ios-text-tertiary); border-radius: 50%;
+            outline: none; cursor: pointer; position: relative; flex-shrink: 0;
+            transition: all 0.2s;
+        }
+        .checkbox-row input[type="checkbox"]:checked { background-color: var(--ios-blue); border-color: var(--ios-blue); }
+        .checkbox-row input[type="checkbox"]:checked::after {
+            content: ''; position: absolute; left: 6px; top: 3px; width: 5px; height: 10px;
+            border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg);
+        }
+        .checkbox-content { flex: 1; }
+        .checkbox-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 2px;}
+        .checkbox-desc { font-size: 0.75rem; font-weight: 500; color: var(--ios-text-secondary); display: flex; justify-content: space-between;}
+        .weight-badge { font-weight: 800; color: var(--ios-blue); background: rgba(0, 122, 255, 0.1); padding: 2px 6px; border-radius: 4px;}
+        
+        .ios-btn-primary {
+            width: 100%; background: var(--ios-blue); color: white; border: none;
+            padding: 14px; border-radius: 12px; font-size: 1rem; font-weight: 700;
+            font-family: inherit; cursor: pointer; transition: opacity 0.2s; box-shadow: 0 4px 10px rgba(0, 122, 255, 0.3);
+        }
+        .ios-btn-primary:active { opacity: 0.7; transform: scale(0.98); }
+        .ios-btn-primary:disabled { opacity: 0.4; cursor: not-allowed; box-shadow: none; }
+
+        /* جدول ملخص الحرمان */
+        .summary-list {
+            background: var(--ios-card); border-radius: var(--radius-card);
+            box-shadow: var(--shadow-sm); overflow: hidden; margin-bottom: 20px; border: 1px solid var(--ios-separator);
+        }
+        .summary-row {
+            display: flex; flex-direction: column; gap: 12px;
+            padding: 16px; border-bottom: 1px solid var(--ios-separator);
+        }
+        .summary-row:last-child { border-bottom: none; }
+        .summary-header { display: flex; justify-content: space-between; align-items: center; }
+        
+        .s-course-info { display: flex; flex-direction: column; gap: 3px; }
+        .s-course-name { font-size: 0.9rem; font-weight: 800; color: var(--ios-text-primary); }
+        .s-course-code { font-size: 0.7rem; font-family: monospace; color: var(--ios-text-secondary); }
+        
+        .s-stats { display: flex; gap: 8px; }
+        .s-stat-box {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background: var(--ios-segmented-bg); border-radius: 8px; padding: 6px 12px; min-width: 65px;
+        }
+        .s-stat-label { font-size: 0.65rem; font-weight: 700; color: var(--ios-text-secondary); margin-bottom: 2px; }
+        .s-stat-value { font-size: 1rem; font-weight: 800; font-family: -apple-system, sans-serif; }
+        
+        .val-safe { color: var(--ios-text-primary); }
+        .val-warning { color: var(--ios-orange); }
+        .val-danger { color: var(--ios-red); }
+
+        .deprived-badge {
+            background: rgba(255, 59, 48, 0.1); color: var(--ios-red);
+            font-size: 0.75rem; font-weight: 800; padding: 4px 8px; border-radius: 6px;
+            display: flex; align-items: center; justify-content: center; height: 100%;
+        }
+
+        .tracker-progress-track { height: 6px; background: var(--ios-segmented-bg); border-radius: 3px; position: relative; overflow: hidden; }
+        .tracker-progress-fill { position: absolute; right: 0; top: 0; bottom: 0; background: var(--ios-green); transition: width 0.4s ease, background-color 0.4s ease; }
+        .tracker-progress-fill.warning { background: var(--ios-orange); }
+        .tracker-progress-fill.danger { background: var(--ios-red); }
+
+        .history-list { margin-top: 12px; border-top: 0.5px solid var(--ios-separator); padding-top: 8px; }
+        .history-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; font-size: 0.8rem; border-bottom: 0.5px dashed var(--ios-separator); }
+        .history-item:last-child { border-bottom: none; }
+        .history-date { font-weight: 600; font-family: -apple-system, sans-serif; color: var(--ios-text-primary);}
+        .delete-btn { background: rgba(255, 59, 48, 0.1); border: none; color: var(--ios-red); cursor: pointer; font-size: 0.75rem; font-weight: bold; padding: 4px 10px; border-radius: 6px; display: inline-flex; align-items: center; gap: 4px; transition: 0.2s;}
+        .delete-btn:active { transform: scale(0.9); }
+        .empty-state { text-align: center; padding: 30px 20px; color: var(--ios-text-secondary); font-size: 0.9rem; font-weight: 600; }
+
+        .toast {
+            position: fixed; bottom: calc(80px + var(--safe-bottom)); left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: rgba(0,0,0,0.8); color: white;
+            padding: 10px 20px; border-radius: 20px;
+            font-size: 0.85rem; font-weight: 600;
+            z-index: 1000; opacity: 0; pointer-events: none;
+            transition: all 0.3s ease; white-space: nowrap;
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        }
+        body.dark-mode .toast { background: rgba(255,255,255,0.9); color: black;}
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
     </style>
 </head>
 <body>
 
-    <!-- نافذة التلميح المنبثقة -->
     <div class="hint-modal-overlay" id="hint-modal">
         <div class="hint-modal-box">
             <div class="hint-modal-body">
@@ -443,22 +565,23 @@
         </div>
     </div>
 
+    <div id="toast" class="toast"></div>
+
     <div class="app-core">
         
-        <header class="header">
-            <div class="header-title-container">
-                <div class="header-subtitle">دبلوم الأمن السيبراني - عن بعد</div>
-                <h1>بوابة سيبر الجوف</h1>
-            </div>
-            <button class="theme-btn" id="theme-btn" aria-label="Toggle Theme">
-                <i class="fa-solid fa-moon"></i>
-            </button>
-        </header>
-
         <main class="main-content">
             
             <div id="view-home" class="view-section active">
-                
+                <header class="header">
+                    <div class="header-title-container">
+                        <div class="header-subtitle">دبلوم الأمن السيبراني - عن بعد</div>
+                        <h1>بوابة سيبر الجوف</h1>
+                    </div>
+                    <button class="theme-btn" id="theme-btn" aria-label="Toggle Theme">
+                        <i class="fa-solid fa-moon"></i>
+                    </button>
+                </header>
+
                 <div id="holiday-alert" class="banner holiday">
                     <i class="fa-solid fa-umbrella-beach banner-icon"></i>
                     <div class="banner-text">
@@ -484,8 +607,6 @@
                     </div>
                     
                     <div class="ios-card" id="schedule-card" style="padding-top: 16px;">
-                        
-                        <!-- أيقونة الإصبع للأنيميشن -->
                         <i class="fa-solid fa-hand-pointer demo-hand" id="demo-hand"></i>
 
                         <div class="segmented-control" id="days-wrapper">
@@ -523,7 +644,7 @@
                         <div class="icon-box bg-green"><i class="fa-solid fa-laptop-file"></i></div>
                         <div class="row-content">
                             <div class="row-title">البوابة الإلكترونية</div>
-                            <div class="row-subtitle">النظام الأكاديمي للجامعة</div>
+                            <div class="row-subtitle">النظام الجامعي</div>
                         </div>
                         <i class="fa-solid fa-chevron-left chevron"></i>
                     </a>
@@ -535,9 +656,62 @@
                 <div id="calendar-container"></div>
             </div>
 
+            <!-- أداة تتبع الحرمان والغياب الجديدة -->
+            <div id="view-tools" class="view-section">
+                <h3 class="section-title" style="font-size: 1.4rem; text-align: center; margin-bottom: 24px;">أداة تتبع الغياب والحرمان</h3>
+                
+                <div class="ios-card" style="background: rgba(0, 122, 255, 0.08); border: none; padding: 16px;">
+                    <p style="margin:0; font-size: 0.85rem; line-height: 1.6; font-weight: 600; color: var(--ios-text-primary);">
+                        <strong style="color: var(--ios-blue);">ملاحظة هامة:</strong>
+                        الحد المسموح للغياب هو 11 ساعة، وينزل الحرمان عند الوصول لـ 12 ساعة.
+                    </p>
+                    <hr style="border: 0; border-top: 1px solid rgba(0, 122, 255, 0.2); margin: 12px 0;">
+                    <p style="margin:0; font-size: 0.8rem; line-height: 1.5; font-weight: 500; color: var(--ios-text-secondary);">
+                        <i class="fa-solid fa-circle-info" style="margin-left: 4px;"></i>
+                        ساعات الغياب في شهر رمضان تُحتسب بنفس عدد الساعات المعتمدة للأيام العادية (قبل رمضان)، بغض النظر عن قصر مدة المحاضرة الفعلي.
+                    </p>
+                </div>
+
+                <h3 class="section-title" style="font-size: 1.15rem; margin-top: 30px;">تسجيل غياب جديد</h3>
+                <div class="date-selectors-wrapper">
+                    <div class="date-selectors">
+                        <div class="date-col">
+                            <label class="input-label">اليوم</label>
+                            <select id="sel-day" class="ios-select"></select>
+                        </div>
+                        <div class="date-separator">/</div>
+                        <div class="date-col">
+                            <label class="input-label">الشهر</label>
+                            <select id="sel-month" class="ios-select"></select>
+                        </div>
+                        <div class="date-separator">/</div>
+                        <div class="date-col">
+                            <label class="input-label">السنة</label>
+                            <select id="sel-year" class="ios-select"></select>
+                        </div>
+                    </div>
+                    
+                    <div id="tracker-lectures-area" style="display: none; margin-top: 16px; border-top: 1px solid var(--ios-separator); padding-top: 16px;">
+                        <div class="checkbox-list" id="tracker-lectures-list"></div>
+                        <button class="ios-btn-primary" id="tracker-save-btn" onclick="saveTrackerAbsence()">
+                            <i class="fa-solid fa-plus" style="margin-left: 6px;"></i> إضافة للسجل
+                        </button>
+                    </div>
+                    
+                    <div id="tracker-msg" class="empty-state" style="padding: 15px 10px;">جاري تحميل البيانات...</div>
+                </div>
+
+                <h3 class="section-title" style="font-size: 1.15rem; margin-top: 30px;">ملخص الحرمان والغياب</h3>
+                <div id="summary-dashboard-list"></div>
+
+                <h3 class="section-title" style="font-size: 1.15rem; margin-top: 30px;">سجل التواريخ المحفوظة</h3>
+                <div id="tracker-dashboard-list"></div>
+            </div>
+
         </main>
     </div>
 
+    <!-- شريط التنقل -->
     <nav class="tab-bar">
         <button class="tab-item active" data-target="view-home">
             <i class="fa-solid fa-calendar-day"></i>
@@ -547,6 +721,10 @@
             <i class="fa-solid fa-list-ul"></i>
             <span>التقويم</span>
         </button>
+        <button class="tab-item" data-target="view-tools">
+            <i class="fa-solid fa-calculator"></i>
+            <span>أدوات</span>
+        </button>
         <button class="tab-item" data-target="view-links">
             <i class="fa-solid fa-link"></i>
             <span>الأنظمة</span>
@@ -554,6 +732,15 @@
     </nav>
 
     <script>
+        // --- دالة إشعار التوست العامة ---
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            if(!toast) return;
+            toast.innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
         // --- Theme Management ---
         const themeBtn = document.getElementById('theme-btn');
         let isDark = localStorage.getItem('joufTheme') === 'dark';
@@ -645,7 +832,6 @@
             return `${y}/${m}/${d}`;
         };
 
-        // دالة مخصصة لكتابة العبارات التوضيحية لـ (تبدأ بعد / تنتهي بعد) بشكل ذكي
         const getDaysDiff = (targetDate, context = "upcoming") => {
             const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
             const target = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
@@ -861,7 +1047,7 @@
             pulsingDot.style.top = `${dotY}px`;
         }
 
-        // --- Calendar Rendering (Separated into Current and Upcoming) ---
+        // --- Calendar Rendering ---
         const calCont = document.getElementById('calendar-container');
         
         const currentEvents = academicCalendar.filter(ev => {
@@ -872,10 +1058,7 @@
 
         const upcomingEvents = academicCalendar.filter(ev => ev.start > now).sort((a, b) => a.start - b.start);
         
-        // بناء وتصميم الصف الخاص بكل حدث
         const createRowHTML = (e, type) => {
-            
-            // حساب مدة الحدث بالأيام
             const startD = new Date(e.start.getFullYear(), e.start.getMonth(), e.start.getDate());
             const endD = new Date(e.end.getFullYear(), e.end.getMonth(), e.end.getDate());
             const durationDiff = Math.ceil((endD - startD) / (1000 * 60 * 60 * 24)) + 1;
@@ -886,7 +1069,6 @@
             else if(durationDiff >= 3 && durationDiff <= 10) durationTxt = `${durationDiff} أيام`;
             else durationTxt = `${durationDiff} يوماً`;
 
-            // بناء السطر التفصيلي الجميل (مدة الحدث + التواريخ باتجاه RTL بشكل دائم)
             let subtitleHTML = '';
             if (e.start.toDateString() === e.end.toDateString() || e.type === 'info') {
                 subtitleHTML = `<span dir="rtl">${fmtDateClean(e.start)}</span>`;
@@ -941,15 +1123,11 @@
 
         calCont.innerHTML = calendarHTML;
 
-        renderSchedule(selDay);
-        updateStatusWidget();
-        setInterval(() => { updateStatusWidget(); updateTimelineProgress(); }, 60000);
-
-        // --- Swipe Logic & Animations ---
+        // --- Swipe Logic ---
         let scheduleTouchStartX = 0;
         let scheduleTouchStartY = 0;
         const scheduleCard = document.getElementById('schedule-card');
-        
+
         const hintBtn = document.getElementById('swipe-hint-btn');
         const hintModal = document.getElementById('hint-modal');
         const hintModalClose = document.getElementById('hint-modal-close');
@@ -958,115 +1136,493 @@
 
         const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-        hintBtn.addEventListener('click', () => {
-            hintModal.classList.add('active');
-        });
-
-        hintModalClose.addEventListener('click', async () => {
-            hintModal.classList.remove('active');
-            await sleep(300); 
-
-            const currentActive = document.querySelector('.segment-btn.active');
-            if(!currentActive) return;
-            
-            let originalIndex = parseInt(currentActive.getAttribute('data-day'));
-
-            const doSmartSwipe = async (actionType) => {
-                let isNextDay = actionType === 'next';
-                let targetIndex = isNextDay ? originalIndex + 1 : originalIndex - 1;
-
-                demoHand.style.transition = 'none';
-                demoHand.style.transform = `translate3d(${isNextDay ? '-60px' : '60px'}, 0, 0) rotate(-15deg) scale(1.1)`;
-                demoHand.style.opacity = '0';
-                void demoHand.offsetWidth; 
-
-                demoHand.style.transition = 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease';
-                demoHand.style.opacity = '1';
-                demoHand.style.transform = `translate3d(${isNextDay ? '-60px' : '60px'}, 0, 0) rotate(-15deg) scale(1)`;
-                await sleep(400);
-
-                demoHand.style.transition = 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)';
-                timelineInnerWrapper.style.transition = 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease';
-                
-                demoHand.style.transform = `translate3d(${isNextDay ? '60px' : '-60px'}, 0, 0) rotate(-15deg) scale(1)`;
-                timelineInnerWrapper.style.transform = `translate3d(${isNextDay ? '80px' : '-80px'}, 0, 0)`; 
-                timelineInnerWrapper.style.opacity = '0'; 
-                await sleep(500);
-
-                document.querySelector(`.segment-btn[data-day="${targetIndex}"]`).click();
-                originalIndex = targetIndex;
-
-                timelineInnerWrapper.style.transition = 'none';
-                timelineInnerWrapper.style.transform = `translate3d(${isNextDay ? '-80px' : '80px'}, 0, 0)`;
-                void timelineInnerWrapper.offsetWidth;
-
-                timelineInnerWrapper.style.transition = 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease';
-                timelineInnerWrapper.style.transform = 'translate3d(0, 0, 0)';
-                timelineInnerWrapper.style.opacity = '1';
-
-                demoHand.style.transform = `translate3d(${isNextDay ? '60px' : '-60px'}, 0, 0) rotate(-15deg) scale(1.1)`;
-                await sleep(200);
-                demoHand.style.opacity = '0';
-                await sleep(300);
-            };
-
-            if (originalIndex === 0) {
-                await doSmartSwipe('next');
-                await doSmartSwipe('prev');
-            } else if (originalIndex === 4) {
-                await doSmartSwipe('prev');
-                await doSmartSwipe('next');
-            } else {
-                await doSmartSwipe('next');
-                await doSmartSwipe('prev');
-            }
-        });
+        if(hintBtn) {
+            hintBtn.addEventListener('click', () => { hintModal.classList.add('active'); });
+        }
         
-        scheduleCard.addEventListener('touchstart', e => { 
-            scheduleTouchStartX = e.changedTouches[0].screenX; 
-            scheduleTouchStartY = e.changedTouches[0].screenY;
-        }, {passive: true});
-        
-        scheduleCard.addEventListener('touchend', e => {
-            const touchEndX = e.changedTouches[0].screenX;
-            const touchEndY = e.changedTouches[0].screenY;
-            const diffX = scheduleTouchStartX - touchEndX;
-            const diffY = scheduleTouchStartY - touchEndY;
-            
-            if (Math.abs(diffX) > 40 && Math.abs(diffX) > Math.abs(diffY)) {
+        if(hintModalClose) {
+            hintModalClose.addEventListener('click', async () => {
+                hintModal.classList.remove('active');
+                await sleep(300); 
+
                 const currentActive = document.querySelector('.segment-btn.active');
                 if(!currentActive) return;
                 
-                const currentIndex = parseInt(currentActive.getAttribute('data-day'));
-                let nextIndex = currentIndex;
-                
-                if (diffX < 0) { 
-                    if (currentIndex < 4) { nextIndex++; } 
-                } else if (diffX > 0) { 
-                    if (currentIndex > 0) { nextIndex--; } 
-                } 
-                
-                if (nextIndex !== currentIndex) {
-                    let isNextDay = nextIndex > currentIndex;
+                let originalIndex = parseInt(currentActive.getAttribute('data-day'));
+
+                const doSmartSwipe = async (actionType) => {
+                    let isNextDay = actionType === 'next';
+                    let targetIndex = isNextDay ? originalIndex + 1 : originalIndex - 1;
+
+                    if (demoHand) {
+                        demoHand.style.transition = 'none';
+                        demoHand.style.transform = `translate3d(${isNextDay ? '-60px' : '60px'}, 0, 0) rotate(-15deg) scale(1.1)`;
+                        demoHand.style.opacity = '0';
+                        void demoHand.offsetWidth; 
+
+                        demoHand.style.transition = 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease';
+                        demoHand.style.opacity = '1';
+                        demoHand.style.transform = `translate3d(${isNextDay ? '-60px' : '60px'}, 0, 0) rotate(-15deg) scale(1)`;
+                    }
+                    await sleep(400);
+
+                    if (demoHand) {
+                        demoHand.style.transition = 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)';
+                        demoHand.style.transform = `translate3d(${isNextDay ? '60px' : '-60px'}, 0, 0) rotate(-15deg) scale(1)`;
+                    }
                     
-                    timelineInnerWrapper.style.transition = 'transform 0.2s ease-out, opacity 0.2s ease-out';
-                    timelineInnerWrapper.style.transform = `translate3d(${isNextDay ? '40px' : '-40px'}, 0, 0)`;
-                    timelineInnerWrapper.style.opacity = '0';
-                    
-                    setTimeout(() => {
-                        document.querySelector(`.segment-btn[data-day="${nextIndex}"]`).click();
-                        
+                    if (timelineInnerWrapper) {
+                        timelineInnerWrapper.style.transition = 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease';
+                        timelineInnerWrapper.style.transform = `translate3d(${isNextDay ? '80px' : '-80px'}, 0, 0)`; 
+                        timelineInnerWrapper.style.opacity = '0'; 
+                    }
+                    await sleep(500);
+
+                    document.querySelector(`.segment-btn[data-day="${targetIndex}"]`).click();
+                    originalIndex = targetIndex;
+
+                    if (timelineInnerWrapper) {
                         timelineInnerWrapper.style.transition = 'none';
-                        timelineInnerWrapper.style.transform = `translate3d(${isNextDay ? '-40px' : '40px'}, 0, 0)`;
+                        timelineInnerWrapper.style.transform = `translate3d(${isNextDay ? '-80px' : '80px'}, 0, 0)`;
                         void timelineInnerWrapper.offsetWidth;
-                        
-                        timelineInnerWrapper.style.transition = 'transform 0.3s ease-out, opacity 0.3s ease-out';
+
+                        timelineInnerWrapper.style.transition = 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease';
                         timelineInnerWrapper.style.transform = 'translate3d(0, 0, 0)';
                         timelineInnerWrapper.style.opacity = '1';
-                    }, 200);
+                    }
+
+                    if (demoHand) {
+                        demoHand.style.transform = `translate3d(${isNextDay ? '60px' : '-60px'}, 0, 0) rotate(-15deg) scale(1.1)`;
+                        await sleep(200);
+                        demoHand.style.opacity = '0';
+                    }
+                    await sleep(300);
+                };
+
+                if (originalIndex === 0) {
+                    await doSmartSwipe('next');
+                    await doSmartSwipe('prev');
+                } else if (originalIndex === 4) {
+                    await doSmartSwipe('prev');
+                    await doSmartSwipe('next');
+                } else {
+                    await doSmartSwipe('next');
+                    await doSmartSwipe('prev');
+                }
+            });
+        }
+        
+        if (scheduleCard) {
+            scheduleCard.addEventListener('touchstart', e => { 
+                scheduleTouchStartX = e.changedTouches[0].screenX; 
+                scheduleTouchStartY = e.changedTouches[0].screenY;
+            }, {passive: true});
+            
+            scheduleCard.addEventListener('touchend', e => {
+                const touchEndX = e.changedTouches[0].screenX;
+                const touchEndY = e.changedTouches[0].screenY;
+                const diffX = scheduleTouchStartX - touchEndX;
+                const diffY = scheduleTouchStartY - touchEndY;
+                
+                if (Math.abs(diffX) > 40 && Math.abs(diffX) > Math.abs(diffY)) {
+                    const currentActive = document.querySelector('.segment-btn.active');
+                    if(!currentActive) return;
+                    
+                    const currentIndex = parseInt(currentActive.getAttribute('data-day'));
+                    let nextIndex = currentIndex;
+                    
+                    if (diffX < 0) { 
+                        if (currentIndex < 4) { nextIndex++; } 
+                    } else if (diffX > 0) { 
+                        if (currentIndex > 0) { nextIndex--; } 
+                    } 
+                    
+                    if (nextIndex !== currentIndex) {
+                        let isNextDay = nextIndex > currentIndex;
+                        
+                        if (timelineInnerWrapper) {
+                            timelineInnerWrapper.style.transition = 'transform 0.2s ease-out, opacity 0.2s ease-out';
+                            timelineInnerWrapper.style.transform = `translate3d(${isNextDay ? '40px' : '-40px'}, 0, 0)`;
+                            timelineInnerWrapper.style.opacity = '0';
+                            
+                            setTimeout(() => {
+                                document.querySelector(`.segment-btn[data-day="${nextIndex}"]`).click();
+                                
+                                timelineInnerWrapper.style.transition = 'none';
+                                timelineInnerWrapper.style.transform = `translate3d(${isNextDay ? '-40px' : '40px'}, 0, 0)`;
+                                void timelineInnerWrapper.offsetWidth;
+                                
+                                timelineInnerWrapper.style.transition = 'transform 0.3s ease-out, opacity 0.3s ease-out';
+                                timelineInnerWrapper.style.transform = 'translate3d(0, 0, 0)';
+                                timelineInnerWrapper.style.opacity = '1';
+                            }, 200);
+                        } else {
+                            document.querySelector(`.segment-btn[data-day="${nextIndex}"]`).click();
+                        }
+                    }
+                }
+            }, {passive: true});
+        }
+
+
+        // =========================================
+        // --- قسم أداة الغياب الجديدة المستقلة ---
+        // =========================================
+
+        const trk_courses = {
+            "ADIT_1110": { name: "مقدمة تقنية المعلومات", code: "ADIT 1110" },
+            "ADCY_1111": { name: "أساسيات الشبكات", code: "ADCY 1111" },
+            "ADEN_1110": { name: "اللغة الإنجليزية 1", code: "ADEN 1110" },
+            "ADCY_1112": { name: "أساسيات الأمن السيبراني", code: "ADCY 1112" },
+            "ADCY_1113": { name: "رياضيات الحاسب", code: "ADCY 1113" }
+        };
+
+        const trk_regularSchedule = {
+            0: [ { n: "مقدمة تقنية المعلومات", s: "15:00", e: "16:50", c:"ADIT_1110", w:2 }, { n: "أساسيات الشبكات", s: "17:00", e: "17:50", c:"ADCY_1111", w:1 }, { n: "اللغة الإنجليزية 1", s: "18:00", e: "19:50", c:"ADEN_1110", w:2 } ],
+            1: [ { n: "أساسيات الأمن السيبراني", s: "15:00", e: "16:50", c:"ADCY_1112", w:2 }, { n: "رياضيات الحاسب", s: "17:00", e: "18:50", c:"ADCY_1113", w:2 } ],
+            2: [ { n: "مقدمة تقنية المعلومات", s: "15:00", e: "15:50", c:"ADIT_1110", w:1 }, { n: "أساسيات الشبكات", s: "16:00", e: "17:50", c:"ADCY_1111", w:2 } ],
+            3: [ { n: "أساسيات الأمن السيبراني", s: "15:00", e: "15:50", c:"ADCY_1112", w:1 }, { n: "رياضيات الحاسب", s: "16:00", e: "16:50", c:"ADCY_1113", w:1 } ],
+            4: [ { n: "اللغة الإنجليزية 1", s: "15:00", e: "15:50", c: "ADEN_1110", w:1 } ]
+        };
+
+        const trk_ramadanSchedule = {
+            0: [ { n: "مقدمة تقنية المعلومات", s: "14:50", e: "16:05", c:"ADIT_1110", w:2 }, { n: "أساسيات الشبكات", s: "21:00", e: "21:35", c:"ADCY_1111", w:1 }, { n: "اللغة الإنجليزية 1", s: "21:40", e: "22:55", c:"ADEN_1110", w:2 } ],
+            1: [ { n: "أساسيات الأمن السيبراني", s: "14:50", e: "16:05", c:"ADCY_1112", w:2 }, { n: "رياضيات الحاسب", s: "21:00", e: "22:15", c:"ADCY_1113", w:2 } ],
+            2: [ { n: "مقدمة تقنية المعلومات", s: "14:50", e: "15:25", c:"ADIT_1110", w:1 }, { n: "أساسيات الشبكات", s: "15:30", e: "16:05", c:"ADCY_1111", w:2 } ],
+            3: [ { n: "أساسيات الأمن السيبراني", s: "14:50", e: "15:25", c:"ADCY_1112", w:1 }, { n: "رياضيات الحاسب", s: "15:30", e: "16:05", c:"ADCY_1113", w:1 } ],
+            4: [ { n: "اللغة الإنجليزية 1", s: "14:50", e: "15:25", c: "ADEN_1110", w:1 } ]
+        };
+
+        const trk_ramadanStart = new Date('2026-02-18T00:00:00');
+        const trk_ramadanEnd = new Date('2026-03-20T23:59:59');
+
+        let trk_records = JSON.parse(localStorage.getItem('jouf_tracker_records')) || [];
+        let dateMap = {}; 
+
+        function toEnglishDigits(str) {
+            if (!str) return '';
+            return str.toString().replace(/[٠-٩]/g, d => d.charCodeAt(0) - 1632);
+        }
+
+        function buildDateMap() {
+            const startDate = new Date('2026-01-01T12:00:00');
+            const formatter = new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura', {
+                year: 'numeric', month: 'numeric', day: 'numeric'
+            });
+
+            for (let i = 0; i < 1000; i++) {
+                let currentGDate = new Date(startDate);
+                currentGDate.setDate(currentGDate.getDate() + i);
+
+                const parts = formatter.formatToParts(currentGDate);
+                let y, m, d;
+                parts.forEach(p => {
+                    if (p.type === 'year') y = parseInt(toEnglishDigits(p.value));
+                    if (p.type === 'month') m = parseInt(toEnglishDigits(p.value));
+                    if (p.type === 'day') d = parseInt(toEnglishDigits(p.value));
+                });
+                
+                if(isNaN(y)){
+                    const str = toEnglishDigits(formatter.format(currentGDate));
+                    const matches = str.match(/\d+/g);
+                    if(matches){ d=parseInt(matches[0]); m=parseInt(matches[1]); y=parseInt(matches[2]); }
+                }
+
+                const hStr = `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+                dateMap[hStr] = new Date(currentGDate);
+            }
+        }
+
+        const selDaySelect = document.getElementById('sel-day');
+        const selMonthSelect = document.getElementById('sel-month');
+        const selYearSelect = document.getElementById('sel-year');
+
+        function initSelectors() {
+            for (let i = 1; i <= 30; i++) {
+                let opt = document.createElement('option');
+                opt.value = i; opt.text = String(i).padStart(2, '0');
+                selDaySelect.appendChild(opt);
+            }
+            for (let i = 1; i <= 12; i++) {
+                let opt = document.createElement('option');
+                opt.value = i; opt.text = String(i).padStart(2, '0');
+                selMonthSelect.appendChild(opt);
+            }
+            let availableYears = [...new Set(Object.keys(dateMap).map(k => k.split('-')[0]))].sort();
+            availableYears.forEach(y => {
+                let opt = document.createElement('option');
+                opt.value = y; opt.text = y;
+                selYearSelect.appendChild(opt);
+            });
+
+            setInitialDate();
+            selDaySelect.addEventListener('change', handleDateSelection);
+            selMonthSelect.addEventListener('change', handleDateSelection);
+            selYearSelect.addEventListener('change', handleDateSelection);
+        }
+
+        function setInitialDate() {
+            let todayG = new Date();
+            let todayGStr = todayG.toISOString().split('T')[0];
+            let foundHijriStr = null;
+
+            for (let hKey in dateMap) {
+                if (dateMap[hKey].toISOString().split('T')[0] === todayGStr) {
+                    foundHijriStr = hKey; break;
                 }
             }
-        }, {passive: true});
+
+            if (!foundHijriStr) { foundHijriStr = Object.keys(dateMap)[0]; }
+
+            const [y, m, d] = foundHijriStr.split('-');
+            selYearSelect.value = y;
+            selMonthSelect.value = parseInt(m);
+            selDaySelect.value = parseInt(d);
+            
+            handleDateSelection();
+        }
+
+        function handleDateSelection() {
+            const y = selYearSelect.value;
+            const m = String(selMonthSelect.value).padStart(2, '0');
+            const d = String(selDaySelect.value).padStart(2, '0');
+            const hStr = `${y}-${m}-${d}`;
+
+            const lecturesArea = document.getElementById('tracker-lectures-area');
+            const listDiv = document.getElementById('tracker-lectures-list');
+            const msgDiv = document.getElementById('tracker-msg');
+            const saveBtn = document.getElementById('tracker-save-btn');
+
+            const gDate = dateMap[hStr];
+
+            if (!gDate) {
+                lecturesArea.style.display = 'none'; msgDiv.style.display = 'block';
+                msgDiv.innerHTML = `<i class="fa-solid fa-triangle-exclamation" style="color:var(--ios-orange);"></i> التاريخ المدخل غير صحيح (هذا الشهر 29 يوماً فقط).`;
+                return;
+            }
+
+            const dayOfWeek = gDate.getDay();
+
+            if (dayOfWeek === 5 || dayOfWeek === 6) {
+                lecturesArea.style.display = 'none'; msgDiv.style.display = 'block';
+                msgDiv.innerHTML = '<i class="fa-solid fa-mug-hot"></i> يوم عطلة، استمتع بوقتك.';
+                return;
+            }
+
+            let activeSchedule = trk_regularSchedule;
+            if (gDate >= trk_ramadanStart && gDate <= trk_ramadanEnd) { activeSchedule = trk_ramadanSchedule; }
+
+            const dayLectures = activeSchedule[dayOfWeek];
+            
+            if (!dayLectures || dayLectures.length === 0) {
+                lecturesArea.style.display = 'none'; msgDiv.style.display = 'block';
+                msgDiv.innerHTML = 'لا توجد محاضرات في هذا اليوم.';
+                return;
+            }
+
+            msgDiv.style.display = 'none'; lecturesArea.style.display = 'block'; listDiv.innerHTML = '';
+            let hasEnabledCheckbox = false;
+
+            dayLectures.forEach((lec) => {
+                const isAlreadySaved = trk_records.some(r => r.hijriDate === hStr && r.courseId === lec.c);
+                if(!isAlreadySaved) hasEnabledCheckbox = true;
+                
+                const timeString = `${trk_formatTime12RTL(lec.s)} - ${trk_formatTime12RTL(lec.e)}`;
+
+                listDiv.innerHTML += `
+                    <label class="checkbox-row" style="${isAlreadySaved ? 'opacity: 0.5; cursor: not-allowed;' : ''}">
+                        <input type="checkbox" class="absence-cb" value="${lec.c}" data-weight="${lec.w}" ${isAlreadySaved ? 'disabled' : ''}>
+                        <div class="checkbox-content">
+                            <div class="checkbox-title">${lec.n}</div>
+                            <div class="checkbox-desc">
+                                <span dir="rtl">${timeString}</span>
+                                <span class="weight-badge">${lec.w} ساعة</span>
+                            </div>
+                        </div>
+                    </label>
+                `;
+            });
+
+            saveBtn.disabled = !hasEnabledCheckbox;
+        }
+
+        const trk_formatTime12RTL = (timeStr) => {
+            const [h, m] = timeStr.split(':').map(Number);
+            const ampm = h >= 12 ? 'م' : 'ص';
+            let hr = h % 12; if (hr === 0) hr = 12;
+            return `<span dir="ltr">${hr}:${m.toString().padStart(2, '0')}</span> <span>${ampm}</span>`;
+        };
+
+        window.saveTrackerAbsence = function() {
+            const y = selYearSelect.value;
+            const m = String(selMonthSelect.value).padStart(2, '0');
+            const d = String(selDaySelect.value).padStart(2, '0');
+            const hStr = `${y}-${m}-${d}`;
+            
+            const checkboxes = document.querySelectorAll('.absence-cb:checked:not(:disabled)');
+            if (checkboxes.length === 0) { showToast('يرجى تحديد محاضرة للغياب.'); return; }
+
+            checkboxes.forEach(cb => {
+                trk_records.push({
+                    id: Date.now() + Math.random().toString(16).slice(2),
+                    hijriDate: hStr,
+                    courseId: cb.value,
+                    weight: parseInt(cb.getAttribute('data-weight'))
+                });
+            });
+
+            localStorage.setItem('jouf_tracker_records', JSON.stringify(trk_records));
+            handleDateSelection();
+            renderAllDashboards();
+            showToast('تم تسجيل الغياب بنجاح');
+        }
+
+        window.deleteTrackerRecord = function(id) {
+            trk_records = trk_records.filter(r => String(r.id) !== String(id));
+            localStorage.setItem('jouf_tracker_records', JSON.stringify(trk_records));
+            handleDateSelection();
+            renderAllDashboards();
+            showToast('تم حذف السجل');
+        };
+
+        function renderAllDashboards() {
+            renderSummaryDashboard();
+            renderDetailedHistory();
+        }
+
+        function renderSummaryDashboard() {
+            const container = document.getElementById('summary-dashboard-list');
+            
+            const summaryData = {};
+            Object.keys(trk_courses).forEach(key => { summaryData[key] = 0; });
+            
+            trk_records.forEach(rec => {
+                if (summaryData[rec.courseId] !== undefined) {
+                    summaryData[rec.courseId] += rec.weight;
+                }
+            });
+
+            let html = '<div class="summary-list">';
+            
+            Object.keys(summaryData).forEach(courseId => {
+                const totalAbsence = summaryData[courseId];
+                const info = trk_courses[courseId];
+                
+                let remaining = 12 - totalAbsence;
+                if(remaining < 0) remaining = 0;
+
+                let progressPercent = (totalAbsence / 12) * 100;
+                if(progressPercent > 100) progressPercent = 100;
+
+                let progressClass = '';
+                let remainColorClass = 'val-safe';
+                
+                if (totalAbsence >= 12) { 
+                    progressClass = 'danger'; 
+                } else if (totalAbsence >= 9) { 
+                    progressClass = 'warning'; 
+                    remainColorClass = 'val-warning'; 
+                }
+                
+                if(remaining <= 3 && remaining > 0) remainColorClass = 'val-danger'; 
+
+                let remainingHtml = '';
+                if (remaining === 0) {
+                    remainingHtml = `<div class="deprived-badge">محروم</div>`;
+                } else {
+                    remainingHtml = `
+                        <div class="s-stat-box">
+                            <span class="s-stat-label">المتبقي</span>
+                            <span class="s-stat-value ${remainColorClass}">${remaining}</span>
+                        </div>
+                    `;
+                }
+
+                html += `
+                    <div class="summary-row">
+                        <div class="summary-header">
+                            <div class="s-course-info">
+                                <span class="s-course-name">${info.name}</span>
+                                <span class="s-course-code">${info.code}</span>
+                            </div>
+                            <div class="s-stats">
+                                <div class="s-stat-box" style="background:transparent;">
+                                    <span class="s-stat-label">الغياب</span>
+                                    <span class="s-stat-value">${totalAbsence}</span>
+                                </div>
+                                ${remainingHtml}
+                            </div>
+                        </div>
+                        <div class="tracker-progress-track">
+                            <div class="tracker-progress-fill ${progressClass}" style="width: ${progressPercent}%;"></div>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        function renderDetailedHistory() {
+            const container = document.getElementById('tracker-dashboard-list');
+            container.innerHTML = '';
+
+            if(trk_records.length === 0){
+                container.innerHTML = '<div class="empty-state">لا توجد تواريخ غياب مسجلة في السجل.</div>';
+                return;
+            }
+
+            const dataByCourse = {};
+            Object.keys(trk_courses).forEach(key => { dataByCourse[key] = []; });
+            trk_records.forEach(rec => { if (dataByCourse[rec.courseId]) { dataByCourse[rec.courseId].push(rec); } });
+
+            Object.keys(dataByCourse).forEach(courseId => {
+                const history = dataByCourse[courseId];
+                if(history.length === 0) return; 
+                
+                const courseInfo = trk_courses[courseId];
+                
+                history.sort((a, b) => {
+                    let dateA = a.hijriDate || a.date; let dateB = b.hijriDate || b.date;
+                    return dateB.localeCompare(dateA);
+                });
+
+                let historyHTML = '<div class="history-list">';
+                history.forEach(h => {
+                    // توافق مع السجلات المحفوظة مسبقاً قبل التحديث الجديد
+                    let displayDate = h.hijriDate || h.date;
+                    historyHTML += `
+                        <div class="history-item">
+                            <span class="history-date" dir="ltr"><i class="fa-regular fa-calendar" style="color:var(--ios-blue); margin-right:4px;"></i> ${displayDate}</span>
+                            <div>
+                                <span style="color: var(--ios-text-secondary); font-weight: 600; font-size: 0.75rem; margin-left:12px;">${h.weight} ساعة</span>
+                                <button class="delete-btn" onclick="deleteTrackerRecord('${h.id}')"><i class="fa-solid fa-xmark"></i> حذف</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                historyHTML += '</div>';
+
+                container.innerHTML += `
+                    <div class="ios-card" style="padding:16px; margin-bottom:12px;">
+                        <h4 style="font-size:0.9rem; font-weight:800; margin-bottom:4px;">${courseInfo.name}</h4>
+                        <div style="font-size:0.75rem; font-family:monospace; color:var(--ios-text-secondary); margin-bottom:10px;">${courseInfo.code}</div>
+                        ${historyHTML}
+                    </div>
+                `;
+            });
+        }
+
+        // =========================================
+        // التشغيل الأولي للتطبيق بالكامل
+        // =========================================
+        buildDateMap(); 
+        initSelectors(); 
+        renderAllDashboards();
+
+        renderSchedule(selDay);
+        updateStatusWidget();
+        setInterval(() => { updateStatusWidget(); updateTimelineProgress(); }, 60000);
 
     </script>
 </body>
