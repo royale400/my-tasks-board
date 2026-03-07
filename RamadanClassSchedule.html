@@ -2,7 +2,8 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#f2f2f7">
     <title>بوابة سيبر الجوف</title>
     
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/webfonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin="anonymous">
@@ -11,1027 +12,830 @@
 
     <style>
         /* ========================================= */
-        /* --- متغيرات الألوان (الثيم الحديث) --- */
+        /* --- 1. متغيرات الألوان (البنفسجي الملكي) --- */
         /* ========================================= */
         :root {
-            --bg-main: #020617;       
-            --bg-panel: #0f172a;      
-            --timeline-line: #334155; 
+            --bg-body: #f2f2f7;
+            --bg-card: #ffffff;
+            --bg-nav: rgba(255, 255, 255, 0.95);
+            --bg-days: #e5e5ea;
             
-            --accent: #38bdf8;        
-            --accent-glow: rgba(56, 189, 248, 0.3); 
-            --accent-green: #10b981;  
-            --accent-red: #ef4444;    
-            --accent-orange: #f59e0b;
+            --text-main: #1c1c1e;
+            --text-sub: #8e8e93;
+            --text-muted: #c7c7cc;
             
-            --accent-exam: #8b5cf6;
-            --accent-exam-glow: rgba(139, 92, 246, 0.4);
-            --accent-exam-bg: rgba(139, 92, 246, 0.1);
+            --brand-color: #7c3aed; 
+            --brand-soft: rgba(124, 58, 237, 0.1);
             
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --text-muted: #64748b;
+            --live-color: #ff3b30;  
+            --live-soft: rgba(255, 59, 48, 0.08);
             
-            --bento-bg: #0f172a;
-            --bento-border: rgba(255, 255, 255, 0.1);
-            --bento-radius: 32px;
-            --bento-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5); 
+            --holiday-color: #5e5ce6; 
+            --holiday-soft: rgba(94, 92, 230, 0.08);
             
-            --accordion-header-bg: rgba(0, 0, 0, 0.3);
-            --links-card-bg: rgba(56, 189, 248, 0.05); 
+            --success-green: #34c759; 
+            
+            --exam-color: #ff9500;
+            --exam-soft: rgba(255, 149, 0, 0.08);
+            
+            --border-color: rgba(0, 0, 0, 0.06);
+            --shadow-sm: 0 2px 10px rgba(0,0,0,0.03);
+            --shadow-nav: 0 -2px 10px rgba(0,0,0,0.05);
+            --shadow-pill: 0 4px 12px rgba(0,0,0,0.1);
+            
+            --radius-card: 20px;
+            --radius-pill: 50px;
         }
 
-        body.light-mode {
-            --bg-main: #f8fafc;
-            --bg-panel: #ffffff;
-            --timeline-line: #cbd5e1;
+        body.dark-mode {
+            --bg-body: #000000;
+            --bg-card: #1c1c1e;
+            --bg-nav: rgba(28, 28, 30, 0.95);
+            --bg-days: #2c2c2e;
             
-            --accent: #0284c7;
-            --accent-glow: rgba(2, 132, 199, 0.2);
-            --accent-green: #059669;
-            --accent-red: #dc2626;
-            --accent-orange: #d97706;
+            --text-main: #f2f2f7;
+            --text-sub: #98989d;
+            --text-muted: #48484a;
             
-            --text-primary: #0f172a;
-            --text-secondary: #64748b;
-            --text-muted: #94a3b8;
+            --brand-color: #8b5cf6;
+            --brand-soft: rgba(139, 92, 246, 0.15);
+            --success-green: #30d158; 
             
-            --bento-bg: #ffffff;
-            --bento-border: #e2e8f0;
-            --bento-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
-            --accordion-header-bg: #f8fafc;
-            --links-card-bg: #f0f9ff;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --shadow-sm: 0 4px 15px rgba(0,0,0,0.3);
+            --shadow-nav: 0 -2px 10px rgba(0,0,0,0.3);
+            --shadow-pill: 0 4px 12px rgba(0,0,0,0.4);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        .no-tap-highlight { -webkit-tap-highlight-color: transparent !important; outline: none !important; }
-        .preload * { transition: none !important; }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
         body {
             font-family: 'Tajawal', sans-serif;
-            background-color: var(--bg-main);
-            color: var(--text-primary);
-            padding: 20px; 
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transition: background-color 0.8s ease, color 0.8s ease; 
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
-        }
-        body.no-scroll { overflow: hidden; }
-
-        /* ========================================= */
-        /* --- شاشة الدخول --- */
-        /* ========================================= */
-        .cyber-splash {
-            position: fixed; inset: 0; 
-            background: #020617;
-            z-index: 99999; display: flex; align-items: center; justify-content: center;
-            transition: background-color 0.8s ease, backdrop-filter 0.8s ease;
+            /* تم إزالة الانتقال اللوني البطيء (Transition) لمنع تمدد العناصر عند التمرير */
         }
 
-        .shield-wrapper { position: relative; display: flex; align-items: center; justify-content: center; width: 150px; height: 150px; z-index: 100000; }
+        /* ========================================= */
+        /* --- 2. الهيكل الأساسي والهيدر --- */
+        /* ========================================= */
+        .app-core {
+            max-width: 600px; margin: 0 auto;
+            min-height: 100dvh; display: flex; flex-direction: column;
+            padding-bottom: 90px;
+        }
+
+        .header {
+            padding: 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 50;
+            background: var(--bg-nav); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+        }
         
-        .shield-ripple {
+        .header-title { display: flex; align-items: center; gap: 15px; }
+        
+        .main-icon { 
+            font-size: 2.8rem;
+            color: var(--brand-color); 
+            animation: float 4s ease-in-out infinite;
+            text-shadow: 0 4px 10px var(--brand-soft);
+        }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+
+        .header-text-container {
+            perspective: 1000px; width: 195px; height: 42px; position: relative; z-index: 2;
+        }
+        .flip-wrapper {
+            width: 100%; height: 100%; position: absolute;
+            transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform-style: preserve-3d;
+        }
+        .flip-wrapper.flipped { transform: rotateX(180deg); }
+        .flip-face {
             position: absolute; width: 100%; height: 100%;
-            border-radius: 50%; border: 3px solid var(--accent-green);
-            opacity: 0; animation: ripple-effect 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+            backface-visibility: hidden; display: flex; flex-direction: column; justify-content: center;
         }
-        .shield-ripple:nth-child(2) { animation-delay: 0.4s; }
-        .shield-ripple:nth-child(3) { animation-delay: 0.8s; }
+        .flip-face.back { transform: rotateX(180deg); }
+        .flip-face h1 { font-size: 1.25rem; font-weight: 900; margin-bottom: 2px; line-height: 1.2; white-space: nowrap;}
+        .flip-face p { font-size: 0.8rem; color: var(--text-sub); font-weight: 600; line-height: 1.2; white-space: nowrap;}
+
+        .theme-btn {
+            width: 40px; height: 40px; border-radius: 50%;
+            background: var(--bg-card); border: 1px solid var(--border-color);
+            color: var(--text-main); display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem; cursor: pointer; box-shadow: var(--shadow-sm); transition: transform 0.2s;
+            flex-shrink: 0;
+        }
+        .theme-btn:active { transform: scale(0.9); }
+
+        .main-content { padding: 20px; display: flex; flex-direction: column; gap: 20px; }
+
+        /* ========================================= */
+        /* --- 3. لوحة التنبيهات وبطاقة الحالة --- */
+        /* ========================================= */
+        .holiday-alert-banner {
+            display: none; background: var(--holiday-soft); border: 1px solid var(--holiday-color);
+            border-radius: 16px; padding: 15px 20px; margin-bottom: 5px;
+            animation: fade-in 0.5s ease;
+        }
+        .holiday-alert-header { color: var(--holiday-color); font-weight: 900; display: flex; align-items: center; gap: 8px; font-size: 1.1rem; margin-bottom: 5px;}
+        .holiday-alert-text { color: var(--text-main); font-weight: 600; font-size: 0.95rem; margin: 0; line-height: 1.5;}
+
+        .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-card); padding: 20px; box-shadow: var(--shadow-sm); }
+        .status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: var(--radius-pill); font-size: 0.8rem; font-weight: 800; margin-bottom: 12px; background: var(--bg-body); color: var(--text-sub); border: 1px solid var(--border-color); }
+        .status-title { font-size: 1.4rem; font-weight: 900; margin-bottom: 5px; line-height: 1.3;}
+        .status-desc { font-size: 0.95rem; color: var(--text-sub); font-weight: 600;}
+
+        .card.is-live { border-color: var(--live-color); background: var(--live-soft); }
+        .card.is-live .status-badge { background: var(--bg-card); color: var(--live-color); border: none; }
+        .live-dot { width: 8px; height: 8px; background: var(--live-color); border-radius: 50%; animation: blink 1.5s infinite; }
         
-        @keyframes ripple-effect { 0% { transform: scale(0.3); opacity: 1; border-width: 4px; } 100% { transform: scale(2.2); opacity: 0; border-width: 0px; } }
-        
-        .splash-shield-icon {
-            width: 90px; height: 90px; color: var(--accent-green); position: relative; z-index: 2;
-            filter: drop-shadow(0 0 20px rgba(16, 185, 129, 0.6));
-            animation: shield-beat 1.5s ease-in-out infinite; transform-origin: center center;
-        }
-        
-        @keyframes shield-beat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); filter: drop-shadow(0 0 30px rgba(16, 185, 129, 0.9)); } }
-        .splash-shield-icon.flying { animation: none !important; filter: drop-shadow(0 0 5px rgba(56, 189, 248, 0.5)) !important; color: var(--accent) !important; }
+        .card.is-holiday { border-color: var(--holiday-color); background: var(--holiday-soft); display: none; }
+
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
         /* ========================================= */
-        /* --- هيكل الـ Bento Grid الرئيسي --- */
+        /* --- 4. شريط الأيام الذكي --- */
         /* ========================================= */
-        .bento-container { width: 100%; max-width: 800px; display: flex; flex-direction: column; gap: 20px; margin-top: 10px; margin-bottom: 30px; opacity: 0; transform: translateY(20px); transition: opacity 0.8s ease, transform 0.8s ease; }
-        .bento-container.visible { opacity: 1; transform: translateY(0); }
-        .bento-box { position: relative; background: var(--bento-bg); border-radius: var(--bento-radius); padding: 30px; border: 1px solid var(--bento-border); box-shadow: var(--bento-shadow); z-index: 1; overflow: hidden; transition: transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s, background-color 0.4s; }
-        .bento-title { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: space-between; font-size: 1.2rem; font-weight: 800; color: var(--text-primary); margin-bottom: 24px; padding-bottom: 15px; border-bottom: 1px solid var(--bento-border); }
-        .title-main-part { display: flex; align-items: center; gap: 10px; }
-        .title-main-part i { color: var(--accent); font-size: 1.4rem; }
+        .section-title { font-size: 1.1rem; font-weight: 800; margin-bottom: 15px; color: var(--text-main); display: flex; align-items: center; gap: 8px;}
+        .section-title i { color: var(--brand-color); }
 
-        /* ========================================= */
-        /* --- صندوق الترحيب --- */
-        /* ========================================= */
-        .welcome-bento { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 24px; }
-        .welcome-info { display: flex; align-items: center; gap: 20px; }
-        
-        .header-icon { 
-            width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; 
-            flex-shrink: 0; border-radius: 20px; background: rgba(56, 189, 248, 0.1); 
-            color: var(--accent); opacity: 0; transition: opacity 0.3s;
-        }
-        body.light-mode .header-icon { background: #e0f2fe; box-shadow: 0 2px 10px rgba(2, 132, 199, 0.1); }
-        .header-icon.visible { opacity: 1; animation: float-icon 3s ease-in-out infinite; }
-        @keyframes float-icon { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-
-        .welcome-text h1 { font-size: 1.5rem; font-weight: 900; margin: 0 0 5px 0; color: var(--text-primary); }
-        .welcome-text p { color: var(--text-secondary); font-size: 0.95rem; margin: 0; font-weight: 600; opacity: 0.8; }
-        .style-badge { color: var(--accent); font-size: 0.75rem; font-family: monospace; letter-spacing: 0.1em; font-weight: 800; margin-bottom: 4px; display: block; }
-        .date-display { background: rgba(56, 189, 248, 0.1); color: var(--accent); font-size: 0.85rem; font-weight: 800; padding: 10px 20px; border-radius: 16px; flex-shrink: 0; }
-        body.light-mode .date-display { background: #e0f2fe; }
-
-        /* ========================================= */
-        /* --- لوحة الإعلانات والمهام --- */
-        /* ========================================= */
-        #tasks-board { display: none; }
-        .tasks-container { display: flex; gap: 15px; flex-direction: column; padding-bottom: 5px; }
-        .task-card { display: flex; gap: 15px; padding: 20px; border-radius: 20px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--bento-border); position: relative; overflow: hidden; width: 100%; }
-        body.light-mode .task-card { background: #ffffff; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
-        .task-card.exam { border-right: 4px solid var(--accent-exam); background: linear-gradient(90deg, rgba(139, 92, 246, 0.05) 0%, transparent 100%); }
-        .task-card.info { border-right: 4px solid var(--accent); background: linear-gradient(90deg, rgba(56, 189, 248, 0.05) 0%, transparent 100%); }
-        .task-card.holiday { border-right: 4px solid var(--accent-green); background: linear-gradient(90deg, rgba(16, 185, 129, 0.05) 0%, transparent 100%); }
-        
-        .task-icon { width: 45px; height: 45px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
-        .exam .task-icon { background: rgba(139, 92, 246, 0.1); color: var(--accent-exam); }
-        .info .task-icon { background: rgba(56, 189, 248, 0.1); color: var(--accent); }
-        .holiday .task-icon { background: rgba(16, 185, 129, 0.1); color: var(--accent-green); }
-        .task-content { flex-grow: 1; display: flex; flex-direction: column; gap: 8px; justify-content: center; min-width: 0; }
-        .task-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 8px;}
-        .task-title { font-weight: 800; font-size: 1.1rem; color: var(--text-primary); margin: 0; line-height: 1.4; display: flex; align-items: center; gap: 8px;}
-        .task-course { font-size: 0.75rem; background: var(--bento-bg); padding: 4px 10px; border-radius: 8px; border: 1px solid var(--bento-border); font-family: monospace; font-weight: bold; color: var(--text-secondary); white-space: nowrap; }
-        .task-desc { font-size: 0.95rem; color: var(--text-secondary); line-height: 1.6; margin: 0; font-weight: 500; white-space: normal; word-wrap: break-word; }
-
-        /* ========================================= */
-        /* --- تصميم التبويبات (Tabs) المتجاورة --- */
-        /* ========================================= */
-        .tabs-container { 
-            display: flex; 
-            gap: 15px; 
-            width: 100%; 
-            max-width: 800px;
-        }
-
-        .tab-button { 
-            flex: 1; 
-            background: var(--bento-bg); 
-            border: 1px solid var(--bento-border); 
-            padding: 24px 15px; 
-            border-radius: 24px; 
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); 
-            cursor: pointer; 
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .tab-button::after { content: ''; position: absolute; inset: 0; background: var(--accent); opacity: 0; transition: opacity 0.3s; z-index: 0; }
-        .tab-button:active::after { opacity: 0.1; }
-        .tab-button > div { position: relative; z-index: 1; }
-
-        .tab-button:hover {
-            transform: translateY(-3px);
-            border-color: var(--accent);
-            box-shadow: 0 10px 20px var(--accent-glow);
-        }
-
-        .tab-button.active { 
-            border-color: var(--accent); 
-            background: var(--links-card-bg); 
-            box-shadow: 0 10px 25px var(--accent-glow); 
-            transform: translateY(-3px); 
-        }
-
-        .tab-icon { 
-            width: 50px; height: 50px; 
-            border-radius: 16px; 
-            display: flex; align-items: center; justify-content: center; 
-            font-size: 1.4rem; 
-            margin-bottom: 12px;
-            transition: all 0.3s; 
-            background: rgba(56, 189, 248, 0.1); 
-            color: var(--accent); 
-        }
-
-        .tab-button[data-target="calendar-view"] .tab-icon { 
-            background: rgba(16, 185, 129, 0.1); 
-            color: var(--accent-green); 
-        }
-
-        .tab-button.active .tab-icon { transform: scale(1.1); }
-        .tab-text h4 { font-size: 1.15rem; font-weight: 800; color: var(--text-primary); margin: 0 0 6px 0; }
-        .tab-text span { font-size: 0.9rem; color: var(--text-secondary); font-weight: 500; display: block; }
-        
-        .tab-content-section { 
-            display: none; 
-            width: 100%; 
-            animation: fadeIn 0.4s ease forwards; 
+        .days-wrapper {
+            position: relative; display: flex;
+            background: var(--bg-days); border-radius: 20px;
+            padding: 6px; margin-bottom: 20px; overflow: hidden;
         }
         
-        .tab-content-section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* ========================================= */
-        /* --- الأكورديون والتايم لاين والتنبيهات --- */
-        /* ========================================= */
-        .accordion-container { display: flex; flex-direction: column; gap: 15px; }
-        .accordion-item { background: transparent; border: 1px solid var(--bento-border); border-radius: 20px; overflow: hidden; transition: all 0.4s; }
-        .accordion-header { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 20px; background: var(--accordion-header-bg); border: none; color: var(--text-primary); font-family: inherit; font-size: 1.1rem; font-weight: 700; cursor: pointer; transition: all 0.3s; }
-        .icon-plus { color: var(--accent); transition: transform 0.4s ease; font-size: 1.2rem; }
-        .accordion-panel { max-height: 0; overflow: hidden; transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
-        .panel-content { padding: 15px 20px 25px 20px; } 
-        .accordion-item.active { border-color: var(--accent); background: rgba(56, 189, 248, 0.02); }
-        .accordion-item.active .accordion-header { font-weight: 900; }
-        .accordion-item.active .icon-plus { transform: rotate(45deg); color: var(--accent-red); }
-        .today-badge { font-size: 0.75rem; background: var(--accent); color: #ffffff; padding: 4px 12px; border-radius: 10px; margin-right: 10px; font-weight: bold; display: inline-block; }
-
-        .accordion-item.is-holiday-day { border: 1px solid var(--accent-green) !important; background: rgba(16, 185, 129, 0.03) !important; }
-        .accordion-item.is-holiday-day .accordion-header { color: var(--accent-green) !important; background: transparent !important;}
-        .accordion-item.is-holiday-day .icon-plus { color: var(--accent-green) !important; }
-        
-        .timeline-wrapper { position: relative; padding-right: 45px; margin-top: 5px; }
-        .timeline-container { display: flex; flex-direction: column; gap: 25px; border: none; position: relative;}
-        .timeline-track-bg { position: absolute; right: 22.5px; top: 16px; bottom: 16px; width: 2px; background-image: linear-gradient(to bottom, var(--timeline-line) 50%, transparent 0%); background-size: 2px 8px; transform: translateX(50%); z-index: 1; }
-        .timeline-track-fill { position: absolute; right: 22.5px; top: 16px; width: 2px; height: 0%; background-color: var(--accent); transform: translateX(50%); z-index: 2; transition: height 1s linear, background-color 0.5s ease; box-shadow: 0 0 10px var(--accent-glow); }
-        .timeline-item { position: relative; display: flex; flex-direction: column; gap: 6px; transition: all 0.5s ease; }
-        .timeline-item::before { content: ''; position: absolute; right: -22.5px; top: 9px; width: 14px; height: 14px; border-radius: 50%; background: var(--bento-bg); border: 3px solid var(--accent); transform: translateX(50%); z-index: 3; box-sizing: border-box; transition: all 0.5s ease; }
-        .timeline-pulsing-dot { position: absolute; right: 22.5px; top: 16px; width: 14px; height: 14px; background-color: var(--accent); border-radius: 50%; transform: translate(50%, -50%); z-index: 4; opacity: 0; transition: top 1s linear, opacity 0.5s ease; }
-        .timeline-pulsing-dot::after { content: ''; position: absolute; top: -4px; left: -4px; right: -4px; bottom: -4px; border-radius: 50%; border: 2px solid var(--accent); animation: radar-pulse-blue 1.5s infinite; }
-        @keyframes radar-pulse-blue { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(2.5); opacity: 0; } }
-        .timeline-pulsing-dot.resting::after { animation: none !important; opacity: 0 !important; }
-        
-        .timeline-wrapper.is-live-track .timeline-track-fill { background-color: var(--accent-red); box-shadow: 0 0 10px rgba(239, 68, 68, 0.4); }
-        .timeline-wrapper.is-live-track .timeline-pulsing-dot { background-color: var(--accent-red); }
-        .timeline-wrapper.is-live-track .timeline-pulsing-dot::after { border-color: var(--accent-red); animation: radar-pulse-red 1.5s infinite; }
-        
-        .time-header { display: flex; align-items: center; gap: 10px; font-family: monospace; font-weight: 800; font-size: 1rem; color: var(--accent); direction: rtl; }
-        .course-title { font-size: 1.05rem; font-weight: 700; color: var(--text-primary); margin: 0; line-height: 1.5; }
-        .course-note { font-size: 0.85rem; color: var(--text-muted); font-weight: 400; }
-        .course-meta { display: flex; align-items: center; gap: 12px; font-size: 0.85rem; color: var(--text-secondary); font-weight: 600; margin-top: 2px; flex-wrap: wrap; }
-        .course-code { background: rgba(255, 255, 255, 0.05); color: var(--text-secondary); padding: 3px 8px; border-radius: 6px; font-family: monospace; border: 1px solid var(--bento-border); }
-        body.light-mode .course-code { background: rgba(0, 0, 0, 0.03); color: var(--text-muted); }
-        
-        .past-item { opacity: 0.45; filter: grayscale(100%); } 
-        .past-item::before { border-color: var(--text-muted); background: var(--bento-bg); } 
-        .past-item .time-header { color: var(--text-muted); font-weight: 600; }
-        .badge-past { background: rgba(255,255,255,0.05); border: 1px solid var(--bento-border); font-family: 'Tajawal', sans-serif; font-size: 0.75rem; padding: 2px 8px; border-radius: 6px; margin-right: 8px; font-weight: bold; }
-        .live-item { opacity: 1; } 
-        .live-item::before { opacity: 0; } 
-        .live-item .time-header { color: var(--accent-red); font-family: 'Tajawal', sans-serif; font-size: 0.95rem; }
-        .countdown-clock { background: rgba(239, 68, 68, 0.15); color: var(--accent-red); padding: 3px 10px; border-radius: 8px; font-weight: 800; font-family: monospace; border: 1px solid rgba(239, 68, 68, 0.3); display: inline-flex; align-items: center; direction: ltr; font-size: 1.05rem; }
-        .countdown-label { font-size: 0.8rem; font-weight: bold; margin: 0 4px; }
-        .future-item { opacity: 0.9; }
-
-        /* ========================================= */
-        /* --- التقويم الجامعي --- */
-        /* ========================================= */
-        .calendar-timeline { position: relative; padding: 10px 0; }
-        .cal-event { display: flex; gap: 15px; margin-bottom: 20px; position: relative; z-index: 2; background: var(--bento-bg); border: 1px solid var(--bento-border); padding: 20px; border-radius: 20px; transition: transform 0.3s; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);}
-        .cal-event:last-child { margin-bottom: 0; }
-        .cal-event:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 10px 20px var(--accent-glow);}
-        .cal-icon { width: 50px; height: 50px; border-radius: 14px; background: rgba(56, 189, 248, 0.1); color: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 1.4rem; flex-shrink: 0; }
-        .cal-details { display: flex; flex-direction: column; justify-content: center; }
-        .cal-details h4 { margin: 0 0 8px 0; color: var(--text-primary); font-size: 1.1rem; font-weight: 800; }
-        .cal-date { font-size: 0.9rem; color: var(--text-secondary); display: flex; gap: 10px; flex-wrap: wrap; font-weight: 600; }
-        .cal-date span { background: rgba(255,255,255,0.05); border: 1px solid var(--bento-border); padding: 5px 12px; border-radius: 8px; display: flex; align-items: center; gap: 6px; }
-        body.light-mode .cal-date span { background: #f8fafc; }
-        
-        .cal-event.info .cal-icon { background: rgba(56, 189, 248, 0.1); color: var(--accent); }
-        .cal-event.holiday .cal-icon { background: rgba(16, 185, 129, 0.1); color: var(--accent-green); }
-        .cal-event.holiday:hover { border-color: var(--accent-green); box-shadow: 0 10px 20px rgba(16,185,129,0.2); }
-        .cal-event.exam .cal-icon { background: rgba(139, 92, 246, 0.1); color: var(--accent-exam); }
-        .cal-event.exam:hover { border-color: var(--accent-exam); box-shadow: 0 10px 20px var(--accent-exam-glow); }
-
-        /* ========================================= */
-        /* --- أزرار البوابة السريعة --- */
-        /* ========================================= */
-        .modern-btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; max-width: 800px; margin-top: 10px;}
-        .modern-btn { 
-            position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; 
-            background: var(--bento-bg); border: 1px solid var(--bento-border); padding: 25px 10px; border-radius: 32px; 
-            text-decoration: none; overflow: hidden; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; box-shadow: var(--bento-shadow);
+        .sliding-highlight {
+            position: absolute; top: 6px; bottom: 6px;
+            background: var(--text-main); border-radius: 16px;
+            box-shadow: var(--shadow-pill);
+            transition: left 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.4s;
+            z-index: 1;
         }
-        .modern-btn:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: 0 15px 30px var(--accent-glow); } 
-        .modern-btn:active, .modern-btn.clicked { transform: scale(0.94); background: var(--accent) !important; border-color: var(--accent); }
-        
-        .btn-icon-box { width: 55px; height: 55px; border-radius: 20px; background: rgba(56, 189, 248, 0.1); display: flex; align-items: center; justify-content: center; color: var(--accent); font-size: 1.6rem; transition: all 0.2s; } 
-        .modern-btn:hover .btn-icon-box { transform: scale(1.1); } 
-        .modern-btn.clicked .btn-icon-box { background: rgba(255, 255, 255, 0.2); color: white; transform: scale(1.1); }
-        
-        .btn-title { font-weight: 800; font-size: 1.1rem; color: var(--text-primary); transition: color 0.2s; text-align: center; } 
-        .modern-btn.clicked .btn-title { color: white !important; }
 
-        /* ========================================= */
-        /* --- صندوق المظهر الحديث --- */
-        /* ========================================= */
-        .modern-theme-card { padding: 15px !important; display: flex; justify-content: center; align-items: center; width: 100%; max-width: 800px;}
-        
-        .scenery-toggle {
-            width: 100%; height: 90px; background: #020617; border-radius: 24px;
-            position: relative; cursor: pointer; border: 1px solid var(--bento-border);
-            overflow: hidden; display: flex; align-items: center; justify-content: center;
-            transition: background 1s ease, border-color 0.4s; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-        .scenery-toggle.is-day { background: #bae6fd; border-color: #7dd3fc;}
-        
-        .theme-icon-container { position: relative; width: 40px; height: 40px; z-index: 10; }
-        .moon-icon, .sun-icon { 
-            position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; 
-            font-size: 32px; transition: 1s cubic-bezier(0.4, 0, 0.2, 1); 
+        .day-btn {
+            flex: 1; position: relative; z-index: 2;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 12px 0; border: none; background: transparent; cursor: pointer;
         }
         
-        .moon-icon { color: #f8fafc; transform: translateY(0); opacity: 1; text-shadow: 0 0 20px rgba(255,255,255,0.5); }
-        .sun-icon { color: #f59e0b; transform: translateY(40px); opacity: 0; text-shadow: 0 0 30px rgba(245, 158, 11, 0.6); }
+        .day-btn .d-num { font-size: 1.4rem; font-weight: 900; font-family: monospace; color: var(--text-sub); line-height: 1;}
+        .day-btn .d-name { font-size: 0.8rem; font-weight: 700; color: var(--text-sub); margin-top: 4px;}
         
-        .is-day .moon-icon { transform: translateY(-40px); opacity: 0; }
-        .is-day .sun-icon { transform: translateY(0); opacity: 1; }
-        
-        .star { position: absolute; background: white; border-radius: 50%; }
-        .star-1 { width: 3px; height: 3px; top: 25px; left: 30%; animation: pulse-star 2s infinite; }
-        .star-2 { width: 4px; height: 4px; top: 45px; right: 25%; animation: pulse-star 2s infinite 1s; }
-        .is-day .star { opacity: 0; }
-        @keyframes pulse-star { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; box-shadow: 0 0 5px white; } }
+        .day-btn.active .d-num, .day-btn.active .d-name { color: var(--bg-body); }
 
         /* ========================================= */
-        /* --- الفوتر وإخلاء المسؤولية --- */
+        /* --- 5. الخط الزمني (هندسة دقيقة 100% بدون Transform) --- */
         /* ========================================= */
-        .page-footer { text-align: center; padding-bottom: 40px; margin-top: 15px; display: flex; flex-direction: column; align-items: center; gap: 15px; width: 100%; max-width: 800px; opacity: 0; transition: opacity 0.8s ease; } 
-        .page-footer.visible { opacity: 1; }
-        .version-badge { color: var(--accent); font-size: 0.95rem; font-weight: 900; font-family: monospace; letter-spacing: 2px; margin-bottom: 5px; }
+        .timeline-container { position: relative; margin-top: 10px; }
         
-        .contact-pill { display: flex; align-items: center; background: var(--bento-bg); border-radius: 30px; padding: 5px; overflow: hidden; transition: max-width 0.4s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s; max-width: 46px; box-shadow: var(--bento-shadow); border: 1px solid var(--bento-border); direction: ltr; } 
-        .contact-pill.open { max-width: 300px; border-color: var(--accent); }
+        /* إعطاء مساحة 55 بيكسل من اليمين للخط الزمني والدائرة */
+        .timeline-item { position: relative; padding-bottom: 25px; padding-right: 55px; }
+        .timeline-item:last-child { padding-bottom: 0; }
         
-        .envelope-btn { min-width: 36px; height: 36px; border-radius: 50%; background: transparent; color: var(--text-secondary); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.3s, color 0.3s; } 
-        .contact-pill.open .envelope-btn { background: var(--accent); color: white; } 
-        .envelope-btn i { font-size: 1.1rem; }
+        /* توسيط رياضي بحت (المحور يقع عند البيكسل رقم 25 من اليمين):
+           - الخط: right 24px + عرض 2px = مركز 25px
+           - الدائرة: right 18px + عرض 14px (نصفها 7) = مركز 25px
+           - النقطة المباشرة: right 20px + عرض 10px (نصفها 5) = مركز 25px
+        */
+        .timeline-line { position: absolute; right: 24px; top: 20px; bottom: 30px; width: 2px; background: var(--border-color); z-index: 1; }
+        .timeline-fill { position: absolute; right: 24px; top: 20px; width: 2px; background: var(--live-color); height: 0%; z-index: 2; transition: height 1s linear; }
         
-        .email-slider { opacity: 0; transform: translateX(-10px); transition: all 0.4s ease; white-space: nowrap; } 
-        .contact-pill.open .email-slider { opacity: 1; transform: translateX(0); padding: 0 15px; } 
-        .email-slider a { color: var(--text-primary); font-family: monospace; font-weight: bold; font-size: 0.9rem; text-decoration: none; }
-
-        .footer-disclaimer-box {
-            background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 16px;
-            padding: 15px 20px; margin-top: 10px; max-width: 90%; text-align: center; margin-left: auto; margin-right: auto;
+        .timeline-dot { 
+            position: absolute; right: 18px; top: 15px; 
+            width: 14px; height: 14px; border-radius: 50%; 
+            background: var(--bg-card); border: 3px solid var(--text-muted); z-index: 4; 
         }
-        .footer-disclaimer-box h4 { color: var(--accent-red); margin: 0 0 8px 0; font-size: 1.05rem; display: flex; align-items: center; justify-content: center; gap: 8px;}
-        .footer-disclaimer-text { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6; margin: 0; font-weight: 500; text-align: center;}
-
-        @media (max-width: 600px) {
-            .bento-box { padding: 25px 20px; border-radius: 28px; } 
-            .welcome-bento { flex-direction: column; align-items: flex-start; gap: 15px; } 
-            .header-icon { width: 60px; height: 60px; font-size: 1.5rem; } 
-            .welcome-text h1 { font-size: 1.3rem; }
-            .cal-event { padding: 15px; }
-            .cal-icon { width: 40px; height: 40px; font-size: 1.1rem; }
-            .cal-details h4 { font-size: 1rem; }
-            .task-header { flex-direction: column; gap: 4px; align-items: flex-start; }
-            .task-card { padding: 15px 12px; }
-            .modern-btn-grid { gap: 10px; }
-            .footer-disclaimer-box { padding: 12px 15px; max-width: 100%;}
-            
-            .tabs-container { gap: 10px; }
-            .tab-button { padding: 15px 10px; border-radius: 20px; }
-            .tab-icon { width: 45px; height: 45px; font-size: 1.3rem; margin-bottom: 10px; }
-            .tab-text h4 { font-size: 1.05rem; }
-            .tab-text span { font-size: 0.8rem; }
+        
+        .timeline-progress-dot { 
+            position: absolute; right: 20px; width: 10px; height: 10px; 
+            border-radius: 50%; background: var(--live-color); z-index: 3; 
+            opacity: 0; transition: top 1s linear; 
+            box-shadow: 0 0 0 4px rgba(255, 59, 48, 0.2); 
+            margin-top: -5px; 
         }
+
+        .class-content { 
+            position: relative; background: var(--bg-card); 
+            border: 1px solid var(--border-color); border-radius: 16px; 
+            padding: 15px 20px; box-shadow: var(--shadow-sm); 
+            display: flex; flex-direction: column; gap: 8px; 
+        }
+
+        .class-time { font-family: 'Tajawal', sans-serif; font-size: 0.95rem; font-weight: 800; color: var(--brand-color); direction: rtl; display: flex; align-items: center; gap: 8px;}
+        .class-title { font-size: 1.1rem; font-weight: 800; color: var(--text-main); margin: 0; }
+        
+        .class-info { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 4px;}
+        .class-prof { font-size: 0.85rem; color: var(--text-sub); display: flex; align-items: center; gap: 8px; font-weight: 600;}
+        .course-code {
+            background: var(--bg-body); padding: 4px 8px; border-radius: 6px; 
+            font-family: monospace; font-size: 0.75rem; border: 1px solid var(--border-color); 
+            color: var(--text-sub); font-weight: bold; direction: ltr;
+        }
+
+        .timeline-item.past { opacity: 0.5; filter: grayscale(100%);}
+        .timeline-item.live-now .timeline-dot { opacity: 0; } 
+        .timeline-item.live-now .class-content { border-color: var(--live-color); background: var(--live-soft); }
+        .timeline-item.live-now .class-time { color: var(--live-color); }
+        .timeline-item.live-now .course-code { border-color: rgba(255, 59, 48, 0.3); color: var(--live-color); background: rgba(255, 59, 48, 0.1);}
+        .live-tag { background: var(--live-color); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; }
+
+        /* ========================================= */
+        /* --- 6. التقويم المصغر --- */
+        /* ========================================= */
+        .cal-list { display: flex; flex-direction: column; gap: 12px;}
+        
+        .cal-row { 
+            display: flex; gap: 20px; padding: 18px; 
+            background: var(--bg-card); border: 1px solid var(--border-color);
+            border-radius: 16px; align-items: flex-start;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        /* الإجازات المستقبلية باهتة قليلاً للتمييز */
+        .cal-row.future-dimmed { opacity: 0.7; box-shadow: none; border-style: dashed; }
+
+        .cal-icon-col { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 60px; flex-shrink: 0; }
+        .cal-icon { width: 50px; height: 50px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; border: 1px solid transparent; margin-top: 5px;}
+        
+        .cal-text { flex: 1; display: flex; flex-direction: column; gap: 8px; justify-content: center; padding-top: 5px; min-width: 0;}
+        .cal-title { font-weight: 800; font-size: 1.05rem; color: var(--text-main); white-space: normal; line-height: 1.4;}
+        
+        .cal-date { 
+            font-family: monospace; font-size: 0.95rem; font-weight: 900; 
+            color: var(--text-sub); letter-spacing: 0.5px; white-space: nowrap; 
+        }
+
+        .cal-countdown { 
+            display: flex; align-items: center; justify-content: center; text-align: center;
+            font-size: 0.75rem; font-weight: 800; background: var(--bg-body); padding: 6px 12px; 
+            border-radius: 8px; color: var(--text-sub); border: 1px solid var(--border-color); 
+            white-space: nowrap; width: fit-content; margin-top: 4px;
+        }
+        
+        .cal-countdown.active-green { background: rgba(52, 199, 89, 0.1); color: var(--success-green); border-color: rgba(52, 199, 89, 0.3); }
+
+        .cal-row.type-holiday .cal-icon { color: var(--holiday-color) !important; background: var(--holiday-soft) !important; border-color: rgba(94, 92, 230, 0.15) !important; }
+        .cal-row.type-exam .cal-icon { color: var(--exam-color) !important; background: var(--exam-soft) !important; border-color: rgba(255, 149, 0, 0.15) !important; }
+        .cal-row.type-info .cal-icon { color: var(--brand-color) !important; background: var(--brand-soft) !important; border-color: rgba(124, 58, 237, 0.15) !important; }
+
+        /* ========================================= */
+        /* --- 7. الوصول السريع --- */
+        /* ========================================= */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .link-card {
+            background: var(--bg-card); border: 1px solid var(--border-color);
+            padding: 30px 20px; border-radius: 20px; text-align: center;
+            text-decoration: none; color: var(--text-main); font-weight: 800; font-size: 1.1rem;
+            display: flex; flex-direction: column; align-items: center; gap: 15px;
+            box-shadow: var(--shadow-sm); transition: transform 0.2s;
+        }
+        .link-card span { white-space: nowrap; font-size: 1rem;}
+        .link-card i { font-size: 2.5rem; color: var(--brand-color); background: var(--brand-soft); width: 70px; height: 70px; border-radius: 20px; display: flex; align-items: center; justify-content: center; }
+        .link-card:active { transform: scale(0.96); }
+
+        /* ========================================= */
+        /* --- 8. الشريط السفلي (Fixed Nav) --- */
+        /* ========================================= */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: var(--bg-nav); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
+            border-top: 1px solid var(--border-color);
+            display: flex; justify-content: space-around;
+            padding: 10px 5px calc(10px + env(safe-area-inset-bottom)) 5px;
+            z-index: 100; box-shadow: var(--shadow-nav); 
+        }
+
+        .nav-item {
+            display: flex; flex-direction: column; align-items: center; gap: 4px;
+            color: var(--text-sub); background: none; border: none;
+            font-family: inherit; font-size: 0.7rem; font-weight: 800;
+            width: 33.3%; cursor: pointer; 
+        }
+        .nav-item i { font-size: 1.4rem; margin-bottom: 2px; transition: transform 0.2s;}
+        .nav-item.active { color: var(--brand-color); }
+        .nav-item.active i { transform: translateY(-2px); }
+
+        /* الشاشات والفوتر */
+        .view-section { display: none; animation: fade-in 0.3s ease forwards; }
+        .view-section.active { display: flex; flex-direction: column; gap: 20px; }
+        @keyframes fade-in { from { opacity: 0; transform: translateY(10px);} to { opacity: 1; transform: translateY(0);} }
+
+        .footer-section { text-align: center; margin-top: 10px; padding-bottom: 20px; }
+        .disclaimer { background: rgba(255, 59, 48, 0.05); border: 1px dashed rgba(255, 59, 48, 0.3); border-radius: 12px; padding: 20px; margin-bottom: 15px; }
+        .disclaimer h4 { color: var(--live-color); font-size: 0.95rem; margin-bottom: 10px; display: flex; justify-content: center; align-items: center; gap: 8px; font-weight: 900;}
+        .disclaimer p { font-size: 0.85rem; color: var(--text-sub); line-height: 1.6; font-weight: 500; margin: 0; }
+        .disclaimer strong { font-weight: 800; color: inherit; } 
+
     </style>
 </head>
-<body class="preload no-scroll"> 
+<body class="light-mode">
 
-    <script>
-        if ((localStorage.getItem('theme') || 'dark') === 'light') {
-            document.body.classList.add('light-mode');
-        }
-    </script>
-
-    <div id="cyber-splash" class="cyber-splash">
-        <div class="shield-wrapper">
-            <div class="shield-ripple"></div>
-            <div class="shield-ripple"></div>
-            <div class="shield-ripple"></div>
-            <svg id="splash-shield" class="splash-shield-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor">
-                <path d="M256 0c-2.4 0-4.7 .3-7 .9C149.7 27 49 53 49 53c-15.3 4.8-25 19.3-25 35V224c0 131.4 87.8 249.7 213 283.5c6.2 1.7 12.8 1.7 19 0C381.2 473.7 469 355.4 469 224V88c0-15.7-9.7-30.2-25-35c0 0-100.7-26-200-52.1c-2.3-.6-4.6-.9-7-.9zM256 464c-2.2-.6-4.4-1.2-6.6-1.9C137.4 429.5 64 330.4 64 224V98.1C132 77.2 216.7 53.6 256 42.4V464z"/>
-            </svg>
-        </div>
-    </div>
-
-    <!-- الحاوية الرئيسية للتفاعل مع السحب -->
-    <div class="container" id="main-swipe-area" style="width: 100%; display: flex; flex-direction: column; align-items: center;">
+    <div class="app-core">
         
-        <div class="bento-container" id="main-content">
-            
-            <div class="bento-box welcome-bento">
-                <div class="welcome-info">
-                    <div class="header-icon" id="header-shield-container">
-                        <svg id="header-shield" style="opacity: 0; width: 40px; height: 40px; color: inherit; transition: opacity 0.3s ease;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor">
-                            <path d="M256 0c-2.4 0-4.7 .3-7 .9C149.7 27 49 53 49 53c-15.3 4.8-25 19.3-25 35V224c0 131.4 87.8 249.7 213 283.5c6.2 1.7 12.8 1.7 19 0C381.2 473.7 469 355.4 469 224V88c0-15.7-9.7-30.2-25-35c0 0-100.7-26-200-52.1c-2.3-.6-4.6-.9-7-.9zM256 464c-2.2-.6-4.4-1.2-6.6-1.9C137.4 429.5 64 330.4 64 224V98.1C132 77.2 216.7 53.6 256 42.4V464z"/>
-                        </svg>
-                    </div>
-                    <div class="welcome-text">
-                        <span class="style-badge">2026</span>
-                        <h1>دبلوم الأمن السيبراني</h1>
-                        <p>جامعة الجوف - عن بعد</p>
-                    </div>
-                </div>
-                <div id="current-date" class="date-display">جاري التحميل...</div>
-            </div>
-
-            <div class="bento-box" id="tasks-board">
-                <div class="bento-title">
-                    <div class="title-main-part">
-                        <i class="fa-solid fa-calendar-day"></i> الإعلانات والمهام
-                    </div>
-                </div>
-                <div class="tasks-container" id="tasks-container"></div>
-            </div>
-
-            <!-- ======================================================== -->
-            <!-- نظام التبويبات (Tabs) المتجاورة -->
-            <!-- ======================================================== -->
-            <div class="tabs-container no-tap-highlight">
-                
-                <div class="tab-button active" data-target="classes-view">
-                    <div class="tab-icon"><i class="fa-regular fa-calendar-check"></i></div>
-                    <div class="tab-text">
-                        <h4>الجدول الدراسي</h4>
-                        <span>المحاضرات الأسبوعية</span>
-                    </div>
-                </div>
-                
-                <div class="tab-button" data-target="calendar-view">
-                    <div class="tab-icon"><i class="fa-solid fa-calendar-days"></i></div>
-                    <div class="tab-text">
-                        <h4>التقويم الجامعي</h4>
-                        <span>الفصل الدراسي الثاني</span>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- الأقسام المخفية والتي تظهر عند الضغط أو السحب -->
-            <div id="classes-view" class="tab-content-section active">
-                <div class="bento-box">
-                    <div class="bento-title">
-                        <div class="title-main-part">
-                            <i class="fa-regular fa-clock"></i> توقيت المحاضرات
+        <!-- الهيدر مع تأثير انعكاس النص -->
+        <header class="header">
+            <div class="header-title">
+                <i class="fa-solid fa-shield-cat main-icon"></i>
+                <div class="header-text-container">
+                    <div class="flip-wrapper" id="flip-wrapper">
+                        <div class="flip-face front">
+                            <h1>دبلوم الأمن السيبراني</h1>
+                            <p>جامعة الجوف - عن بعد</p>
+                        </div>
+                        <div class="flip-face back">
+                            <h1>بوابة سيبر الجوف</h1>
+                            <p>مبادرة غير رسمية</p>
                         </div>
                     </div>
-                    <div id="accordion-container" class="accordion-container"></div>
                 </div>
             </div>
+            <button class="theme-btn" id="theme-btn"><i class="fa-solid fa-moon"></i></button>
+        </header>
 
-            <div id="calendar-view" class="tab-content-section">
-                <div class="bento-box">
-                    <div class="bento-title">
-                        <div class="title-main-part">
-                            <i class="fa-solid fa-calendar-days"></i> التقويم الجامعي (1447هـ)
-                        </div>
-                    </div>
-                    <div class="calendar-timeline" id="calendar-timeline">
-                        <!-- سيتم بناء التقويم برمجياً هنا -->
-                    </div>
-                </div>
-            </div>
-
-            <div class="modern-btn-grid">
-                <a href="https://lms.ju.edu.sa/" class="modern-btn" onclick="handleLinkClick(event, this)">
-                    <div class="btn-icon-box"><i class="fa-solid fa-graduation-cap"></i></div>
-                    <span class="btn-title">بلاك بورد</span>
-                </a>
-                <a href="https://edug.ju.edu.sa/ju/init" class="modern-btn" onclick="handleLinkClick(event, this)">
-                    <div class="btn-icon-box"><i class="fa-solid fa-laptop-file"></i></div>
-                    <span class="btn-title">البوابة الإلكترونية</span>
-                </a>
-            </div>
-
-            <div class="bento-box modern-theme-card">
-                <div class="scenery-toggle no-tap-highlight" id="theme-toggle" title="انقر لتغيير المظهر">
-                    <div class="theme-icon-container">
-                        <i class="fa-solid fa-moon moon-icon"></i>
-                        <i class="fa-solid fa-sun sun-icon"></i>
-                    </div>
-                    <div class="star star-1"></div>
-                    <div class="star star-2"></div>
-                </div>
-            </div>
-
-        </div>
-
-        <footer class="page-footer" id="page-footer">
-            <div class="version-badge">V.2.1</div>
-            <div class="contact-pill no-tap-highlight" id="contact-pill">
-                <button class="envelope-btn no-tap-highlight" id="envelope-btn" title="تواصل معنا">
-                    <i class="fa-solid fa-envelope"></i>
-                </button>
-                <div class="email-slider">
-                    <a href="mailto:ali.dev.3662@gmail.com">ali.dev.3662@gmail.com</a>
-                </div>
-            </div>
+        <main class="main-content">
             
-            <div class="footer-disclaimer-box">
-                <h4>إخلاء مسؤولية</h4>
-                <p class="footer-disclaimer-text">
-                    هذا الموقع مبادرة شخصية غير رسمية. البيانات قابلة للتحديث والتغيير. قد تطرأ تغييرات مفاجئة على أوقات المحاضرات حسب ما يقرره دكتور المقرر. لضمان دقة المعلومات، نرجو الرجوع دائماً للمصادر الرسمية للجامعة ومتابعة تحديثات قروب الدفعة. نحن غير مسؤولين عن أي تعارض في المواعيد.
-                </p>
-            </div>
-        </footer>
+            <!-- الشاشة الأولى: الرئيسية -->
+            <div id="view-home" class="view-section active">
+                
+                <!-- تنبيه الإجازة التلقائي -->
+                <div id="holiday-alert-banner" class="holiday-alert-banner">
+                    <div class="holiday-alert-header" id="holiday-alert-title"></div>
+                    <p id="holiday-alert-text" class="holiday-alert-text"></p>
+                </div>
 
+                <!-- بطاقة الحالة (تختفي أوقات الإجازة الطويلة) -->
+                <div class="card hero-widget" id="status-widget">
+                    <div class="widget-header">
+                        <div class="pill-badge" id="status-badge"><i class="fa-solid fa-spinner fa-spin"></i> تحديث...</div>
+                    </div>
+                    <div>
+                        <h2 class="status-title" id="status-title">...</h2>
+                        <p class="status-desc" id="status-sub">...</p>
+                    </div>
+                </div>
+
+                <!-- الجدول وشريط الأيام المغناطيسي -->
+                <div class="card" style="padding: 20px 15px;">
+                    <h3 class="section-title"><i class="fa-solid fa-layer-group"></i> جدول المحاضرات</h3>
+                    <div class="days-wrapper" id="days-wrapper">
+                        <div class="sliding-highlight" id="sliding-highlight"></div>
+                    </div>
+
+                    <!-- الخط الزمني الدقيق 100% -->
+                    <div class="timeline-container" id="timeline-container">
+                        <div class="timeline-line"></div>
+                        <div class="timeline-fill" id="timeline-fill"></div>
+                        <div class="timeline-progress-dot" id="timeline-dot"></div>
+                        <div id="timeline-items"></div>
+                    </div>
+                </div>
+
+                <!-- الفوتر الرسمي -->
+                <div class="footer-section">
+                    <div class="disclaimer">
+                        <h4><i class="fa-solid fa-triangle-exclamation"></i> إخلاء مسؤولية</h4>
+                        <p>هذا التطبيق مبادرة غير رسمية. نرجو الاعتماد على الأنظمة الرسمية للجامعة ومتابعة الإعلانات عبر <strong>قروب الدفعة الرسمي على الواتساب</strong> لتجنب أي تعارض في المواعيد.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- الشاشة الثانية: وصول سريع -->
+            <div id="view-links" class="view-section">
+                <h3 class="section-title"><i class="fa-solid fa-bolt"></i> الأنظمة الجامعية</h3>
+                <div class="grid-2">
+                    <a href="https://lms.ju.edu.sa/" class="link-card" target="_blank">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                        <span>بلاك بورد</span>
+                    </a>
+                    <a href="https://edug.ju.edu.sa/ju/init" class="link-card" target="_blank">
+                        <i class="fa-solid fa-laptop-file"></i>
+                        <span>البوابة الإلكترونية</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- الشاشة الثالثة: التقويم -->
+            <div id="view-calendar" class="view-section">
+                <h3 class="section-title"><i class="fa-solid fa-flag"></i> التقويم الجامعي</h3>
+                <div class="cal-list" id="calendar-container">
+                    <!-- يولد برمجياً -->
+                </div>
+            </div>
+
+        </main>
     </div>
 
+    <!-- الشريط السفلي الثابت -->
+    <nav class="bottom-nav">
+        <button class="nav-item active" data-target="view-home">
+            <i class="fa-solid fa-house"></i>
+            <span>الرئيسية</span>
+        </button>
+        <button class="nav-item" data-target="view-links">
+            <i class="fa-solid fa-bolt"></i>
+            <span>وصول سريع</span>
+        </button>
+        <button class="nav-item" data-target="view-calendar">
+            <i class="fa-solid fa-calendar-days"></i>
+            <span>التقويم</span>
+        </button>
+    </nav>
+
     <script>
-        // =========================================================
-        // --- دالة تنسيق التاريخ مع اسم اليوم ---
-        // =========================================================
-        function formatMiladi(dateObj) {
-            const days = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
-            const months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
-            return `${days[dateObj.getDay()]} ${dateObj.getDate()} ${months[dateObj.getMonth()]} ${dateObj.getFullYear()}`;
+        // ==========================================
+        // --- 1. إعدادات الثيم وتبادل النصوص ---
+        // ==========================================
+        const themeBtn = document.getElementById('theme-btn');
+        let isDark = localStorage.getItem('joufTheme') === 'dark';
+        
+        function applyTheme() {
+            document.body.className = isDark ? 'dark-mode' : 'light-mode';
+            themeBtn.innerHTML = isDark ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
+            document.querySelector('meta[name="theme-color"]').setAttribute('content', isDark ? '#000000' : '#f2f2f7');
         }
+        applyTheme();
+        
+        // التبديل اللحظي للثيم (بدون تمدد)
+        themeBtn.addEventListener('click', () => { 
+            isDark = !isDark; 
+            localStorage.setItem('joufTheme', isDark ? 'dark' : 'light'); 
+            applyTheme();
+        });
 
-        const nowInit = new Date();
+        // الأنيميشن كل 10 ثواني
+        setInterval(() => {
+            document.getElementById('flip-wrapper').classList.toggle('flipped');
+        }, 10000);
 
-        // =========================================================
-        // --- فك التعليق الإجباري في حالة تعليق الشاشة ---
-        // =========================================================
-        setTimeout(() => {
-            document.body.classList.remove('preload', 'no-scroll');
-        }, 3500);
+        // التنقل الملاحي
+        const navBtns = document.querySelectorAll('.nav-item');
+        const views = document.querySelectorAll('.view-section');
 
-        // =========================================================
-        // --- بيانات التقويم الجامعي الموحدة ---
-        // =========================================================
+        navBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                if(btn.classList.contains('active')) return;
+                navBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                views.forEach(v => v.classList.remove('active'));
+                document.getElementById(btn.getAttribute('data-target')).classList.add('active');
+                window.scrollTo(0, 0);
+                
+                if (btn.getAttribute('data-target') === 'view-home') {
+                    setTimeout(() => updateHighlightPosition(document.querySelector('.day-btn.active')), 50);
+                    updateTimelineProgress();
+                }
+            });
+        });
+
+        // ==========================================
+        // --- 2. البيانات والتواريخ ---
+        // ==========================================
+        const now = new Date();
+        const cDay = now.getDay();
+        const cMins = (now.getHours() * 60) + now.getMinutes();
+
+        const thClass = now < new Date('2026-03-05T15:30:00') 
+            ? { n: "اللغة الإنجليزية 1", s: "14:50", e: "15:25", p: "د. جلال الربيع", c: "ADEN 1110" } 
+            : { n: "اللغة الإنجليزية 1", s: "15:00", e: "15:50", p: "د. جلال الربيع", c: "ADEN 1110" };
+
+        const schedule = {
+            0: [ { n: "مقدمة تقنية المعلومات", s: "15:00", e: "16:50", p: "د. محمود عبدالمنعم", c:"ADIT 1110" }, { n: "أساسيات الشبكات", s: "17:00", e: "17:50", p: "د. عبدالعزيز الدمراني", c:"ADCY 1111" }, { n: "اللغة الإنجليزية 1", s: "18:00", e: "19:50", p: "د. جلال الربيع", c:"ADEN 1110" } ],
+            1: [ { n: "أساسيات الأمن السيبراني", s: "15:00", e: "16:50", p: "د. عمرو أبوزيد", c:"ADCY 1112" }, { n: "رياضيات الحاسب", s: "17:00", e: "18:50", p: "د. أسامة شاهين", c:"ADCY 1113" } ],
+            2: [ { n: "مقدمة تقنية المعلومات", s: "15:00", e: "15:50", p: "د. محمود عبدالمنعم", c:"ADIT 1110" }, { n: "أساسيات الشبكات", s: "16:00", e: "17:50", p: "د. عبدالعزيز الدمراني", c:"ADCY 1111" } ],
+            3: [ { n: "أساسيات الأمن السيبراني", s: "15:00", e: "15:50", p: "د. عمرو أبوزيد", c:"ADCY 1112" }, { n: "رياضيات الحاسب", s: "16:00", e: "16:50", p: "د. أسامة شاهين", c:"ADCY 1113" } ],
+            4: [thClass]
+        };
+
         const academicCalendar = [
-            { start: new Date('2026-01-18T00:00:00'), end: new Date('2026-01-18T23:59:59'), title: 'بداية الدراسة للفصل الدراسي الثاني', type: 'info', icon: 'fa-solid fa-play' },
+            { start: new Date('2026-01-18T00:00:00'), end: new Date('2026-01-18T23:59:59'), title: 'بداية الدراسة', type: 'info', icon: 'fa-solid fa-play' },
             { start: new Date('2026-02-22T00:00:00'), end: new Date('2026-02-22T23:59:59'), title: 'إجازة يوم التأسيس', type: 'holiday', icon: 'fa-solid fa-flag' },
-            { start: new Date('2026-03-01T00:00:00'), end: new Date('2026-03-01T23:59:59'), title: 'إجازة نهاية أسبوع مطولة (يوم)', type: 'holiday', icon: 'fa-solid fa-bed' },
+            { start: new Date('2026-03-01T00:00:00'), end: new Date('2026-03-01T23:59:59'), title: 'إجازة نهاية أسبوع مطولة', type: 'holiday', icon: 'fa-solid fa-bed' },
             { start: new Date('2026-03-05T15:30:00'), end: new Date('2026-03-28T23:59:59'), title: 'إجازة عيد الفطر المبارك', type: 'holiday', icon: 'fa-solid fa-moon' },
-            { start: new Date('2026-04-01T00:00:00'), end: new Date('2026-04-02T23:59:59'), title: 'إجازة نهاية أسبوع مطولة (يومان)', type: 'holiday', icon: 'fa-solid fa-bed' },
-            { start: new Date('2026-05-17T00:00:00'), end: new Date('2026-05-17T23:59:59'), title: 'إجازة نهاية أسبوع مطولة (يوم)', type: 'holiday', icon: 'fa-solid fa-bed' },
-            { start: new Date('2026-05-21T15:30:00'), end: new Date('2026-05-31T23:59:59'), title: 'إجازة عيد الأضحى المبارك', type: 'holiday', icon: 'fa-solid fa-kaaba' },
+            { start: new Date('2026-04-01T00:00:00'), end: new Date('2026-04-02T23:59:59'), title: 'إجازة نهاية أسبوع مطولة', type: 'holiday', icon: 'fa-solid fa-bed' },
+            { start: new Date('2026-05-17T00:00:00'), end: new Date('2026-05-17T23:59:59'), title: 'إجازة نهاية أسبوع مطولة', type: 'holiday', icon: 'fa-solid fa-bed' },
+            { start: new Date('2026-05-21T15:30:00'), end: new Date('2026-05-31T23:59:59'), title: 'إجازة عيد الأضحى المبارك', type: 'holiday', icon: 'fa-solid fa-kaaba' }, 
             { start: new Date('2026-06-02T00:00:00'), end: new Date('2026-06-18T15:29:59'), title: 'الاختبارات النهائية', type: 'exam', icon: 'fa-solid fa-file-signature' },
             { start: new Date('2026-06-18T15:30:00'), end: new Date('2026-08-22T23:59:59'), title: 'إجازة نهاية العام الدراسي', type: 'holiday', icon: 'fa-solid fa-power-off' },
-            { start: new Date('2026-08-23T00:00:00'), end: new Date('2026-08-23T23:59:59'), title: 'بداية الدراسة للعام 1448 هـ', type: 'info', icon: 'fa-solid fa-graduation-cap'}
+            { start: new Date('2026-08-23T00:00:00'), end: new Date('2026-08-23T23:59:59'), title: 'بداية الدراسة للعام 1448هـ', type: 'info', icon: 'fa-solid fa-graduation-cap'}
         ];
 
-        // =========================================================
-        // --- البناء البرمجي للتقويم الجامعي ---
-        // =========================================================
-        const futureCalendarEvents = academicCalendar
-            .filter(ev => ev.end >= nowInit)
-            .sort((a, b) => a.start - b.start);
-
-        const calendarContainer = document.getElementById('calendar-timeline');
+        const t2m = (t) => { const [h, m] = t.split(':').map(Number); return (h * 60) + m; };
         
-        if (futureCalendarEvents.length > 0) {
-            calendarContainer.innerHTML = futureCalendarEvents.map(event => {
-                let datesHtml = '';
-                if (event.start.toDateString() === event.end.toDateString() || event.type === 'info') {
-                    datesHtml = `<span><i class="fa-regular fa-calendar"></i> ${formatMiladi(event.start)}</span>`;
+        const fmtT12 = (t) => { 
+            const [h, m] = t.split(':').map(Number); 
+            const ampm = h >= 12 ? 'م' : 'ص';
+            let hr = h % 12; if (hr === 0) hr = 12;
+            return `<span dir="rtl">${hr}:${m.toString().padStart(2,'0')} ${ampm}</span>`; 
+        };
+
+        const fmtDateClean = (dateObj) => {
+            const y = dateObj.getFullYear();
+            const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const d = String(dateObj.getDate()).padStart(2, '0');
+            return `<span dir="ltr">${y}/${m}/${d}</span>`;
+        };
+
+        const getDaysDiff = (targetDate) => {
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const target = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
+            const diff = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
+            
+            if(diff === 0) return "اليوم";
+            if(diff === 1) return "غداً";
+            if(diff === 2) return "بعد يومين";
+            if(diff <= 10) return `بعد ${diff} أيام`;
+            return `بعد ${diff} يوماً`;
+        }
+
+        const getMonthsNames = (dateObj) => {
+            const months = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+            return months[dateObj.getMonth()];
+        }
+
+        // ==========================================
+        // --- 3. بناء واجهة الأيام الديناميكية ---
+        // ==========================================
+        const daysWrapper = document.getElementById('days-wrapper');
+        const slidingHighlight = document.getElementById('sliding-highlight');
+        const arDaysShort = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس'];
+        
+        let diffToSunday = cDay === 5 ? 2 : (cDay === 6 ? 1 : -cDay);
+        let sundayDate = new Date(now);
+        sundayDate.setDate(now.getDate() + diffToSunday);
+
+        for(let i=0; i<5; i++) {
+            let d = new Date(sundayDate);
+            d.setDate(sundayDate.getDate() + i);
+            
+            let btn = document.createElement('button');
+            btn.className = `day-btn ${cDay === i ? 'active' : ''}`;
+            btn.setAttribute('data-day', i);
+            btn.innerHTML = `<span class="d-num">${d.getDate()}</span><span class="d-name">${arDaysShort[i]}</span>`;
+            
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                updateHighlightPosition(this);
+                renderSchedule(i);
+            });
+            daysWrapper.appendChild(btn);
+        }
+
+        function updateHighlightPosition(activeBtn) {
+            if(!activeBtn) return;
+            slidingHighlight.style.width = `${activeBtn.offsetWidth}px`;
+            slidingHighlight.style.left = `${activeBtn.offsetLeft}px`;
+        }
+
+        setTimeout(() => {
+            let initialActive = document.querySelector(`.day-btn[data-day="${(cDay >= 0 && cDay <= 4) ? cDay : 0}"]`);
+            if(!initialActive) initialActive = document.querySelector('.day-btn');
+            initialActive.classList.add('active');
+            updateHighlightPosition(initialActive);
+        }, 100);
+
+        // ==========================================
+        // --- 4. تحديث بطاقة الحالة والتنبيهات ---
+        // ==========================================
+        function updateStatusWidget() {
+            const wCard = document.getElementById('status-widget');
+            const badge = document.getElementById('status-badge');
+            const title = document.getElementById('status-title');
+            const sub = document.getElementById('status-sub');
+            const alertBanner = document.getElementById('holiday-alert-banner');
+            const alertTitle = document.getElementById('holiday-alert-title');
+            const alertText = document.getElementById('holiday-alert-text');
+            
+            const holiday = academicCalendar.find(e => e.type === 'holiday' && now >= e.start && now <= e.end);
+            
+            if (holiday) {
+                alertBanner.style.display = 'block';
+                alertTitle.innerHTML = `<i class="${holiday.icon}"></i> ${holiday.title}`;
+                alertText.innerText = `حتى ${holiday.end.getDate()} ${getMonthsNames(holiday.end)}`;
+                wCard.style.display = 'none'; 
+                return;
+            } else {
+                alertBanner.style.display = 'none';
+                wCard.style.display = 'flex';
+            }
+
+            if (cDay === 5 || cDay === 6) {
+                wCard.className = 'card hero-widget';
+                badge.innerHTML = `<i class="fa-solid fa-bed"></i> عطلة الأسبوع`;
+                title.innerText = 'الراحة مطلوبة.'; sub.innerText = 'نلتقي يوم الأحد القادم إن شاء الله.'; return;
+            }
+
+            const tClasses = schedule[cDay];
+            if (!tClasses) return;
+
+            let liveC = null; let nextC = null; let over = true;
+            for (let c of tClasses) {
+                const s = t2m(c.s); const e = t2m(c.e);
+                if (cMins >= s && cMins < e) { liveC = c; break; }
+                if (cMins < s && !nextC) { nextC = c; over = false; }
+            }
+
+            if (liveC) {
+                wCard.className = 'card hero-widget is-live';
+                badge.innerHTML = `<div class="live-dot"></div> محاضرة مباشرة`;
+                title.innerText = liveC.n; 
+                sub.innerHTML = `مع ${liveC.p} - تنتهي الساعة ${fmtT12(liveC.e)}`;
+            } else {
+                wCard.className = 'card hero-widget';
+                if (nextC) {
+                    const diff = t2m(nextC.s) - cMins;
+                    badge.innerHTML = `<i class="fa-regular fa-clock"></i> المحاضرة القادمة`;
+                    title.innerText = nextC.n;
+                    sub.innerHTML = diff < 60 ? `تبدأ بعد ${diff} دقيقة` : `تبدأ الساعة ${fmtT12(nextC.s)}`;
+                } else if (over) {
+                    badge.innerHTML = `<i class="fa-solid fa-check-double"></i> اكتمل اليوم`;
+                    title.innerText = 'عمل رائع!'; sub.innerText = 'لقد أنهيت جميع محاضراتك المجدولة لهذا اليوم.';
+                }
+            }
+        }
+
+        // ==========================================
+        // --- 5. بناء الجدول (توسيط + رمز المادة) ---
+        // ==========================================
+        const tlItemsCont = document.getElementById('timeline-items');
+        let selDay = (cDay >= 0 && cDay <= 4) ? cDay : 0;
+        let timelineCache = [];
+
+        function renderSchedule(dIdx) {
+            const classes = schedule[dIdx];
+            if (!classes) {
+                tlItemsCont.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-sub);"><i class="fa-solid fa-bed" style="font-size: 2rem; margin-bottom: 10px;"></i><br>لا توجد محاضرات في هذا اليوم.</div>`; 
+                document.getElementById('timeline-fill').style.height = '0';
+                timelineCache = []; return;
+            }
+
+            const isToday = (dIdx === cDay);
+            let html = '';
+            timelineCache = [];
+
+            classes.forEach((c, index) => {
+                const sM = t2m(c.s); const eM = t2m(c.e);
+                const isPast = isToday && (cMins >= eM);
+                
+                html += `
+                    <div class="timeline-item ${isPast ? 'past' : ''}" id="tl-item-${index}" data-start="${sM}" data-end="${eM}">
+                        <div class="timeline-dot"></div>
+                        <div class="class-content">
+                            <div class="class-time">${fmtT12(c.s)} - ${fmtT12(c.e)}</div>
+                            <h4 class="class-title">${c.n}</h4>
+                            <div class="class-info">
+                                <span class="class-prof"><i class="fa-solid fa-user-tie"></i> ${c.p}</span>
+                                <span class="course-code">${c.c}</span>
+                            </div>
+                        </div>
+                    </div>`;
+            });
+            tlItemsCont.innerHTML = html;
+            
+            setTimeout(() => {
+                const items = document.querySelectorAll('.timeline-item');
+                items.forEach((item, index) => {
+                    timelineCache.push({
+                        el: item, s: parseInt(item.getAttribute('data-start')), e: parseInt(item.getAttribute('data-end')),
+                        top: item.offsetTop, height: item.offsetHeight,
+                        timeEl: item.querySelector('.class-time'),
+                        origTimeTxt: `${fmtT12(schedule[dIdx][index].s)} - ${fmtT12(schedule[dIdx][index].e)}`
+                    });
+                });
+                updateTimelineProgress();
+            }, 50);
+        }
+
+        function updateTimelineProgress() {
+            const trackFill = document.getElementById('timeline-fill');
+            const pulsingDot = document.getElementById('timeline-dot');
+            const wrapper = document.getElementById('timeline-container');
+            
+            if (!document.getElementById('view-home').classList.contains('active') || timelineCache.length === 0) return;
+            
+            // تجميد الخط الزمني إذا كان اليوم إجازة
+            const isHoliday = academicCalendar.some(e => e.type === 'holiday' && now >= e.start && now <= e.end);
+            const activeBtn = document.querySelector('.day-btn.active');
+            const isToday = activeBtn && parseInt(activeBtn.getAttribute('data-day')) === cDay;
+
+            if (!isToday || isHoliday) {
+                trackFill.style.height = '0'; pulsingDot.style.opacity = '0';
+                timelineCache.forEach(c => { c.el.classList.remove('live-now', 'past'); c.timeEl.innerHTML = c.origTimeTxt; });
+                return;
+            }
+
+            let dotY = 20; let fillH = 0; let isLive = false; let allPast = true; let firstFutTop = null;
+            const currentTotalMins = (new Date().getHours() * 60) + new Date().getMinutes();
+
+            timelineCache.forEach((c) => {
+                c.el.classList.remove('live-now', 'past');
+                
+                if (currentTotalMins >= c.e) {
+                    c.el.classList.add('past'); c.timeEl.innerHTML = `${c.origTimeTxt} <span class="live-tag" style="background:var(--bg-body); color:var(--text-sub); border:1px solid var(--border-color);">انتهت</span>`;
+                } else if (currentTotalMins >= c.s && currentTotalMins < c.e) {
+                    isLive = true; allPast = false; c.el.classList.add('live-now');
+                    c.timeEl.innerHTML = `<span class="live-tag">مباشر</span> ${c.origTimeTxt}`;
+                    
+                    const progress = (currentTotalMins - c.s) / (c.e - c.s);
+                    // +20 هي بداية الخط من الأعلى top:20px
+                    dotY = c.top + 20 + (c.height * progress);
+                    fillH = dotY - 20; 
                 } else {
-                     datesHtml = `<span><i class="fa-solid fa-arrow-right-to-bracket"></i> تبدأ: ${formatMiladi(event.start)}</span> 
-                                  <span><i class="fa-solid fa-arrow-right-from-bracket"></i> تنتهي: ${formatMiladi(event.end)}</span>`;
+                    allPast = false; c.timeEl.innerHTML = c.origTimeTxt;
+                    if (firstFutTop === null) firstFutTop = c.top + 20;
+                }
+            });
+
+            if (isLive) { pulsingDot.style.opacity = '1'; }
+            else if (allPast) { pulsingDot.style.opacity = '0'; fillH = wrapper.offsetHeight - 30; }
+            else if (firstFutTop !== null) { pulsingDot.style.opacity = '0'; fillH = firstFutTop - 20; }
+            
+            trackFill.style.height = `${fillH}px`;
+            pulsingDot.style.top = `${dotY}px`;
+        }
+
+        // ==========================================
+        // --- 6. التقويم (إخفاء الماضي ومحاذاة التواريخ) ---
+        // ==========================================
+        const calCont = document.getElementById('calendar-container');
+        
+        const futureEvents = academicCalendar.filter(ev => {
+            const eventEnd = new Date(ev.end);
+            eventEnd.setHours(23, 59, 59, 999);
+            return eventEnd >= now;
+        }).sort((a, b) => a.start - b.start);
+        
+        if (futureEvents.length > 0) {
+            calCont.innerHTML = futureEvents.map(e => {
+                
+                let datesHtml = '';
+                if (e.start.toDateString() === e.end.toDateString() || e.type === 'info') {
+                    datesHtml = `<span style="white-space: nowrap;">${fmtDateClean(e.start)}</span>`;
+                } else {
+                    datesHtml = `<span style="white-space: nowrap;">${fmtDateClean(e.start)} - ${fmtDateClean(e.end)}</span>`;
+                }
+
+                let countdownHtml = '';
+                let extraClass = '';
+                
+                if (now < e.start) {
+                    extraClass = 'future-dimmed';
+                    const timeLeft = getDaysDiff(e.start);
+                    countdownHtml = `<div class="cal-countdown">القادم ${timeLeft}</div>`;
+                } else if (now >= e.start && now <= e.end) {
+                    const timeLeft = getDaysDiff(e.end);
+                    const txt = timeLeft === "اليوم" ? "تنتهي اليوم" : `تنتهي ${timeLeft}`;
+                    countdownHtml = `<div class="cal-countdown active-green">${txt}</div>`;
                 }
 
                 return `
-                <div class="cal-event ${event.type}">
-                    <div class="cal-icon"><i class="${event.icon}"></i></div>
-                    <div class="cal-details">
-                        <h4>${event.title}</h4>
+                <div class="cal-row type-${e.type} ${extraClass}">
+                    <div class="cal-icon-col">
+                        <div class="cal-icon"><i class="${e.icon}"></i></div>
+                    </div>
+                    <div class="cal-text">
+                        <div class="cal-title">${e.title}</div>
                         <div class="cal-date">${datesHtml}</div>
+                        ${countdownHtml}
                     </div>
                 </div>`;
             }).join('');
-        } else {
-            calendarContainer.innerHTML = '<div style="text-align:center; padding: 20px; color: var(--text-secondary);">لا توجد أحداث قادمة في التقويم المتاح حالياً.</div>';
-        }
+        } else { calCont.innerHTML = '<p style="text-align:center; color:var(--text-sub); padding:20px;">لا توجد أحداث قادمة.</p>'; }
 
-        // =========================================================
-        // --- تحديث الإعلانات بناءً على التقويم ---
-        // =========================================================
-        let announcements = [];
+        renderSchedule(selDay);
+        updateStatusWidget();
+        setInterval(() => { updateStatusWidget(); updateTimelineProgress(); }, 60000);
 
-        if (futureCalendarEvents.length > 0) {
-            const nextEvent = futureCalendarEvents[0];
-            let desc = '';
-            
-            if (nextEvent.start <= nowInit && nextEvent.end >= nowInit) {
-                 desc = `نحن الآن في فترة ${nextEvent.title} والتي تستمر حتى ${formatMiladi(nextEvent.end)}.`;
-            } else {
-                 if (nextEvent.start.toDateString() === nextEvent.end.toDateString() || nextEvent.type === 'info') {
-                     desc = `يوافق تاريخ ${formatMiladi(nextEvent.start)}`;
-                 } else {
-                     desc = `تبدأ في ${formatMiladi(nextEvent.start)} وتنتهي في ${formatMiladi(nextEvent.end)}`;
-                 }
-            }
-
-            announcements.push({
-                type: nextEvent.type,
-                icon: nextEvent.icon,
-                title: nextEvent.title,
-                course: 'التقويم الجامعي',
-                desc: desc
-            });
-        } 
-
-        const tasksBoard = document.getElementById('tasks-board');
-        const tasksContainer = document.getElementById('tasks-container');
-
-        if (announcements.length > 0) {
-            tasksBoard.style.display = 'block';
-            tasksContainer.innerHTML = announcements.map(task => `
-                <div class="task-card ${task.type}">
-                    <div class="task-icon"><i class="${task.icon}"></i></div>
-                    <div class="task-content">
-                        <div class="task-header"><h4 class="task-title">${task.title}</h4><span class="task-course">${task.course}</span></div>
-                        <p class="task-desc">${task.desc}</p>
-                    </div>
-                </div>`).join('');
-        }
-
-        let todayAccordionElement = null; 
-
-        // =========================================================
-        // --- دالة النزول الذكي للجدول (مخفية للفتح التلقائي) ---
-        // =========================================================
-        function openAndScrollToToday() {
-            if (todayAccordionElement) {
-                const scheduleSection = document.getElementById('classes-view');
-                if (scheduleSection && scheduleSection.classList.contains('active')) {
-                    const header = todayAccordionElement.querySelector('.accordion-header');
-                    if (!todayAccordionElement.classList.contains('active')) {
-                        header.click();
-                    }
-                    
-                    setTimeout(() => {
-                        const yOffset = -20; 
-                        const y = todayAccordionElement.getBoundingClientRect().top + window.scrollY + yOffset;
-                        window.scrollTo({ top: y, behavior: 'smooth' });
-                    }, 300);
-                }
-            }
-        }
-
-        // =========================================================
-        // --- نظام التبويبات (Tabs) وإخفاء المحتوى ---
-        // =========================================================
-        const tabBtns = document.querySelectorAll('.tab-button');
-        const tabContents = document.querySelectorAll('.tab-content-section');
-
-        tabBtns.forEach((btn) => {
-            btn.addEventListener('click', () => {
-                const targetId = btn.getAttribute('data-target');
-                const targetElement = document.getElementById(targetId);
-                const isActive = btn.classList.contains('active');
-
-                if (isActive) {
-                    if (targetId === 'classes-view') {
-                        // النزول للجدول فقط عند الضغط المتعمد من المستخدم
-                        openAndScrollToToday();
-                    }
-                    return;
-                }
-
-                // إزالة التفعيل عن الجميع
-                tabBtns.forEach(c => c.classList.remove('active'));
-                tabContents.forEach(c => c.classList.remove('active'));
-
-                // تفعيل القسم المطلوب
-                btn.classList.add('active');
-                targetElement.classList.add('active');
-
-                if (targetId === 'classes-view') {
-                    setTimeout(updateLiveTimeline, 50);
-                    // عند التبديل، يتم النزول لجدول اليوم
-                    setTimeout(openAndScrollToToday, 100); 
-                } 
-            });
-        });
-
-        // =========================================================
-        // --- ميزة السحب (Swipe) لليمين واليسار للتبديل بين الأقسام ---
-        // =========================================================
+        // ==========================================
+        // --- 7. ميزة السحب للجدول ---
+        // ==========================================
         let touchStartX = 0;
-        let touchStartY = 0;
-
-        document.addEventListener('touchstart', e => {
-            touchStartX = e.changedTouches[0].screenX;
-            touchStartY = e.changedTouches[0].screenY;
-        }, {passive: true});
-
-        document.addEventListener('touchend', e => {
-            if(e.target.closest('.tasks-container')) return;
-            
+        const daysWrapperEl = document.getElementById('days-wrapper');
+        
+        daysWrapperEl.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, {passive: true});
+        daysWrapperEl.addEventListener('touchend', e => {
             const touchEndX = e.changedTouches[0].screenX;
-            const touchEndY = e.changedTouches[0].screenY;
-            
             const diffX = touchStartX - touchEndX;
-            const diffY = touchStartY - touchEndY;
-
-            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
-                const scheduleBtn = document.querySelector('.tab-button[data-target="classes-view"]');
-                const calendarBtn = document.querySelector('.tab-button[data-target="calendar-view"]');
+            
+            if (Math.abs(diffX) > 40) {
+                const currentActive = document.querySelector('.day-btn.active');
+                const currentIndex = parseInt(currentActive.getAttribute('data-day'));
+                let nextIndex = currentIndex;
                 
-                if (!scheduleBtn || !calendarBtn) return;
-
-                const isScheduleActive = scheduleBtn.classList.contains('active');
-
-                if (diffX > 0 && isScheduleActive) {
-                    calendarBtn.click();
-                } else if (diffX < 0 && !isScheduleActive) {
-                    scheduleBtn.click();
+                if (diffX > 0 && currentIndex > 0) nextIndex--; 
+                else if (diffX < 0 && currentIndex < 4) nextIndex++; 
+                
+                if (nextIndex !== currentIndex) {
+                    document.querySelector(`.day-btn[data-day="${nextIndex}"]`).click();
                 }
             }
         }, {passive: true});
-
-        // =========================================================
-        // --- الأنيميشن البطل (مدة 2.5 ثانية) ---
-        // =========================================================
-        setTimeout(() => {
-            const splash = document.getElementById('cyber-splash');
-            const splashShield = document.getElementById('splash-shield');
-            const headerShield = document.getElementById('header-shield');
-            const headerContainer = document.getElementById('header-shield-container');
-            const ripples = document.querySelectorAll('.shield-ripple');
-            const mainContent = document.getElementById('main-content');
-            const pageFooter = document.getElementById('page-footer');
-
-            if (ripples) ripples.forEach(r => r.style.display = 'none');
-            if (splashShield) splashShield.classList.add('flying');
-            if (splash) splash.style.backgroundColor = 'transparent';
-            
-            if (mainContent) mainContent.classList.add('visible');
-            if (pageFooter) pageFooter.classList.add('visible');
-            
-            if (splashShield && headerContainer) {
-                const rectSplash = splashShield.getBoundingClientRect();
-                const rectHeader = headerContainer.getBoundingClientRect();
-
-                const deltaX = rectHeader.left + (rectHeader.width / 2) - (rectSplash.left + (rectSplash.width / 2));
-                const deltaY = rectHeader.top + (rectHeader.height / 2) - (rectSplash.top + (rectSplash.height / 2));
-                
-                const scale = 0.44;
-
-                splashShield.style.transition = 'transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.8s';
-                splashShield.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(${scale})`;
-            }
-            
-            document.body.classList.remove('preload', 'no-scroll');
-
-            setTimeout(() => {
-                if (headerShield) headerShield.style.opacity = '1';
-                if (headerContainer) headerContainer.classList.add('visible');
-                if (splash) splash.remove();
-                
-                // تحديث التايم لاين بدون نزول الشاشة
-                setTimeout(updateLiveTimeline, 50);
-
-            }, 800);
-
-        }, 2500); 
-
-        // =========================================================
-        // --- الروابط والمظهر الحديث ---
-        // =========================================================
-        function handleLinkClick(event, element) {
-            event.preventDefault(); 
-            const href = element.getAttribute('href');
-            element.classList.add('clicked');
-            setTimeout(() => { window.open(href, '_blank'); setTimeout(() => element.classList.remove('clicked'), 300); }, 250); 
-        }
-
-        const contactPill = document.getElementById('contact-pill');
-        document.getElementById('envelope-btn').addEventListener('click', (e) => { e.stopPropagation(); contactPill.classList.toggle('open'); });
-        document.addEventListener('click', (e) => { if (!contactPill.contains(e.target)) contactPill.classList.remove('open'); });
-
-        const themeToggle = document.getElementById('theme-toggle');
-        const body = document.body;
-        let isLight = ((localStorage.getItem('theme') || 'dark') === 'light');
-
-        if (isLight) themeToggle.classList.add('is-day');
-
-        themeToggle.addEventListener('click', () => {
-            isLight = !isLight; 
-            themeToggle.classList.toggle('is-day');
-            if (isLight) { body.classList.add('light-mode'); localStorage.setItem('theme', 'light'); } 
-            else { body.classList.remove('light-mode'); localStorage.setItem('theme', 'dark'); }
-        });
-
-        // =========================================================
-        // --- بناء الجدول والتايم لاين ونظام الإجازات الذكي ---
-        // =========================================================
-        
-        let thursdayClass = { "course_code": "ADEN_1110", "course_name": "اللغة الإنجليزية 1", "start_time": "15:00", "end_time": "15:50" };
-        const switchTime = new Date('2026-03-05T15:30:00'); 
-        if (new Date() < switchTime) {
-             thursdayClass = { "course_code": "ADEN_1110", "course_name": "اللغة الإنجليزية 1", "start_time": "14:50", "end_time": "15:25" };
-        }
-
-        const rawScheduleJSON = {
-          "schedule": {
-            "Sunday": [
-              { "course_code": "ADIT_1110", "course_name": "مقدمة تقنية المعلومات", "start_time": "15:00", "end_time": "16:50" },
-              { "course_code": "ADCY_1111", "course_name": "أساسيات الشبكات", "start_time": "17:00", "end_time": "17:50" },
-              { "course_code": "ADEN_1110", "course_name": "اللغة الإنجليزية 1", "start_time": "18:00", "end_time": "19:50" }
-            ],
-            "Monday": [
-              { "course_code": "ADCY_1112", "course_name": "أساسيات الأمن السيبراني", "start_time": "15:00", "end_time": "16:50" },
-              { "course_code": "ADCY_1113", "course_name": "رياضيات الحاسب", "start_time": "17:00", "end_time": "18:50" }
-            ],
-            "Tuesday": [
-              { "course_code": "ADIT_1110", "course_name": "مقدمة تقنية المعلومات", "start_time": "15:00", "end_time": "15:50" },
-              { "course_code": "ADCY_1111", "course_name": "أساسيات الشبكات", "start_time": "16:00", "end_time": "17:50" }
-            ],
-            "Wednesday": [
-              { "course_code": "ADCY_1112", "course_name": "أساسيات الأمن السيبراني", "start_time": "15:00", "end_time": "15:50" },
-              { "course_code": "ADCY_1113", "course_name": "رياضيات الحاسب", "start_time": "16:00", "end_time": "16:50" }
-            ],
-            "Thursday": [
-              thursdayClass
-            ]
-          }
-        };
-
-        const professorMap = { "ADIT_1110": "د. محمود عبدالمنعم", "ADCY_1111": "د. عبدالعزيز الدمراني", "ADEN_1110": "د. جلال الربيع", "ADCY_1112": "د. عمرو أبوزيد", "ADCY_1113": "د. أسامة شاهين" };
-        
-        const upcomingHolidays = academicCalendar.filter(e => e.type === 'holiday');
-
-        const dayMapping = { "Sunday": 0, "Monday": 1, "Tuesday": 2, "Wednesday": 3, "Thursday": 4 };
-        const arabicDayNames = { "Sunday": "الأحد", "Monday": "الاثنين", "Tuesday": "الثلاثاء", "Wednesday": "الأربعاء", "Thursday": "الخميس" };
-        
-        const formatTime = (t) => { const [h, m] = t.split(':').map(Number); const suffix = h >= 12 ? 'م' : 'ص'; let H = h > 12 ? h - 12 : h; if (H === 0 && h !== 12) H = 12; if (h === 12) H = 12; return `${H}:${m.toString().padStart(2,'0')} ${suffix}`; };
-        const timeToMins = (t) => { const [h, m] = t.split(':').map(Number); return (h * 60) + m; };
-
-        document.getElementById('current-date').innerText = formatMiladi(nowInit);
-
-        const accordionContainer = document.getElementById('accordion-container');
-        const currentDayIndexInit = nowInit.getDay();
-        const currentMinutesInit = (nowInit.getHours() * 60) + nowInit.getMinutes();
-        
-        let targetDayIndex = currentDayIndexInit;
-        let isTodayOverGlobally = false;
-        const todayEngInit = Object.keys(dayMapping).find(k => dayMapping[k] === currentDayIndexInit);
-        if (todayEngInit && rawScheduleJSON.schedule[todayEngInit]) {
-            const todayCourses = rawScheduleJSON.schedule[todayEngInit];
-            let isTodayOver = true;
-            for (let i = 0; i < todayCourses.length; i++) { if (currentMinutesInit <= timeToMins(todayCourses[i].end_time)) { isTodayOver = false; break; } }
-            if (isTodayOver) { targetDayIndex = currentDayIndexInit + 1; isTodayOverGlobally = true; }
-        }
-        if (targetDayIndex === 5 || targetDayIndex === 6 || targetDayIndex > 6) targetDayIndex = 0;
-
-        function createAccordionItem(title, contentHTML, isHolidayDay = false, isHighlight = false, badgeText = "") {
-            const item = document.createElement('div');
-            item.className = `accordion-item ${isHolidayDay ? 'is-holiday-day' : ''}`;
-            
-            const header = document.createElement('button');
-            header.className = 'accordion-header';
-            header.innerHTML = `<span>${title} ${badgeText ? `<span class="today-badge">${badgeText}</span>` : ''}</span><i class="fa-solid fa-chevron-down icon-plus"></i>`;
-
-            const panel = document.createElement('div');
-            panel.className = 'accordion-panel';
-            panel.innerHTML = `<div class="panel-content">${contentHTML}</div>`;
-
-            header.addEventListener('click', function() {
-                const isActive = item.classList.contains('active');
-                document.querySelectorAll('.accordion-item.active').forEach(actItem => {
-                    if (actItem !== item) { actItem.classList.remove('active'); actItem.querySelector('.accordion-panel').style.maxHeight = null; }
-                });
-                if (!isActive) { item.classList.add('active'); panel.style.maxHeight = panel.scrollHeight + "px"; } 
-                else { item.classList.remove('active'); panel.style.maxHeight = null; }
-            });
-            item.appendChild(header); item.appendChild(panel); return item;
-        }
-
-        // بناء الجدول والتحقق الذكي من الإجازات لجمعها في بطاقة واحدة
-        const currentActiveHoliday = upcomingHolidays.find(h => nowInit >= h.start && nowInit <= h.end);
-
-        if (currentActiveHoliday) {
-            // نحن الآن في إجازة، نعرض رسالة واحدة فقط وتختفي قائمة الأيام تماماً
-            accordionContainer.innerHTML = `
-                <div style="background: var(--bento-bg); border: 1px solid var(--accent-green); padding: 35px 20px; border-radius: 24px; text-align: center; box-shadow: 0 10px 25px rgba(16,185,129,0.1);">
-                    <i class="${currentActiveHoliday.icon}" style="font-size: 3.5rem; color: var(--accent-green); margin-bottom: 20px; display: block;"></i>
-                    <h3 style="color: var(--accent-green); margin-bottom: 12px; font-size: 1.4rem; font-weight: 900;">إجازة سعيدة!</h3>
-                    <p style="color: var(--text-primary); font-weight: 600; line-height: 1.8; font-size: 1.1rem; margin: 0;">
-                        لا توجد محاضرات حالياً لتزامنها مع <strong>${currentActiveHoliday.title}</strong>.<br>
-                        ستعود المحاضرات لأوقاتها المعتادة بعد انتهاء الإجازة بمشيئة الله.
-                    </p>
-                </div>
-            `;
-        } else {
-            // عرض الجدول المعتاد
-            Object.entries(rawScheduleJSON.schedule).sort((a, b) => dayMapping[a[0]] - dayMapping[b[0]]).forEach(([englishDay, courses]) => {
-                const dayName = arabicDayNames[englishDay]; const dayIndex = dayMapping[englishDay];
-                let contentHTML = ''; let isHolidayDay = false; let displayTitle = dayName;
-                
-                let distance = dayIndex - currentDayIndexInit;
-                if (distance < 0) distance += 7;
-                if (distance === 0 && isTodayOverGlobally) distance += 7;
-                
-                const renderedDate = new Date(nowInit);
-                renderedDate.setDate(nowInit.getDate() + distance);
-                renderedDate.setHours(12, 0, 0, 0); 
-
-                const holidayForDay = upcomingHolidays.find(h => renderedDate >= h.start && renderedDate <= h.end);
-                
-                if (holidayForDay) {
-                    // إذا صادف يوم معين إجازة (وهذا لا ينطبق على الإجازة الطويلة التي تغطي الأسبوع كامل)
-                    isHolidayDay = true; displayTitle = `${dayName} (إجازة)`;
-                    contentHTML = `<div class="holiday-card"><div class="holiday-icon-box"><i class="${holidayForDay.icon}"></i></div><div class="holiday-content"><h3>${holidayForDay.title}</h3><p>لا توجد محاضرات في هذا اليوم.</p><span class="holiday-date">${formatMiladi(renderedDate)}</span></div></div>`;
-                } else {
-                    courses.sort((a, b) => a.start_time.localeCompare(b.start_time));
-                    contentHTML = `<div class="timeline-wrapper" data-day="${dayIndex}"><div class="timeline-track-bg"></div><div class="timeline-track-fill"></div><div class="timeline-pulsing-dot" style="opacity: 0;"></div><div class="timeline-container">`;
-                    
-                    contentHTML += courses.map(course => {
-                        const profName = professorMap[course.course_code.split(' ')[0]] || "";
-                        const formattedCode = course.course_code.replace('_', ' ');
-                        let displayName = course.course_name.replace(/(\(.*?\))/g, '<span class="course-note">$1</span>');
-                        const timeHeaderHTML = `${formatTime(course.start_time)} - ${formatTime(course.end_time)}`;
-                        return `<div class="timeline-item" data-start="${timeToMins(course.start_time)}" data-end="${timeToMins(course.end_time)}" data-original-time="${timeHeaderHTML}"><div class="time-header">${timeHeaderHTML}</div><h3 class="course-title">${displayName}</h3><div class="course-meta"><span><span class="course-code">${formattedCode}</span></span><span><i class="fa-solid fa-user-tie"></i> ${profName}</span></div></div>`;
-                    }).join('');
-                    contentHTML += `</div></div>`;
-                }
-
-                let isHighlight = (dayIndex === targetDayIndex);
-                let badgeText = isHighlight ? ((currentDayIndexInit === dayIndex) ? "اليوم" : "القادم") : "";
-                const item = createAccordionItem(displayTitle, contentHTML, isHolidayDay, isHighlight, badgeText);
-                accordionContainer.appendChild(item);
-
-                // فتح أكورديون محاضرة اليوم بصمت بدون تمرير الشاشة للأسفل
-                if(isHighlight && !holidayForDay) {
-                    todayAccordionElement = item;
-                    item.classList.add('active');
-                    requestAnimationFrame(() => {
-                        setTimeout(() => {
-                            const panel = item.querySelector('.accordion-panel');
-                            if (panel) panel.style.maxHeight = panel.scrollHeight + "px";
-                        }, 50);
-                    });
-                }
-            });
-        }
-
-        function updateLiveTimeline() {
-            if(!document.getElementById('classes-view').classList.contains('active')) return;
-            const dateNow = new Date(); const currentDayIndex = dateNow.getDay();
-            const currentSecs = (dateNow.getHours() * 60 + dateNow.getMinutes()) * 60 + dateNow.getSeconds();
-            
-            document.querySelectorAll('.timeline-wrapper').forEach(wrapper => {
-                const dayIndex = parseInt(wrapper.getAttribute('data-day'));
-                const items = wrapper.querySelectorAll('.timeline-item');
-                const trackFill = wrapper.querySelector('.timeline-track-fill');
-                const pulsingDot = wrapper.querySelector('.timeline-pulsing-dot');
-                const containerOffset = wrapper.querySelector('.timeline-container').offsetTop;
-                
-                let dotY = 16; let fillHeight = 0; let isLiveFound = false; let allPast = true; let firstFutureTop = null;
-                
-                items.forEach(item => {
-                    const startSecs = parseInt(item.getAttribute('data-start')) * 60;
-                    const endSecs = parseInt(item.getAttribute('data-end')) * 60;
-                    const timeHeader = item.querySelector('.time-header');
-                    const originalTime = item.getAttribute('data-original-time');
-                    const itemTop = containerOffset + item.offsetTop + 16; 
-                    const itemBottom = containerOffset + item.offsetTop + item.offsetHeight + 16;
-                    
-                    item.className = 'timeline-item'; timeHeader.innerHTML = originalTime;
-
-                    if (currentDayIndex === dayIndex) {
-                        if (currentSecs >= endSecs) {
-                            item.classList.add('past-item'); timeHeader.innerHTML = `${originalTime} <span class="badge-past">انتهت</span>`;
-                        } else if (currentSecs >= startSecs && currentSecs < endSecs) {
-                            isLiveFound = true; allPast = false; item.classList.add('live-item');
-                            const diffSec = endSecs - currentSecs;
-                            const h = Math.floor(diffSec / 3600); const m = Math.floor((diffSec % 3600) / 60); const s = diffSec % 60;
-                            let timeStr = h > 0 ? `${h}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}` : `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-                            timeHeader.innerHTML = `<i class="fa-solid fa-satellite-dish fa-beat-fade"></i><span class="countdown-label">مباشر ·</span><span class="countdown-clock" dir="ltr">${timeStr}</span>`;
-                            const progress = (currentSecs - startSecs) / (endSecs - startSecs);
-                            dotY = itemTop + ((itemBottom - itemTop) * progress);
-                            fillHeight = dotY - 16;
-                        } else {
-                            item.classList.add('future-item'); allPast = false;
-                            if (firstFutureTop === null) firstFutureTop = itemTop;
-                        }
-                    }
-                });
-                
-                if (currentDayIndex === dayIndex) {
-                    if (isLiveFound) { wrapper.classList.add('is-live-track'); pulsingDot.classList.remove('resting'); pulsingDot.style.opacity = '1'; } 
-                    else if (allPast) { wrapper.classList.remove('is-live-track'); pulsingDot.classList.add('resting'); dotY = wrapper.offsetHeight - 16; fillHeight = dotY - 16; pulsingDot.style.opacity = '1'; } 
-                    else if (firstFutureTop !== null) { wrapper.classList.remove('is-live-track'); pulsingDot.classList.add('resting'); dotY = firstFutureTop; fillHeight = Math.max(0, dotY - 16); pulsingDot.style.opacity = fillHeight > 0 ? '1' : '0'; } 
-                    else { fillHeight = 0; dotY = 16; pulsingDot.style.opacity = '0'; }
-                    trackFill.style.height = `${Math.min(fillHeight, wrapper.offsetHeight - 32)}px`;
-                    pulsingDot.style.top = `${Math.min(dotY, wrapper.offsetHeight - 16)}px`; 
-                } else { wrapper.classList.remove('is-live-track'); trackFill.style.height = `0`; pulsingDot.style.opacity = `0`; }
-            });
-        }
-        updateLiveTimeline(); setInterval(updateLiveTimeline, 1000);
 
     </script>
 </body>
