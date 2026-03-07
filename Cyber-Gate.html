@@ -73,7 +73,6 @@
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
             overscroll-behavior-y: none;
-            /* تمت إزالة خاصية transition لجعل الانتقال فورياً 0 ثانية */
         }
 
         .text-secondary { color: var(--ios-text-secondary); }
@@ -122,7 +121,7 @@
             border: none;
             color: var(--ios-blue); 
             display: flex; align-items: center; justify-content: center;
-            font-size: 1rem; cursor: pointer; transition: opacity 0.2s;
+            font-size: 1rem; cursor: pointer;
             margin-bottom: 4px;
         }
         .theme-btn:active { opacity: 0.6; }
@@ -132,10 +131,19 @@
         /* ========================================= */
         /* --- 3. iOS Cards & Widgets --- */
         /* ========================================= */
+        .section-header-row {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 0 16px;
+        }
+        
+        /* إضافة المسافات السفلية لجميع العناوين بشكل افتراضي */
         .section-title { 
             font-size: 1.1rem; font-weight: 700; color: var(--ios-text-primary); 
-            margin-bottom: 10px; padding-right: 16px;
-            letter-spacing: -0.3px;
+            letter-spacing: -0.3px; margin-bottom: 12px; padding-right: 16px;
+        }
+        
+        /* إزالة المسافة السفلية للعنوان عندما يكون داخل حاوية بها أزرار أخرى (مثل صفحة اليوم) */
+        .section-header-row .section-title {
+            margin-bottom: 0; padding-right: 0;
         }
 
         .ios-card { 
@@ -143,6 +151,27 @@
             border-radius: var(--radius-card); 
             box-shadow: var(--shadow-sm); 
             overflow: hidden;
+            position: relative;
+        }
+
+        .hint-btn {
+            background: none; border: none; color: var(--ios-blue); font-size: 1.2rem; 
+            cursor: pointer; padding: 5px; opacity: 0.8; transition: opacity 0.2s;
+        }
+        .hint-btn:active { opacity: 0.4; transform: scale(0.95); }
+
+        .demo-hand {
+            position: absolute; 
+            font-size: 3rem; 
+            color: rgba(0, 122, 255, 0.95); 
+            opacity: 0; 
+            pointer-events: none; 
+            z-index: 100; 
+            filter: drop-shadow(0 6px 12px rgba(0,0,0,0.3));
+            top: 130px; 
+            left: 50%; 
+            transform: translate3d(0, 0, 0) rotate(-15deg); 
+            will-change: transform, opacity;
         }
 
         .status-widget {
@@ -211,33 +240,47 @@
         /* ========================================= */
         /* --- 5. Timeline --- */
         /* ========================================= */
-        .timeline-container { position: relative; padding: 0 16px 16px; }
+        .timeline-container { position: relative; padding: 0 16px 16px; width: 100%; overflow: hidden;}
         
+        #timeline-inner-wrapper {
+            will-change: transform, opacity;
+        }
+
         .timeline-item { 
-            position: relative; padding-bottom: 20px; padding-right: 35px; 
-            opacity: 1; transition: opacity 0.3s;
+            position: relative; 
+            padding-bottom: 20px; 
+            padding-right: 45px; 
+            opacity: 1; 
+            transition: opacity 0.3s;
         }
         .timeline-item:last-child { padding-bottom: 0; }
         
-        /* محاذاة دقيقة ومثالية للخط الزمني */
         .timeline-line { 
-            position: absolute; right: 26px; top: 10px; bottom: 20px; 
+            position: absolute; 
+            right: 15px; 
+            top: 10px; bottom: 20px; 
             width: 2px; background: var(--ios-separator); z-index: 1; 
         }
         .timeline-fill { 
-            position: absolute; right: 26px; top: 10px; 
+            position: absolute; 
+            right: 15px; 
+            top: 10px; 
             width: 2px; background: var(--ios-red); height: 0%; z-index: 2; transition: height 1s linear; 
         }
         
         .timeline-dot { 
-            position: absolute; right: 5px; top: 10px; 
+            position: absolute; 
+            right: 10px; 
+            top: 10px; 
             width: 12px; height: 12px; border-radius: 50%; 
             background: var(--ios-card); border: 2px solid var(--ios-separator); 
             z-index: 4; box-sizing: border-box;
         }
         
         .timeline-progress-dot { 
-            position: absolute; right: 21px; top: 10px; 
+            position: absolute; 
+            right: 10px; 
+            top: 10px; 
             width: 12px; height: 12px; border-radius: 50%; 
             background: var(--ios-red); z-index: 5; 
             opacity: 0; transition: top 1s linear; 
@@ -325,7 +368,7 @@
         .banner.disclaimer p { font-size: 0.75rem; margin: 0; }
 
         /* ========================================= */
-        /* --- 8. Tab Bar --- */
+        /* --- 8. Tab Bar & Modals --- */
         /* ========================================= */
         .tab-bar {
             position: fixed; bottom: 0; left: 0; right: 0;
@@ -351,24 +394,49 @@
         .view-section.active { display: block; }
         @keyframes fade-in { from { opacity: 0; transform: scale(0.98);} to { opacity: 1; transform: scale(1);} }
 
-        .toast {
-            position: fixed; bottom: calc(80px + var(--safe-bottom)); left: 50%;
-            transform: translateX(-50%) translateY(20px);
-            background: rgba(0,0,0,0.8); color: white;
-            padding: 10px 20px; border-radius: 20px;
-            font-size: 0.85rem; font-weight: 600;
-            z-index: 1000; opacity: 0; pointer-events: none;
-            transition: all 0.3s ease; white-space: nowrap;
-            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        /* ستايل النافذة المنبثقة للتلميح */
+        .hint-modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 9999;
+            display: flex; justify-content: center; align-items: center;
+            opacity: 0; visibility: hidden; transition: opacity 0.3s;
+            backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
         }
-        body.dark-mode .toast { background: rgba(255,255,255,0.9); color: black;}
-        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+        .hint-modal-overlay.active { opacity: 1; visibility: visible; }
+        
+        .hint-modal-box {
+            background: var(--ios-card); width: 290px; border-radius: 18px;
+            text-align: center; overflow: hidden; transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .hint-modal-overlay.active .hint-modal-box { transform: scale(1); }
+        
+        .hint-modal-body { padding: 24px 20px 20px; }
+        .hint-modal-icon { font-size: 2.5rem; color: var(--ios-blue); margin-bottom: 12px; }
+        .hint-modal-text { font-size: 1.05rem; font-weight: 700; line-height: 1.5; margin: 0; color: var(--ios-text-primary); }
+        
+        .hint-modal-footer { border-top: 0.5px solid var(--ios-separator); display: flex; }
+        .hint-modal-btn {
+            flex: 1; padding: 14px; background: transparent; border: none;
+            color: var(--ios-blue); font-size: 1.05rem; font-weight: 700; cursor: pointer;
+            font-family: inherit;
+        }
+        .hint-modal-btn:active { background: var(--ios-segmented-bg); }
 
     </style>
 </head>
 <body>
 
-    <div id="toast" class="toast"></div>
+    <!-- نافذة التلميح المنبثقة -->
+    <div class="hint-modal-overlay" id="hint-modal">
+        <div class="hint-modal-box">
+            <div class="hint-modal-body">
+                <i class="fa-solid fa-arrows-left-right hint-modal-icon"></i>
+                <p class="hint-modal-text">اسحب يميناً أو يساراً داخل الجدول للانتقال بين الأيام بسهولة</p>
+            </div>
+            <div class="hint-modal-footer">
+                <button class="hint-modal-btn" id="hint-modal-close">حسناً، فهمت</button>
+            </div>
+        </div>
+    </div>
 
     <div class="app-core">
         
@@ -403,18 +471,29 @@
                 </div>
 
                 <div>
-                    <h3 class="section-title">جدول المحاضرات</h3>
+                    <div class="section-header-row">
+                        <h3 class="section-title">جدول المحاضرات</h3>
+                        <button class="hint-btn" id="swipe-hint-btn" aria-label="كيفية الانتقال">
+                            <i class="fa-solid fa-circle-exclamation"></i>
+                        </button>
+                    </div>
+                    
                     <div class="ios-card" id="schedule-card" style="padding-top: 16px;">
                         
+                        <!-- أيقونة الإصبع للأنيميشن -->
+                        <i class="fa-solid fa-hand-pointer demo-hand" id="demo-hand"></i>
+
                         <div class="segmented-control" id="days-wrapper">
                             <div class="segment-highlight" id="sliding-highlight"></div>
                         </div>
 
                         <div class="timeline-container" id="timeline-container">
-                            <div class="timeline-line"></div>
-                            <div class="timeline-fill" id="timeline-fill"></div>
-                            <div class="timeline-progress-dot" id="timeline-dot"></div>
-                            <div id="timeline-items"></div>
+                            <div id="timeline-inner-wrapper">
+                                <div class="timeline-line"></div>
+                                <div class="timeline-fill" id="timeline-fill"></div>
+                                <div class="timeline-progress-dot" id="timeline-dot"></div>
+                                <div id="timeline-items"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -425,6 +504,7 @@
             </div>
 
             <div id="view-links" class="view-section">
+                <!-- ستلاحظ هنا عودة المساحة المريحة للعنوان -->
                 <h3 class="section-title">الأنظمة الجامعية</h3>
                 <div class="ios-list">
                     <a href="https://lms.ju.edu.sa/" class="list-row" target="_blank">
@@ -447,6 +527,7 @@
             </div>
 
             <div id="view-calendar" class="view-section">
+                <!-- ستلاحظ هنا أيضاً عودة المساحة المريحة للعنوان -->
                 <h3 class="section-title">التقويم الجامعي</h3>
                 <div class="ios-list" id="calendar-container"></div>
             </div>
@@ -545,10 +626,8 @@
             { start: new Date('2026-08-23T00:00:00'), end: new Date('2026-08-23T23:59:59'), title: 'بداية العام 1448هـ', type: 'info', icon: 'fa-graduation-cap', color: 'bg-blue'}
         ];
 
-        // --- Helpers ---
         const t2m = (t) => { const [h, m] = t.split(':').map(Number); return (h * 60) + m; };
         
-        // تنسيق الوقت ليصبح بالشكل الصحيح: الرقم أولاً ثم (م/ص) ليتوافق مع القراءة العربية
         const fmtT12 = (t) => { 
             const [h, m] = t.split(':').map(Number); 
             const ampm = h >= 12 ? 'م' : 'ص';
@@ -615,7 +694,6 @@
             updateHighlightPosition(initialActive);
         }, 100);
 
-        // --- Status Widget ---
         function updateStatusWidget() {
             const wCard = document.getElementById('status-widget');
             const badge = document.getElementById('status-badge');
@@ -673,7 +751,6 @@
             }
         }
 
-        // --- Schedule Rendering ---
         const tlItemsCont = document.getElementById('timeline-items');
         let selDay = (cDay >= 0 && cDay <= 4) ? cDay : 0;
         let timelineCache = [];
@@ -772,7 +849,6 @@
             pulsingDot.style.top = `${dotY}px`;
         }
 
-        // --- Calendar Rendering ---
         const calCont = document.getElementById('calendar-container');
         
         const futureEvents = academicCalendar.filter(ev => {
@@ -783,7 +859,6 @@
         
         if (futureEvents.length > 0) {
             calCont.innerHTML = futureEvents.map(e => {
-                
                 let datesStr = '';
                 if (e.start.toDateString() === e.end.toDateString() || e.type === 'info') {
                     datesStr = fmtDateClean(e.start);
@@ -794,7 +869,6 @@
                 let trailingTxt = '';
                 let extraClass = '';
                 if (now < e.start) {
-                    // إضافة كلمة (القادم) للأحداث التي لم تبدأ بعد
                     trailingTxt = "القادم " + getDaysDiff(e.start);
                 } else if (now >= e.start && now <= e.end) {
                     const diffTxt = getDaysDiff(e.end);
@@ -814,22 +888,86 @@
             }).join('');
         } else { calCont.innerHTML = '<p style="text-align:center; color:var(--ios-text-secondary); padding:20px;">لا توجد أحداث قادمة.</p>'; }
 
-        // --- Init ---
         renderSchedule(selDay);
         updateStatusWidget();
         setInterval(() => { updateStatusWidget(); updateTimelineProgress(); }, 60000);
 
-        // --- Swipe Logic ---
+        // --- نظام الأنيميشن الذكي للسحب والمطابق لـ RTL ---
         let scheduleTouchStartX = 0;
         let scheduleTouchStartY = 0;
         const scheduleCard = document.getElementById('schedule-card');
         
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            toast.innerText = msg;
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 2000);
-        }
+        const hintBtn = document.getElementById('swipe-hint-btn');
+        const hintModal = document.getElementById('hint-modal');
+        const hintModalClose = document.getElementById('hint-modal-close');
+        const demoHand = document.getElementById('demo-hand');
+        const timelineInnerWrapper = document.getElementById('timeline-inner-wrapper');
+
+        const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+        hintBtn.addEventListener('click', () => {
+            hintModal.classList.add('active');
+        });
+
+        hintModalClose.addEventListener('click', async () => {
+            hintModal.classList.remove('active');
+            await sleep(300); 
+
+            const currentActive = document.querySelector('.segment-btn.active');
+            if(!currentActive) return;
+            
+            let originalIndex = parseInt(currentActive.getAttribute('data-day'));
+
+            const doSmartSwipe = async (actionType) => {
+                let isNextDay = actionType === 'next';
+                let targetIndex = isNextDay ? originalIndex + 1 : originalIndex - 1;
+
+                demoHand.style.transition = 'none';
+                demoHand.style.transform = `translate3d(${isNextDay ? '-60px' : '60px'}, 0, 0) rotate(-15deg) scale(1.1)`;
+                demoHand.style.opacity = '0';
+                void demoHand.offsetWidth; 
+
+                demoHand.style.transition = 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease';
+                demoHand.style.opacity = '1';
+                demoHand.style.transform = `translate3d(${isNextDay ? '-60px' : '60px'}, 0, 0) rotate(-15deg) scale(1)`;
+                await sleep(400);
+
+                demoHand.style.transition = 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1)';
+                timelineInnerWrapper.style.transition = 'transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease';
+                
+                demoHand.style.transform = `translate3d(${isNextDay ? '60px' : '-60px'}, 0, 0) rotate(-15deg) scale(1)`;
+                timelineInnerWrapper.style.transform = `translate3d(${isNextDay ? '80px' : '-80px'}, 0, 0)`; 
+                timelineInnerWrapper.style.opacity = '0'; 
+                await sleep(500);
+
+                document.querySelector(`.segment-btn[data-day="${targetIndex}"]`).click();
+                originalIndex = targetIndex;
+
+                timelineInnerWrapper.style.transition = 'none';
+                timelineInnerWrapper.style.transform = `translate3d(${isNextDay ? '-80px' : '80px'}, 0, 0)`;
+                void timelineInnerWrapper.offsetWidth;
+
+                timelineInnerWrapper.style.transition = 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease';
+                timelineInnerWrapper.style.transform = 'translate3d(0, 0, 0)';
+                timelineInnerWrapper.style.opacity = '1';
+
+                demoHand.style.transform = `translate3d(${isNextDay ? '60px' : '-60px'}, 0, 0) rotate(-15deg) scale(1.1)`;
+                await sleep(200);
+                demoHand.style.opacity = '0';
+                await sleep(300);
+            };
+
+            if (originalIndex === 0) {
+                await doSmartSwipe('next');
+                await doSmartSwipe('prev');
+            } else if (originalIndex === 4) {
+                await doSmartSwipe('prev');
+                await doSmartSwipe('next');
+            } else {
+                await doSmartSwipe('next');
+                await doSmartSwipe('prev');
+            }
+        });
         
         scheduleCard.addEventListener('touchstart', e => { 
             scheduleTouchStartX = e.changedTouches[0].screenX; 
@@ -856,7 +994,23 @@
                 } 
                 
                 if (nextIndex !== currentIndex) {
-                    document.querySelector(`.segment-btn[data-day="${nextIndex}"]`).click();
+                    let isNextDay = nextIndex > currentIndex;
+                    
+                    timelineInnerWrapper.style.transition = 'transform 0.2s ease-out, opacity 0.2s ease-out';
+                    timelineInnerWrapper.style.transform = `translate3d(${isNextDay ? '40px' : '-40px'}, 0, 0)`;
+                    timelineInnerWrapper.style.opacity = '0';
+                    
+                    setTimeout(() => {
+                        document.querySelector(`.segment-btn[data-day="${nextIndex}"]`).click();
+                        
+                        timelineInnerWrapper.style.transition = 'none';
+                        timelineInnerWrapper.style.transform = `translate3d(${isNextDay ? '-40px' : '40px'}, 0, 0)`;
+                        void timelineInnerWrapper.offsetWidth;
+                        
+                        timelineInnerWrapper.style.transition = 'transform 0.3s ease-out, opacity 0.3s ease-out';
+                        timelineInnerWrapper.style.transform = 'translate3d(0, 0, 0)';
+                        timelineInnerWrapper.style.opacity = '1';
+                    }, 200);
                 }
             }
         }, {passive: true});
