@@ -73,7 +73,7 @@
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
             overscroll-behavior-y: none;
-            transition: background-color 0.2s ease, color 0.2s ease;
+            /* تمت إزالة خاصية transition لجعل الانتقال فورياً 0 ثانية */
         }
 
         .text-secondary { color: var(--ios-text-secondary); }
@@ -403,7 +403,7 @@
                 </div>
 
                 <div>
-                    <h3 class="section-title">الجدول الدراسي</h3>
+                    <h3 class="section-title">جدول المحاضرات</h3>
                     <div class="ios-card" id="schedule-card" style="padding-top: 16px;">
                         
                         <div class="segmented-control" id="days-wrapper">
@@ -807,7 +807,7 @@
                     <div class="icon-box ${e.color}"><i class="fa-solid ${e.icon}"></i></div>
                     <div class="row-content">
                         <div class="row-title">${e.title}</div>
-                        <div class="row-subtitle" dir="ltr" style="text-align: right;">${datesStr}</div>
+                        <div class="row-subtitle" dir="rtl">${datesStr}</div>
                     </div>
                     <div class="row-trailing ${extraClass}">${trailingTxt}</div>
                 </div>`;
