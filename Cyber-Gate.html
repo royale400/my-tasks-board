@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#f2f2f7" id="theme-color-meta">
+    <title>بوابة سيبر الجوف</title>
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/webfonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* ========================================= */
+        /* --- 1. iOS Design System Variables --- */
+        /* ========================================= */
+        :root {
+            --ios-bg: #f2f2f7;
+            --ios-card: #ffffff;
+            --ios-nav-bg: rgba(255, 255, 255, 0.85);
+            
+            --ios-blue: #007aff;
+            --ios-red: #ff3b30;
+            --ios-green: #34c759;
+            --ios-orange: #ff9500;
+            --ios-purple: #af52de;
+            
+            --ios-text-primary: #000000;
+            --ios-text-secondary: #8e8e93;
+            --ios-text-tertiary: #c7c7cc;
+            
+            --ios-separator: rgba(60, 60, 67, 0.15);
+            --ios-segmented-bg: rgba(118, 118, 128, 0.12);
+            --ios-segmented-thumb: #ffffff;
+            
+            --radius-card: 14px;
+            --radius-pill: 50px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-thumb: 0 3px 8px rgba(0,0,0,0.12), 0 3px 1px rgba(0,0,0,0.04);
+            
+            --safe-bottom: env(safe-area-inset-bottom, 20px);
+        }
+
+        body.dark-mode {
+            --ios-bg: #000000;
+            --ios-card: #1c1c1e;
+            --ios-nav-bg: rgba(28, 28, 30, 0.85);
+            
+            --ios-blue: #0a84ff;
+            --ios-red: #ff453a;
+            --ios-green: #30d158;
+            --ios-orange: #ff9f0a;
+            --ios-purple: #bf5af2;
+            
+            --ios-text-primary: #ffffff;
+            --ios-text-secondary: #ebebf5; 
+            --ios-text-tertiary: #ebebf5; 
+            
+            --ios-separator: rgba(84, 84, 88, 0.65);
+            --ios-segmented-bg: rgba(118, 118, 128, 0.24);
+            --ios-segmented-thumb: #636366;
+            
+            --shadow-sm: none;
+            --shadow-thumb: 0 3px 8px rgba(0,0,0,0.3);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        body {
+            font-family: 'Tajawal', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--ios-bg);
+            color: var(--ios-text-primary);
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            overscroll-behavior-y: none;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .text-secondary { color: var(--ios-text-secondary); }
+
+        /* ========================================= */
+        /* --- 2. Layout & Header --- */
+        /* ========================================= */
+        .app-core {
+            max-width: 600px; margin: 0 auto;
+            min-height: 100dvh; display: flex; flex-direction: column;
+            padding-bottom: calc(80px + var(--safe-bottom));
+        }
+
+        .header {
+            padding: 16px 20px 10px;
+            position: sticky; top: 0; z-index: 50;
+            background: var(--ios-nav-bg); 
+            backdrop-filter: saturate(180%) blur(20px); 
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            border-bottom: 0.5px solid var(--ios-separator);
+            display: flex; justify-content: space-between; align-items: flex-end;
+        }
+        
+        .header-title-container {
+            display: flex; flex-direction: column; gap: 2px;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .header-subtitle {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--ios-text-secondary);
+        }
+
+        .theme-btn {
+            width: 32px; height: 32px; 
+            border-radius: 50%;
+            background: var(--ios-segmented-bg); 
+            border: none;
+            color: var(--ios-blue); 
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1rem; cursor: pointer; transition: opacity 0.2s;
+            margin-bottom: 4px;
+        }
+        .theme-btn:active { opacity: 0.6; }
+
+        .main-content { padding: 20px; display: flex; flex-direction: column; gap: 24px; }
+
+        /* ========================================= */
+        /* --- 3. iOS Cards & Widgets --- */
+        /* ========================================= */
+        .section-title { 
+            font-size: 1.1rem; font-weight: 700; color: var(--ios-text-primary); 
+            margin-bottom: 10px; padding-right: 16px;
+            letter-spacing: -0.3px;
+        }
+
+        .ios-card { 
+            background: var(--ios-card); 
+            border-radius: var(--radius-card); 
+            box-shadow: var(--shadow-sm); 
+            overflow: hidden;
+        }
+
+        .status-widget {
+            padding: 20px;
+            display: flex; flex-direction: column; gap: 8px;
+            border: 2px solid transparent;
+        }
+        
+        .status-widget.is-live {
+            border-color: var(--ios-red);
+            background: var(--ios-card);
+        }
+
+        .status-badge { 
+            align-self: flex-start;
+            display: inline-flex; align-items: center; gap: 6px; 
+            padding: 4px 10px; border-radius: 6px; 
+            font-size: 0.75rem; font-weight: 700; 
+            background: var(--ios-segmented-bg); color: var(--ios-text-secondary); 
+        }
+        
+        .status-widget.is-live .status-badge {
+            background: rgba(255, 59, 48, 0.1);
+            color: var(--ios-red);
+        }
+
+        .live-dot { width: 8px; height: 8px; background: var(--ios-red); border-radius: 50%; animation: blink 1.5s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+        .status-title { font-size: 1.3rem; font-weight: 800; line-height: 1.3;}
+        .status-desc { font-size: 0.95rem; font-weight: 500; color: var(--ios-text-secondary); display:flex; align-items:center; gap:4px;}
+
+        /* ========================================= */
+        /* --- 4. Segmented Control --- */
+        /* ========================================= */
+        .segmented-control {
+            display: flex;
+            background: var(--ios-segmented-bg);
+            border-radius: 9px;
+            padding: 2px;
+            position: relative;
+            margin: 0 16px 16px 16px;
+        }
+
+        .segment-highlight {
+            position: absolute; top: 2px; bottom: 2px;
+            background: var(--ios-segmented-thumb);
+            border-radius: 7px;
+            box-shadow: var(--shadow-thumb);
+            transition: left 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), width 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            z-index: 1;
+        }
+
+        .segment-btn {
+            flex: 1; position: relative; z-index: 2;
+            padding: 6px 0; border: none; background: transparent; cursor: pointer;
+            text-align: center; color: var(--ios-text-primary);
+            font-family: inherit; transition: color 0.3s;
+        }
+        
+        .segment-btn .d-name { font-size: 0.85rem; font-weight: 600; display: block;}
+        .segment-btn .d-num { font-size: 0.7rem; font-weight: 500; opacity: 0.7; display: block; margin-top: 2px;}
+        
+        .segment-btn.active { font-weight: 700; }
+
+        /* ========================================= */
+        /* --- 5. Timeline --- */
+        /* ========================================= */
+        .timeline-container { position: relative; padding: 0 16px 16px; }
+        
+        .timeline-item { 
+            position: relative; padding-bottom: 20px; padding-right: 35px; 
+            opacity: 1; transition: opacity 0.3s;
+        }
+        .timeline-item:last-child { padding-bottom: 0; }
+        
+        /* محاذاة دقيقة ومثالية للخط الزمني */
+        .timeline-line { 
+            position: absolute; right: 26px; top: 10px; bottom: 20px; 
+            width: 2px; background: var(--ios-separator); z-index: 1; 
+        }
+        .timeline-fill { 
+            position: absolute; right: 26px; top: 10px; 
+            width: 2px; background: var(--ios-red); height: 0%; z-index: 2; transition: height 1s linear; 
+        }
+        
+        .timeline-dot { 
+            position: absolute; right: 5px; top: 10px; 
+            width: 12px; height: 12px; border-radius: 50%; 
+            background: var(--ios-card); border: 2px solid var(--ios-separator); 
+            z-index: 4; box-sizing: border-box;
+        }
+        
+        .timeline-progress-dot { 
+            position: absolute; right: 21px; top: 10px; 
+            width: 12px; height: 12px; border-radius: 50%; 
+            background: var(--ios-red); z-index: 5; 
+            opacity: 0; transition: top 1s linear; 
+            box-shadow: 0 0 0 3px rgba(255, 59, 48, 0.2); 
+            box-sizing: border-box;
+        }
+
+        .class-content { display: flex; flex-direction: column; gap: 4px; }
+        .class-header { display: flex; justify-content: space-between; align-items: baseline; }
+        .class-title { font-size: 1.05rem; font-weight: 700; margin: 0; color: var(--ios-text-primary);}
+        
+        .class-time { 
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
+            font-size: 0.85rem; font-weight: 600; color: var(--ios-blue);
+            display: inline-flex; gap: 4px; direction: rtl; align-items: center;
+        }
+        
+        .class-info { font-size: 0.85rem; color: var(--ios-text-secondary); display: flex; justify-content: space-between; font-weight: 500;}
+        .course-code { font-family: monospace; font-size: 0.75rem; letter-spacing: 0.5px;}
+
+        .live-tag { 
+            color: var(--ios-red); font-size: 0.75rem; font-weight: 700; 
+            margin-left: 6px; animation: blink 1.5s infinite;
+        }
+
+        .timeline-item.past { opacity: 0.4; }
+        .timeline-item.live-now .timeline-dot { opacity: 0; } 
+        .timeline-item.live-now .class-time { color: var(--ios-red); }
+
+        /* ========================================= */
+        /* --- 6. iOS List Views --- */
+        /* ========================================= */
+        .ios-list { background: var(--ios-card); border-radius: var(--radius-card); overflow: hidden; }
+
+        .list-row {
+            display: flex; align-items: center; gap: 16px;
+            padding: 12px 16px; position: relative; text-decoration: none;
+        }
+        
+        .list-row:not(:last-child)::after {
+            content: ''; position: absolute; bottom: 0; right: 60px; left: 0;
+            height: 0.5px; background-color: var(--ios-separator);
+        }
+
+        .list-row:active { background-color: var(--ios-segmented-bg); }
+
+        .icon-box {
+            width: 32px; height: 32px; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 1rem; flex-shrink: 0;
+        }
+        
+        .bg-blue { background-color: var(--ios-blue); }
+        .bg-green { background-color: var(--ios-green); }
+        .bg-orange { background-color: var(--ios-orange); }
+        .bg-purple { background-color: var(--ios-purple); }
+        .bg-red { background-color: var(--ios-red); }
+        .bg-gray { background-color: var(--ios-text-tertiary); }
+
+        .row-content { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+        .row-title { font-size: 1rem; font-weight: 600; color: var(--ios-text-primary); }
+        .row-subtitle { font-size: 0.8rem; font-weight: 400; color: var(--ios-text-secondary); font-family: -apple-system, sans-serif;}
+
+        .row-trailing { 
+            font-size: 0.85rem; font-weight: 600; color: var(--ios-text-secondary);
+            display: flex; align-items: center; gap: 8px; white-space: nowrap;
+        }
+        .row-trailing.active-holiday { color: var(--ios-green); }
+        .chevron { color: var(--ios-text-tertiary); font-size: 0.8rem; }
+
+        /* ========================================= */
+        /* --- 7. Banners & Disclaimer --- */
+        /* ========================================= */
+        .banner {
+            border-radius: 10px; padding: 12px 16px;
+            display: flex; align-items: flex-start; gap: 12px;
+            margin-bottom: 8px;
+        }
+        .banner-icon { font-size: 1.2rem; margin-top: 2px; }
+        .banner-text h4 { font-size: 0.9rem; font-weight: 700; margin-bottom: 2px;}
+        .banner-text p { font-size: 0.8rem; line-height: 1.4; opacity: 0.9; margin: 0;}
+
+        .banner.holiday { background: rgba(175, 82, 222, 0.1); color: var(--ios-purple); display: none;}
+        .banner.disclaimer { background: var(--ios-segmented-bg); color: var(--ios-text-secondary); align-items: center; text-align: center; display: block; padding: 16px; border-radius: var(--radius-card);}
+        .banner.disclaimer p { font-size: 0.75rem; margin: 0; }
+
+        /* ========================================= */
+        /* --- 8. Tab Bar --- */
+        /* ========================================= */
+        .tab-bar {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: var(--ios-nav-bg); 
+            backdrop-filter: saturate(180%) blur(20px); 
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            border-top: 0.5px solid var(--ios-separator);
+            display: flex; justify-content: space-around;
+            padding: 10px 5px var(--safe-bottom) 5px;
+            z-index: 100; 
+        }
+
+        .tab-item { 
+            display: flex; flex-direction: column; align-items: center; gap: 4px; 
+            color: var(--ios-text-secondary); background: none; border: none; 
+            font-family: inherit; font-size: 0.65rem; font-weight: 600; 
+            width: 33.3%; cursor: pointer; 
+        }
+        .tab-item i { font-size: 1.3rem; margin-bottom: 2px; }
+        .tab-item.active { color: var(--ios-blue); }
+
+        .view-section { display: none; animation: fade-in 0.2s ease forwards; }
+        .view-section.active { display: block; }
+        @keyframes fade-in { from { opacity: 0; transform: scale(0.98);} to { opacity: 1; transform: scale(1);} }
+
+        .toast {
+            position: fixed; bottom: calc(80px + var(--safe-bottom)); left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: rgba(0,0,0,0.8); color: white;
+            padding: 10px 20px; border-radius: 20px;
+            font-size: 0.85rem; font-weight: 600;
+            z-index: 1000; opacity: 0; pointer-events: none;
+            transition: all 0.3s ease; white-space: nowrap;
+            backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+        }
+        body.dark-mode .toast { background: rgba(255,255,255,0.9); color: black;}
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    </style>
+</head>
+<body>
+
+    <div id="toast" class="toast"></div>
+
+    <div class="app-core">
+        
+        <header class="header">
+            <div class="header-title-container">
+                <div class="header-subtitle">دبلوم الأمن السيبراني - عن بعد</div>
+                <h1>بوابة سيبر الجوف</h1>
+            </div>
+            <button class="theme-btn" id="theme-btn" aria-label="Toggle Theme">
+                <i class="fa-solid fa-moon"></i>
+            </button>
+        </header>
+
+        <main class="main-content">
+            
+            <div id="view-home" class="view-section active">
+                
+                <div id="holiday-alert" class="banner holiday">
+                    <i class="fa-solid fa-umbrella-beach banner-icon"></i>
+                    <div class="banner-text">
+                        <h4 id="holiday-alert-title">إجازة رسمية</h4>
+                        <p id="holiday-alert-text"></p>
+                    </div>
+                </div>
+
+                <div class="ios-card status-widget" id="status-widget">
+                    <div class="status-badge" id="status-badge"><i class="fa-solid fa-circle-notch fa-spin"></i> تحديث...</div>
+                    <div>
+                        <h2 class="status-title" id="status-title">...</h2>
+                        <p class="status-desc" id="status-sub">...</p>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="section-title">الجدول الدراسي</h3>
+                    <div class="ios-card" id="schedule-card" style="padding-top: 16px;">
+                        
+                        <div class="segmented-control" id="days-wrapper">
+                            <div class="segment-highlight" id="sliding-highlight"></div>
+                        </div>
+
+                        <div class="timeline-container" id="timeline-container">
+                            <div class="timeline-line"></div>
+                            <div class="timeline-fill" id="timeline-fill"></div>
+                            <div class="timeline-progress-dot" id="timeline-dot"></div>
+                            <div id="timeline-items"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="banner disclaimer">
+                    <p>هذا التطبيق مبادرة غير رسمية.<br>يرجى الاعتماد على الأنظمة الرسمية للجامعة ومتابعة قروب الدفعة على واتساب.</p>
+                </div>
+            </div>
+
+            <div id="view-links" class="view-section">
+                <h3 class="section-title">الأنظمة الجامعية</h3>
+                <div class="ios-list">
+                    <a href="https://lms.ju.edu.sa/" class="list-row" target="_blank">
+                        <div class="icon-box bg-blue"><i class="fa-solid fa-graduation-cap"></i></div>
+                        <div class="row-content">
+                            <div class="row-title">بلاك بورد (Blackboard)</div>
+                            <div class="row-subtitle">نظام إدارة التعلم الإلكتروني</div>
+                        </div>
+                        <i class="fa-solid fa-chevron-left chevron"></i>
+                    </a>
+                    <a href="https://edug.ju.edu.sa/ju/init" class="list-row" target="_blank">
+                        <div class="icon-box bg-green"><i class="fa-solid fa-laptop-file"></i></div>
+                        <div class="row-content">
+                            <div class="row-title">البوابة الإلكترونية</div>
+                            <div class="row-subtitle">النظام الأكاديمي للجامعة</div>
+                        </div>
+                        <i class="fa-solid fa-chevron-left chevron"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div id="view-calendar" class="view-section">
+                <h3 class="section-title">التقويم الجامعي</h3>
+                <div class="ios-list" id="calendar-container"></div>
+            </div>
+
+        </main>
+    </div>
+
+    <nav class="tab-bar">
+        <button class="tab-item active" data-target="view-home">
+            <i class="fa-solid fa-calendar-day"></i>
+            <span>اليوم</span>
+        </button>
+        <button class="tab-item" data-target="view-calendar">
+            <i class="fa-solid fa-list-ul"></i>
+            <span>التقويم</span>
+        </button>
+        <button class="tab-item" data-target="view-links">
+            <i class="fa-solid fa-link"></i>
+            <span>الأنظمة</span>
+        </button>
+    </nav>
+
+    <script>
+        // --- Theme Management ---
+        const themeBtn = document.getElementById('theme-btn');
+        let isDark = localStorage.getItem('joufTheme') === 'dark';
+        
+        function applyTheme() {
+            if(isDark) {
+                document.body.classList.add('dark-mode');
+                themeBtn.innerHTML = '<i class="fa-solid fa-sun"></i>';
+                document.getElementById('theme-color-meta').setAttribute('content', '#000000');
+            } else {
+                document.body.classList.remove('dark-mode');
+                themeBtn.innerHTML = '<i class="fa-solid fa-moon"></i>';
+                document.getElementById('theme-color-meta').setAttribute('content', '#f2f2f7');
+            }
+        }
+        applyTheme();
+        
+        themeBtn.addEventListener('click', () => { 
+            isDark = !isDark; 
+            localStorage.setItem('joufTheme', isDark ? 'dark' : 'light'); 
+            applyTheme();
+        });
+
+        // --- Navigation ---
+        const navBtns = document.querySelectorAll('.tab-item');
+        const views = document.querySelectorAll('.view-section');
+
+        navBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                if(btn.classList.contains('active')) return;
+                navBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                views.forEach(v => v.classList.remove('active'));
+                document.getElementById(btn.getAttribute('data-target')).classList.add('active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+                if (btn.getAttribute('data-target') === 'view-home') {
+                    setTimeout(() => updateHighlightPosition(document.querySelector('.segment-btn.active')), 50);
+                    updateTimelineProgress();
+                }
+            });
+        });
+
+        // --- Data & Logic ---
+        const now = new Date();
+        const cDay = now.getDay();
+        const cMins = (now.getHours() * 60) + now.getMinutes();
+        const arabicMonths = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+
+        const thClass = now < new Date('2026-03-05T15:30:00') 
+            ? { n: "اللغة الإنجليزية 1", s: "14:50", e: "15:25", p: "د. جلال الربيع", c: "ADEN 1110" } 
+            : { n: "اللغة الإنجليزية 1", s: "15:00", e: "15:50", p: "د. جلال الربيع", c: "ADEN 1110" };
+
+        const schedule = {
+            0: [ { n: "مقدمة تقنية المعلومات", s: "15:00", e: "16:50", p: "د. محمود عبدالمنعم", c:"ADIT 1110" }, { n: "أساسيات الشبكات", s: "17:00", e: "17:50", p: "د. عبدالعزيز الدمراني", c:"ADCY 1111" }, { n: "اللغة الإنجليزية 1", s: "18:00", e: "19:50", p: "د. جلال الربيع", c:"ADEN 1110" } ],
+            1: [ { n: "أساسيات الأمن السيبراني", s: "15:00", e: "16:50", p: "د. عمرو أبوزيد", c:"ADCY 1112" }, { n: "رياضيات الحاسب", s: "17:00", e: "18:50", p: "د. أسامة شاهين", c:"ADCY 1113" } ],
+            2: [ { n: "مقدمة تقنية المعلومات", s: "15:00", e: "15:50", p: "د. محمود عبدالمنعم", c:"ADIT 1110" }, { n: "أساسيات الشبكات", s: "16:00", e: "17:50", p: "د. عبدالعزيز الدمراني", c:"ADCY 1111" } ],
+            3: [ { n: "أساسيات الأمن السيبراني", s: "15:00", e: "15:50", p: "د. عمرو أبوزيد", c:"ADCY 1112" }, { n: "رياضيات الحاسب", s: "16:00", e: "16:50", p: "د. أسامة شاهين", c:"ADCY 1113" } ],
+            4: [thClass]
+        };
+
+        const academicCalendar = [
+            { start: new Date('2026-01-18T00:00:00'), end: new Date('2026-01-18T23:59:59'), title: 'بداية الدراسة', type: 'info', icon: 'fa-play', color: 'bg-blue' },
+            { start: new Date('2026-02-22T00:00:00'), end: new Date('2026-02-22T23:59:59'), title: 'إجازة يوم التأسيس', type: 'holiday', icon: 'fa-flag', color: 'bg-purple' },
+            { start: new Date('2026-03-01T00:00:00'), end: new Date('2026-03-01T23:59:59'), title: 'إجازة نهاية أسبوع مطولة', type: 'holiday', icon: 'fa-bed', color: 'bg-purple' },
+            { start: new Date('2026-03-05T15:30:00'), end: new Date('2026-03-28T23:59:59'), title: 'إجازة عيد الفطر المبارك', type: 'holiday', icon: 'fa-moon', color: 'bg-purple' },
+            { start: new Date('2026-04-01T00:00:00'), end: new Date('2026-04-02T23:59:59'), title: 'إجازة نهاية أسبوع مطولة', type: 'holiday', icon: 'fa-bed', color: 'bg-purple' },
+            { start: new Date('2026-05-17T00:00:00'), end: new Date('2026-05-17T23:59:59'), title: 'إجازة نهاية أسبوع مطولة', type: 'holiday', icon: 'fa-bed', color: 'bg-purple' },
+            { start: new Date('2026-05-21T15:30:00'), end: new Date('2026-05-31T23:59:59'), title: 'إجازة عيد الأضحى', type: 'holiday', icon: 'fa-kaaba', color: 'bg-purple' }, 
+            { start: new Date('2026-06-02T00:00:00'), end: new Date('2026-06-18T15:29:59'), title: 'الاختبارات النهائية', type: 'exam', icon: 'fa-file-signature', color: 'bg-orange' },
+            { start: new Date('2026-06-18T15:30:00'), end: new Date('2026-08-22T23:59:59'), title: 'إجازة نهاية العام الدراسي', type: 'holiday', icon: 'fa-power-off', color: 'bg-gray' },
+            { start: new Date('2026-08-23T00:00:00'), end: new Date('2026-08-23T23:59:59'), title: 'بداية العام 1448هـ', type: 'info', icon: 'fa-graduation-cap', color: 'bg-blue'}
+        ];
+
+        // --- Helpers ---
+        const t2m = (t) => { const [h, m] = t.split(':').map(Number); return (h * 60) + m; };
+        
+        // تنسيق الوقت ليصبح بالشكل الصحيح: الرقم أولاً ثم (م/ص) ليتوافق مع القراءة العربية
+        const fmtT12 = (t) => { 
+            const [h, m] = t.split(':').map(Number); 
+            const ampm = h >= 12 ? 'م' : 'ص';
+            let hr = h % 12; if (hr === 0) hr = 12;
+            return `<span style="display:inline-flex; align-items:center; gap:3px;"><span dir="ltr">${hr}:${m.toString().padStart(2,'0')}</span><span>${ampm}</span></span>`; 
+        };
+
+        const fmtDateClean = (dateObj) => {
+            const y = dateObj.getFullYear();
+            const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const d = String(dateObj.getDate()).padStart(2, '0');
+            return `${y}/${m}/${d}`;
+        };
+
+        const getDaysDiff = (targetDate) => {
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const target = new Date(targetDate.getFullYear(), targetDate.getMonth(), targetDate.getDate());
+            const diff = Math.ceil((target - today) / (1000 * 60 * 60 * 24));
+            
+            if(diff === 0) return "اليوم";
+            if(diff === 1) return "غداً";
+            if(diff === 2) return "بعد يومين";
+            if(diff <= 10) return `بعد ${diff} أيام`;
+            return `بعد ${diff} يوماً`;
+        }
+
+        // --- Segmented Control Init ---
+        const daysWrapper = document.getElementById('days-wrapper');
+        const slidingHighlight = document.getElementById('sliding-highlight');
+        const arDaysShort = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس'];
+        
+        let diffToSunday = cDay === 5 ? 2 : (cDay === 6 ? 1 : -cDay);
+        let sundayDate = new Date(now);
+        sundayDate.setDate(now.getDate() + diffToSunday);
+
+        for(let i=0; i<5; i++) {
+            let d = new Date(sundayDate);
+            d.setDate(sundayDate.getDate() + i);
+            
+            let btn = document.createElement('button');
+            btn.className = `segment-btn ${cDay === i ? 'active' : ''}`;
+            btn.setAttribute('data-day', i);
+            btn.innerHTML = `<span class="d-name">${arDaysShort[i]}</span><span class="d-num">${d.getDate()}</span>`;
+            
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.segment-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                updateHighlightPosition(this);
+                renderSchedule(i);
+            });
+            daysWrapper.appendChild(btn);
+        }
+
+        function updateHighlightPosition(activeBtn) {
+            if(!activeBtn) return;
+            slidingHighlight.style.width = `${activeBtn.offsetWidth}px`;
+            slidingHighlight.style.left = `${activeBtn.offsetLeft}px`;
+        }
+
+        setTimeout(() => {
+            let initialActive = document.querySelector(`.segment-btn[data-day="${(cDay >= 0 && cDay <= 4) ? cDay : 0}"]`);
+            if(!initialActive) initialActive = document.querySelector('.segment-btn');
+            initialActive.classList.add('active');
+            updateHighlightPosition(initialActive);
+        }, 100);
+
+        // --- Status Widget ---
+        function updateStatusWidget() {
+            const wCard = document.getElementById('status-widget');
+            const badge = document.getElementById('status-badge');
+            const title = document.getElementById('status-title');
+            const sub = document.getElementById('status-sub');
+            const alertBanner = document.getElementById('holiday-alert');
+            const alertTitle = document.getElementById('holiday-alert-title');
+            const alertText = document.getElementById('holiday-alert-text');
+            
+            const holiday = academicCalendar.find(e => e.type === 'holiday' && now >= e.start && now <= e.end);
+            
+            if (holiday) {
+                alertBanner.style.display = 'flex';
+                alertTitle.innerText = holiday.title;
+                alertText.innerText = `تستمر حتى ${holiday.end.getDate()} ${arabicMonths[holiday.end.getMonth()]}`;
+                wCard.style.display = 'none'; 
+                return;
+            } else {
+                alertBanner.style.display = 'none';
+                wCard.style.display = 'flex';
+            }
+
+            if (cDay === 5 || cDay === 6) {
+                wCard.classList.remove('is-live');
+                badge.innerHTML = `<i class="fa-solid fa-bed"></i> عطلة الأسبوع`;
+                title.innerText = 'الراحة مطلوبة'; sub.innerText = 'نلتقي يوم الأحد إن شاء الله.'; return;
+            }
+
+            const tClasses = schedule[cDay];
+            if (!tClasses) return;
+
+            let liveC = null; let nextC = null; let over = true;
+            for (let c of tClasses) {
+                const s = t2m(c.s); const e = t2m(c.e);
+                if (cMins >= s && cMins < e) { liveC = c; break; }
+                if (cMins < s && !nextC) { nextC = c; over = false; }
+            }
+
+            if (liveC) {
+                wCard.classList.add('is-live');
+                badge.innerHTML = `<div class="live-dot"></div> محاضرة مباشرة`;
+                title.innerText = liveC.n; 
+                sub.innerHTML = `مع ${liveC.p} - تنتهي ${fmtT12(liveC.e)}`;
+            } else {
+                wCard.classList.remove('is-live');
+                if (nextC) {
+                    const diff = t2m(nextC.s) - cMins;
+                    badge.innerHTML = `<i class="fa-regular fa-clock"></i> القادمة`;
+                    title.innerText = nextC.n;
+                    sub.innerHTML = diff < 60 ? `تبدأ بعد ${diff} دقيقة` : `تبدأ الساعة ${fmtT12(nextC.s)}`;
+                } else if (over) {
+                    badge.innerHTML = `<i class="fa-solid fa-check"></i> اكتمل اليوم`;
+                    title.innerText = 'عمل رائع!'; sub.innerText = 'لا توجد محاضرات متبقية اليوم.';
+                }
+            }
+        }
+
+        // --- Schedule Rendering ---
+        const tlItemsCont = document.getElementById('timeline-items');
+        let selDay = (cDay >= 0 && cDay <= 4) ? cDay : 0;
+        let timelineCache = [];
+
+        function renderSchedule(dIdx) {
+            const classes = schedule[dIdx];
+            if (!classes) {
+                tlItemsCont.innerHTML = `<div style="text-align:center; padding:30px 0; color:var(--ios-text-secondary);"><i class="fa-solid fa-mug-hot" style="font-size: 1.5rem; margin-bottom: 8px;"></i><br>يوم حر بدون محاضرات</div>`; 
+                document.getElementById('timeline-fill').style.height = '0';
+                document.getElementById('timeline-dot').style.opacity = '0';
+                timelineCache = []; return;
+            }
+
+            const isToday = (dIdx === cDay);
+            let html = '';
+            timelineCache = [];
+
+            classes.forEach((c, index) => {
+                const sM = t2m(c.s); const eM = t2m(c.e);
+                const isPast = isToday && (cMins >= eM);
+                
+                html += `
+                    <div class="timeline-item ${isPast ? 'past' : ''}" id="tl-item-${index}" data-start="${sM}" data-end="${eM}">
+                        <div class="timeline-dot"></div>
+                        <div class="class-content">
+                            <div class="class-header">
+                                <h4 class="class-title">${c.n}</h4>
+                                <span class="class-time">${fmtT12(c.s)} <span>-</span> ${fmtT12(c.e)}</span>
+                            </div>
+                            <div class="class-info">
+                                <span>${c.p}</span>
+                                <span class="course-code">${c.c}</span>
+                            </div>
+                        </div>
+                    </div>`;
+            });
+            tlItemsCont.innerHTML = html;
+            
+            setTimeout(() => {
+                const items = document.querySelectorAll('.timeline-item');
+                items.forEach((item, index) => {
+                    timelineCache.push({
+                        el: item, s: parseInt(item.getAttribute('data-start')), e: parseInt(item.getAttribute('data-end')),
+                        top: item.offsetTop, height: item.offsetHeight,
+                        titleEl: item.querySelector('.class-title'),
+                        origTitleTxt: schedule[dIdx][index].n
+                    });
+                });
+                updateTimelineProgress();
+            }, 50);
+        }
+
+        function updateTimelineProgress() {
+            const trackFill = document.getElementById('timeline-fill');
+            const pulsingDot = document.getElementById('timeline-dot');
+            const wrapper = document.getElementById('timeline-container');
+            
+            if (!document.getElementById('view-home').classList.contains('active') || timelineCache.length === 0) return;
+            
+            const isHoliday = academicCalendar.some(e => e.type === 'holiday' && now >= e.start && now <= e.end);
+            const activeBtn = document.querySelector('.segment-btn.active');
+            const isToday = activeBtn && parseInt(activeBtn.getAttribute('data-day')) === cDay;
+
+            if (!isToday || isHoliday) {
+                trackFill.style.height = '0'; pulsingDot.style.opacity = '0';
+                timelineCache.forEach(c => { c.el.classList.remove('live-now', 'past'); c.titleEl.innerHTML = c.origTitleTxt; });
+                return;
+            }
+
+            let dotY = 10; let fillH = 0; let isLive = false; let allPast = true; let firstFutTop = null;
+            const currentTotalMins = (new Date().getHours() * 60) + new Date().getMinutes();
+
+            timelineCache.forEach((c) => {
+                c.el.classList.remove('live-now', 'past');
+                
+                if (currentTotalMins >= c.e) {
+                    c.el.classList.add('past'); c.titleEl.innerHTML = c.origTitleTxt;
+                } else if (currentTotalMins >= c.s && currentTotalMins < c.e) {
+                    isLive = true; allPast = false; c.el.classList.add('live-now');
+                    c.titleEl.innerHTML = `${c.origTitleTxt} <span class="live-tag">مباشر</span>`;
+                    
+                    const progress = (currentTotalMins - c.s) / (c.e - c.s);
+                    dotY = c.top + 10 + (c.height * progress);
+                    fillH = dotY - 10; 
+                } else {
+                    allPast = false; c.titleEl.innerHTML = c.origTitleTxt;
+                    if (firstFutTop === null) firstFutTop = c.top + 10;
+                }
+            });
+
+            if (isLive) { pulsingDot.style.opacity = '1'; }
+            else if (allPast) { pulsingDot.style.opacity = '0'; fillH = wrapper.offsetHeight - 20; }
+            else if (firstFutTop !== null) { pulsingDot.style.opacity = '0'; fillH = firstFutTop - 10; }
+            
+            trackFill.style.height = `${fillH}px`;
+            pulsingDot.style.top = `${dotY}px`;
+        }
+
+        // --- Calendar Rendering ---
+        const calCont = document.getElementById('calendar-container');
+        
+        const futureEvents = academicCalendar.filter(ev => {
+            const eventEnd = new Date(ev.end);
+            eventEnd.setHours(23, 59, 59, 999);
+            return eventEnd >= now;
+        }).sort((a, b) => a.start - b.start);
+        
+        if (futureEvents.length > 0) {
+            calCont.innerHTML = futureEvents.map(e => {
+                
+                let datesStr = '';
+                if (e.start.toDateString() === e.end.toDateString() || e.type === 'info') {
+                    datesStr = fmtDateClean(e.start);
+                } else {
+                    datesStr = `${fmtDateClean(e.start)} - ${fmtDateClean(e.end)}`;
+                }
+
+                let trailingTxt = '';
+                let extraClass = '';
+                if (now < e.start) {
+                    // إضافة كلمة (القادم) للأحداث التي لم تبدأ بعد
+                    trailingTxt = "القادم " + getDaysDiff(e.start);
+                } else if (now >= e.start && now <= e.end) {
+                    const diffTxt = getDaysDiff(e.end);
+                    trailingTxt = diffTxt === "اليوم" ? "تنتهي اليوم" : (diffTxt === "غداً" ? "تنتهي غداً" : `تنتهي ${diffTxt}`);
+                    extraClass = 'active-holiday';
+                }
+
+                return `
+                <div class="list-row">
+                    <div class="icon-box ${e.color}"><i class="fa-solid ${e.icon}"></i></div>
+                    <div class="row-content">
+                        <div class="row-title">${e.title}</div>
+                        <div class="row-subtitle" dir="ltr" style="text-align: right;">${datesStr}</div>
+                    </div>
+                    <div class="row-trailing ${extraClass}">${trailingTxt}</div>
+                </div>`;
+            }).join('');
+        } else { calCont.innerHTML = '<p style="text-align:center; color:var(--ios-text-secondary); padding:20px;">لا توجد أحداث قادمة.</p>'; }
+
+        // --- Init ---
+        renderSchedule(selDay);
+        updateStatusWidget();
+        setInterval(() => { updateStatusWidget(); updateTimelineProgress(); }, 60000);
+
+        // --- Swipe Logic ---
+        let scheduleTouchStartX = 0;
+        let scheduleTouchStartY = 0;
+        const scheduleCard = document.getElementById('schedule-card');
+        
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+        
+        scheduleCard.addEventListener('touchstart', e => { 
+            scheduleTouchStartX = e.changedTouches[0].screenX; 
+            scheduleTouchStartY = e.changedTouches[0].screenY;
+        }, {passive: true});
+        
+        scheduleCard.addEventListener('touchend', e => {
+            const touchEndX = e.changedTouches[0].screenX;
+            const touchEndY = e.changedTouches[0].screenY;
+            const diffX = scheduleTouchStartX - touchEndX;
+            const diffY = scheduleTouchStartY - touchEndY;
+            
+            if (Math.abs(diffX) > 40 && Math.abs(diffX) > Math.abs(diffY)) {
+                const currentActive = document.querySelector('.segment-btn.active');
+                if(!currentActive) return;
+                
+                const currentIndex = parseInt(currentActive.getAttribute('data-day'));
+                let nextIndex = currentIndex;
+                
+                if (diffX < 0) { 
+                    if (currentIndex < 4) { nextIndex++; } 
+                } else if (diffX > 0) { 
+                    if (currentIndex > 0) { nextIndex--; } 
+                } 
+                
+                if (nextIndex !== currentIndex) {
+                    document.querySelector(`.segment-btn[data-day="${nextIndex}"]`).click();
+                }
+            }
+        }, {passive: true});
+
+    </script>
+</body>
+</html>
