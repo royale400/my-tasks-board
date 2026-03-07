@@ -18,7 +18,7 @@
             --bg-body: #f2f2f7;
             --bg-card: #ffffff;
             --bg-nav: rgba(255, 255, 255, 0.95);
-            --bg-days: #e5e5ea;
+            --bg-days: #e5e5ea; /* اللون الرمادي للبطاقات المستقبلية */
             
             --text-main: #1c1c1e;
             --text-sub: #8e8e93;
@@ -48,10 +48,10 @@
         }
 
         body.dark-mode {
-            --bg-body: #000000;
+            --bg-body: #0a0a0c; 
             --bg-card: #1c1c1e;
             --bg-nav: rgba(28, 28, 30, 0.95);
-            --bg-days: #2c2c2e;
+            --bg-days: #2c2c2e; /* الرمادي الداكن في الوضع الليلي */
             
             --text-main: #f2f2f7;
             --text-sub: #98989d;
@@ -75,7 +75,7 @@
             color: var(--text-main);
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
-            /* تم إزالة الانتقال اللوني البطيء (Transition) لمنع تمدد العناصر عند التمرير */
+            overscroll-behavior-y: none;
         }
 
         /* ========================================= */
@@ -93,6 +93,7 @@
             position: sticky; top: 0; z-index: 50;
             background: var(--bg-nav); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border-color);
+            transform: translateZ(0); 
         }
         
         .header-title { display: flex; align-items: center; gap: 15px; }
@@ -102,6 +103,7 @@
             color: var(--brand-color); 
             animation: float 4s ease-in-out infinite;
             text-shadow: 0 4px 10px var(--brand-soft);
+            transform: translateZ(0); 
         }
         @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
@@ -126,10 +128,11 @@
             width: 40px; height: 40px; border-radius: 50%;
             background: var(--bg-card); border: 1px solid var(--border-color);
             color: var(--text-main); display: flex; align-items: center; justify-content: center;
-            font-size: 1.1rem; cursor: pointer; box-shadow: var(--shadow-sm); transition: transform 0.2s;
+            font-size: 1.1rem; cursor: pointer; box-shadow: var(--shadow-sm); 
             flex-shrink: 0;
+            transform: translateZ(0);
         }
-        .theme-btn:active { transform: scale(0.9); }
+        .theme-btn:active { transform: scale(0.9) translateZ(0); }
 
         .main-content { padding: 20px; display: flex; flex-direction: column; gap: 20px; }
 
@@ -140,11 +143,17 @@
             display: none; background: var(--holiday-soft); border: 1px solid var(--holiday-color);
             border-radius: 16px; padding: 15px 20px; margin-bottom: 5px;
             animation: fade-in 0.5s ease;
+            transform: translateZ(0); 
         }
         .holiday-alert-header { color: var(--holiday-color); font-weight: 900; display: flex; align-items: center; gap: 8px; font-size: 1.1rem; margin-bottom: 5px;}
         .holiday-alert-text { color: var(--text-main); font-weight: 600; font-size: 0.95rem; margin: 0; line-height: 1.5;}
 
-        .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-card); padding: 20px; box-shadow: var(--shadow-sm); }
+        .card { 
+            background: var(--bg-card); border: 1px solid var(--border-color); 
+            border-radius: var(--radius-card); padding: 20px; box-shadow: var(--shadow-sm); 
+            transform: translateZ(0); -webkit-transform: translateZ(0); will-change: transform;
+        }
+        
         .status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: var(--radius-pill); font-size: 0.8rem; font-weight: 800; margin-bottom: 12px; background: var(--bg-body); color: var(--text-sub); border: 1px solid var(--border-color); }
         .status-title { font-size: 1.4rem; font-weight: 900; margin-bottom: 5px; line-height: 1.3;}
         .status-desc { font-size: 0.95rem; color: var(--text-sub); font-weight: 600;}
@@ -167,6 +176,7 @@
             position: relative; display: flex;
             background: var(--bg-days); border-radius: 20px;
             padding: 6px; margin-bottom: 20px; overflow: hidden;
+            transform: translateZ(0);
         }
         
         .sliding-highlight {
@@ -189,34 +199,35 @@
         .day-btn.active .d-num, .day-btn.active .d-name { color: var(--bg-body); }
 
         /* ========================================= */
-        /* --- 5. الخط الزمني (هندسة دقيقة 100% بدون Transform) --- */
+        /* --- 5. الخط الزمني (حل جذري 100% رياضي) --- */
         /* ========================================= */
         .timeline-container { position: relative; margin-top: 10px; }
         
-        /* إعطاء مساحة 55 بيكسل من اليمين للخط الزمني والدائرة */
-        .timeline-item { position: relative; padding-bottom: 25px; padding-right: 55px; }
+        /* ترك مسافة 45 بيكسل من اليمين داخل كل عنصر على حدة */
+        .timeline-item { position: relative; padding-bottom: 25px; padding-right: 45px; }
         .timeline-item:last-child { padding-bottom: 0; }
         
-        /* توسيط رياضي بحت (المحور يقع عند البيكسل رقم 25 من اليمين):
-           - الخط: right 24px + عرض 2px = مركز 25px
-           - الدائرة: right 18px + عرض 14px (نصفها 7) = مركز 25px
-           - النقطة المباشرة: right 20px + عرض 10px (نصفها 5) = مركز 25px
+        /* التوسيط الرياضي الصريح (المحور يقع عند البيكسل رقم 22 من اليمين):
+           - الخط: يبعد عن اليمين 21 + عرضه 2 = 23 (مركزه = 22)
+           - الدائرة الثابتة: تبعد 15 + عرضها 14 = 29 (مركزها = 15+7 = 22)
+           - النقطة الحمراء: تبعد 17 + عرضها 10 = 27 (مركزها = 17+5 = 22)
+           ملاحظة: تم إلغاء transform: translateX لمنع تفاوت المتصفحات!
         */
-        .timeline-line { position: absolute; right: 24px; top: 20px; bottom: 30px; width: 2px; background: var(--border-color); z-index: 1; }
-        .timeline-fill { position: absolute; right: 24px; top: 20px; width: 2px; background: var(--live-color); height: 0%; z-index: 2; transition: height 1s linear; }
+        .timeline-line { position: absolute; right: 21px; top: 15px; bottom: 30px; width: 2px; background: var(--border-color); z-index: 1; }
+        .timeline-fill { position: absolute; right: 21px; top: 15px; width: 2px; background: var(--live-color); height: 0%; z-index: 2; transition: height 1s linear; }
         
         .timeline-dot { 
-            position: absolute; right: 18px; top: 15px; 
+            position: absolute; right: 15px; top: 12px; 
             width: 14px; height: 14px; border-radius: 50%; 
             background: var(--bg-card); border: 3px solid var(--text-muted); z-index: 4; 
         }
         
         .timeline-progress-dot { 
-            position: absolute; right: 20px; width: 10px; height: 10px; 
+            position: absolute; right: 17px; width: 10px; height: 10px; 
             border-radius: 50%; background: var(--live-color); z-index: 3; 
             opacity: 0; transition: top 1s linear; 
             box-shadow: 0 0 0 4px rgba(255, 59, 48, 0.2); 
-            margin-top: -5px; 
+            margin-top: -5px; /* لموازنتها مع الخاصية top من الجافاسكربت */
         }
 
         .class-content { 
@@ -224,6 +235,7 @@
             border: 1px solid var(--border-color); border-radius: 16px; 
             padding: 15px 20px; box-shadow: var(--shadow-sm); 
             display: flex; flex-direction: column; gap: 8px; 
+            transform: translateZ(0); -webkit-transform: translateZ(0); will-change: transform;
         }
 
         .class-time { font-family: 'Tajawal', sans-serif; font-size: 0.95rem; font-weight: 800; color: var(--brand-color); direction: rtl; display: flex; align-items: center; gap: 8px;}
@@ -231,10 +243,17 @@
         
         .class-info { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 4px;}
         .class-prof { font-size: 0.85rem; color: var(--text-sub); display: flex; align-items: center; gap: 8px; font-weight: 600;}
+        
         .course-code {
             background: var(--bg-body); padding: 4px 8px; border-radius: 6px; 
             font-family: monospace; font-size: 0.75rem; border: 1px solid var(--border-color); 
             color: var(--text-sub); font-weight: bold; direction: ltr;
+            display: inline-block; transform: translateZ(0);
+        }
+        .live-tag { 
+            background: var(--live-color); color: white; padding: 2px 6px; 
+            border-radius: 4px; font-size: 0.7rem; font-weight: bold; 
+            display: inline-block; transform: translateZ(0);
         }
 
         .timeline-item.past { opacity: 0.5; filter: grayscale(100%);}
@@ -242,10 +261,9 @@
         .timeline-item.live-now .class-content { border-color: var(--live-color); background: var(--live-soft); }
         .timeline-item.live-now .class-time { color: var(--live-color); }
         .timeline-item.live-now .course-code { border-color: rgba(255, 59, 48, 0.3); color: var(--live-color); background: rgba(255, 59, 48, 0.1);}
-        .live-tag { background: var(--live-color); color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; }
-
+        
         /* ========================================= */
-        /* --- 6. التقويم المصغر --- */
+        /* --- 6. التقويم المصغر (إصلاح الألوان والبطاقات) --- */
         /* ========================================= */
         .cal-list { display: flex; flex-direction: column; gap: 12px;}
         
@@ -254,10 +272,16 @@
             background: var(--bg-card); border: 1px solid var(--border-color);
             border-radius: 16px; align-items: flex-start;
             box-shadow: var(--shadow-sm);
+            transform: translateZ(0); -webkit-transform: translateZ(0); will-change: transform;
         }
         
-        /* الإجازات المستقبلية باهتة قليلاً للتمييز */
-        .cal-row.future-dimmed { opacity: 0.7; box-shadow: none; border-style: dashed; }
+        /* تمييز البطاقات المستقبلية بخلفية رمادية وإطار مختلف */
+        .cal-row.future-dimmed { 
+            background-color: var(--bg-days); 
+            border: 1px dashed var(--border-color);
+            opacity: 0.85; 
+            box-shadow: none; 
+        }
 
         .cal-icon-col { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 60px; flex-shrink: 0; }
         .cal-icon { width: 50px; height: 50px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; border: 1px solid transparent; margin-top: 5px;}
@@ -265,16 +289,14 @@
         .cal-text { flex: 1; display: flex; flex-direction: column; gap: 8px; justify-content: center; padding-top: 5px; min-width: 0;}
         .cal-title { font-weight: 800; font-size: 1.05rem; color: var(--text-main); white-space: normal; line-height: 1.4;}
         
-        .cal-date { 
-            font-family: monospace; font-size: 0.95rem; font-weight: 900; 
-            color: var(--text-sub); letter-spacing: 0.5px; white-space: nowrap; 
-        }
+        .cal-date { font-family: monospace; font-size: 0.95rem; font-weight: 900; color: var(--text-sub); letter-spacing: 0.5px; white-space: nowrap; }
 
         .cal-countdown { 
             display: flex; align-items: center; justify-content: center; text-align: center;
             font-size: 0.75rem; font-weight: 800; background: var(--bg-body); padding: 6px 12px; 
             border-radius: 8px; color: var(--text-sub); border: 1px solid var(--border-color); 
             white-space: nowrap; width: fit-content; margin-top: 4px;
+            transform: translateZ(0); -webkit-transform: translateZ(0);
         }
         
         .cal-countdown.active-green { background: rgba(52, 199, 89, 0.1); color: var(--success-green); border-color: rgba(52, 199, 89, 0.3); }
@@ -292,14 +314,14 @@
             padding: 30px 20px; border-radius: 20px; text-align: center;
             text-decoration: none; color: var(--text-main); font-weight: 800; font-size: 1.1rem;
             display: flex; flex-direction: column; align-items: center; gap: 15px;
-            box-shadow: var(--shadow-sm); transition: transform 0.2s;
+            box-shadow: var(--shadow-sm); transform: translateZ(0);
         }
         .link-card span { white-space: nowrap; font-size: 1rem;}
         .link-card i { font-size: 2.5rem; color: var(--brand-color); background: var(--brand-soft); width: 70px; height: 70px; border-radius: 20px; display: flex; align-items: center; justify-content: center; }
-        .link-card:active { transform: scale(0.96); }
+        .link-card:active { transform: scale(0.96) translateZ(0); }
 
         /* ========================================= */
-        /* --- 8. الشريط السفلي (Fixed Nav) --- */
+        /* --- 8. الشريط السفلي --- */
         /* ========================================= */
         .bottom-nav {
             position: fixed; bottom: 0; left: 0; right: 0;
@@ -308,6 +330,7 @@
             display: flex; justify-content: space-around;
             padding: 10px 5px calc(10px + env(safe-area-inset-bottom)) 5px;
             z-index: 100; box-shadow: var(--shadow-nav); 
+            transform: translateZ(0); -webkit-transform: translate3d(0,0,0);
         }
 
         .nav-item {
@@ -316,7 +339,7 @@
             font-family: inherit; font-size: 0.7rem; font-weight: 800;
             width: 33.3%; cursor: pointer; 
         }
-        .nav-item i { font-size: 1.4rem; margin-bottom: 2px; transition: transform 0.2s;}
+        .nav-item i { font-size: 1.4rem; margin-bottom: 2px; }
         .nav-item.active { color: var(--brand-color); }
         .nav-item.active i { transform: translateY(-2px); }
 
@@ -325,7 +348,7 @@
         .view-section.active { display: flex; flex-direction: column; gap: 20px; }
         @keyframes fade-in { from { opacity: 0; transform: translateY(10px);} to { opacity: 1; transform: translateY(0);} }
 
-        .footer-section { text-align: center; margin-top: 10px; padding-bottom: 20px; }
+        .footer-section { text-align: center; margin-top: 10px; padding-bottom: 20px; transform: translateZ(0); }
         .disclaimer { background: rgba(255, 59, 48, 0.05); border: 1px dashed rgba(255, 59, 48, 0.3); border-radius: 12px; padding: 20px; margin-bottom: 15px; }
         .disclaimer h4 { color: var(--live-color); font-size: 0.95rem; margin-bottom: 10px; display: flex; justify-content: center; align-items: center; gap: 8px; font-weight: 900;}
         .disclaimer p { font-size: 0.85rem; color: var(--text-sub); line-height: 1.6; font-weight: 500; margin: 0; }
@@ -337,7 +360,6 @@
 
     <div class="app-core">
         
-        <!-- الهيدر مع تأثير انعكاس النص -->
         <header class="header">
             <div class="header-title">
                 <i class="fa-solid fa-shield-cat main-icon"></i>
@@ -359,16 +381,13 @@
 
         <main class="main-content">
             
-            <!-- الشاشة الأولى: الرئيسية -->
             <div id="view-home" class="view-section active">
                 
-                <!-- تنبيه الإجازة التلقائي -->
                 <div id="holiday-alert-banner" class="holiday-alert-banner">
                     <div class="holiday-alert-header" id="holiday-alert-title"></div>
                     <p id="holiday-alert-text" class="holiday-alert-text"></p>
                 </div>
 
-                <!-- بطاقة الحالة (تختفي أوقات الإجازة الطويلة) -->
                 <div class="card hero-widget" id="status-widget">
                     <div class="widget-header">
                         <div class="pill-badge" id="status-badge"><i class="fa-solid fa-spinner fa-spin"></i> تحديث...</div>
@@ -379,14 +398,13 @@
                     </div>
                 </div>
 
-                <!-- الجدول وشريط الأيام المغناطيسي -->
                 <div class="card" style="padding: 20px 15px;">
                     <h3 class="section-title"><i class="fa-solid fa-layer-group"></i> جدول المحاضرات</h3>
                     <div class="days-wrapper" id="days-wrapper">
                         <div class="sliding-highlight" id="sliding-highlight"></div>
                     </div>
 
-                    <!-- الخط الزمني الدقيق 100% -->
+                    <!-- الخط الزمني الرياضي الدقيق -->
                     <div class="timeline-container" id="timeline-container">
                         <div class="timeline-line"></div>
                         <div class="timeline-fill" id="timeline-fill"></div>
@@ -395,7 +413,6 @@
                     </div>
                 </div>
 
-                <!-- الفوتر الرسمي -->
                 <div class="footer-section">
                     <div class="disclaimer">
                         <h4><i class="fa-solid fa-triangle-exclamation"></i> إخلاء مسؤولية</h4>
@@ -404,7 +421,6 @@
                 </div>
             </div>
 
-            <!-- الشاشة الثانية: وصول سريع -->
             <div id="view-links" class="view-section">
                 <h3 class="section-title"><i class="fa-solid fa-bolt"></i> الأنظمة الجامعية</h3>
                 <div class="grid-2">
@@ -419,18 +435,14 @@
                 </div>
             </div>
 
-            <!-- الشاشة الثالثة: التقويم -->
             <div id="view-calendar" class="view-section">
                 <h3 class="section-title"><i class="fa-solid fa-flag"></i> التقويم الجامعي</h3>
-                <div class="cal-list" id="calendar-container">
-                    <!-- يولد برمجياً -->
-                </div>
+                <div class="cal-list" id="calendar-container"></div>
             </div>
 
         </main>
     </div>
 
-    <!-- الشريط السفلي الثابت -->
     <nav class="bottom-nav">
         <button class="nav-item active" data-target="view-home">
             <i class="fa-solid fa-house"></i>
@@ -447,32 +459,26 @@
     </nav>
 
     <script>
-        // ==========================================
-        // --- 1. إعدادات الثيم وتبادل النصوص ---
-        // ==========================================
         const themeBtn = document.getElementById('theme-btn');
         let isDark = localStorage.getItem('joufTheme') === 'dark';
         
         function applyTheme() {
             document.body.className = isDark ? 'dark-mode' : 'light-mode';
             themeBtn.innerHTML = isDark ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
-            document.querySelector('meta[name="theme-color"]').setAttribute('content', isDark ? '#000000' : '#f2f2f7');
+            document.querySelector('meta[name="theme-color"]').setAttribute('content', isDark ? '#0a0a0c' : '#f2f2f7');
         }
         applyTheme();
         
-        // التبديل اللحظي للثيم (بدون تمدد)
         themeBtn.addEventListener('click', () => { 
             isDark = !isDark; 
             localStorage.setItem('joufTheme', isDark ? 'dark' : 'light'); 
             applyTheme();
         });
 
-        // الأنيميشن كل 10 ثواني
         setInterval(() => {
             document.getElementById('flip-wrapper').classList.toggle('flipped');
         }, 10000);
 
-        // التنقل الملاحي
         const navBtns = document.querySelectorAll('.nav-item');
         const views = document.querySelectorAll('.view-section');
 
@@ -493,9 +499,6 @@
             });
         });
 
-        // ==========================================
-        // --- 2. البيانات والتواريخ ---
-        // ==========================================
         const now = new Date();
         const cDay = now.getDay();
         const cMins = (now.getHours() * 60) + now.getMinutes();
@@ -558,9 +561,6 @@
             return months[dateObj.getMonth()];
         }
 
-        // ==========================================
-        // --- 3. بناء واجهة الأيام الديناميكية ---
-        // ==========================================
         const daysWrapper = document.getElementById('days-wrapper');
         const slidingHighlight = document.getElementById('sliding-highlight');
         const arDaysShort = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس'];
@@ -600,9 +600,6 @@
             updateHighlightPosition(initialActive);
         }, 100);
 
-        // ==========================================
-        // --- 4. تحديث بطاقة الحالة والتنبيهات ---
-        // ==========================================
         function updateStatusWidget() {
             const wCard = document.getElementById('status-widget');
             const badge = document.getElementById('status-badge');
@@ -660,9 +657,6 @@
             }
         }
 
-        // ==========================================
-        // --- 5. بناء الجدول (توسيط + رمز المادة) ---
-        // ==========================================
         const tlItemsCont = document.getElementById('timeline-items');
         let selDay = (cDay >= 0 && cDay <= 4) ? cDay : 0;
         let timelineCache = [];
@@ -719,7 +713,6 @@
             
             if (!document.getElementById('view-home').classList.contains('active') || timelineCache.length === 0) return;
             
-            // تجميد الخط الزمني إذا كان اليوم إجازة
             const isHoliday = academicCalendar.some(e => e.type === 'holiday' && now >= e.start && now <= e.end);
             const activeBtn = document.querySelector('.day-btn.active');
             const isToday = activeBtn && parseInt(activeBtn.getAttribute('data-day')) === cDay;
@@ -730,7 +723,7 @@
                 return;
             }
 
-            let dotY = 20; let fillH = 0; let isLive = false; let allPast = true; let firstFutTop = null;
+            let dotY = 15; let fillH = 0; let isLive = false; let allPast = true; let firstFutTop = null;
             const currentTotalMins = (new Date().getHours() * 60) + new Date().getMinutes();
 
             timelineCache.forEach((c) => {
@@ -743,26 +736,22 @@
                     c.timeEl.innerHTML = `<span class="live-tag">مباشر</span> ${c.origTimeTxt}`;
                     
                     const progress = (currentTotalMins - c.s) / (c.e - c.s);
-                    // +20 هي بداية الخط من الأعلى top:20px
-                    dotY = c.top + 20 + (c.height * progress);
-                    fillH = dotY - 20; 
+                    dotY = c.top + 15 + (c.height * progress);
+                    fillH = dotY - 15; 
                 } else {
                     allPast = false; c.timeEl.innerHTML = c.origTimeTxt;
-                    if (firstFutTop === null) firstFutTop = c.top + 20;
+                    if (firstFutTop === null) firstFutTop = c.top + 15;
                 }
             });
 
             if (isLive) { pulsingDot.style.opacity = '1'; }
             else if (allPast) { pulsingDot.style.opacity = '0'; fillH = wrapper.offsetHeight - 30; }
-            else if (firstFutTop !== null) { pulsingDot.style.opacity = '0'; fillH = firstFutTop - 20; }
+            else if (firstFutTop !== null) { pulsingDot.style.opacity = '0'; fillH = firstFutTop - 15; }
             
             trackFill.style.height = `${fillH}px`;
             pulsingDot.style.top = `${dotY}px`;
         }
 
-        // ==========================================
-        // --- 6. التقويم (إخفاء الماضي ومحاذاة التواريخ) ---
-        // ==========================================
         const calCont = document.getElementById('calendar-container');
         
         const futureEvents = academicCalendar.filter(ev => {
@@ -812,9 +801,6 @@
         updateStatusWidget();
         setInterval(() => { updateStatusWidget(); updateTimelineProgress(); }, 60000);
 
-        // ==========================================
-        // --- 7. ميزة السحب للجدول ---
-        // ==========================================
         let touchStartX = 0;
         const daysWrapperEl = document.getElementById('days-wrapper');
         
