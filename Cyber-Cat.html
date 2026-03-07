@@ -18,7 +18,10 @@
             --bg-body: #f2f2f7;
             --bg-card: #ffffff;
             --bg-nav: rgba(255, 255, 255, 0.95);
-            --bg-days: #e5e5ea; /* اللون الرمادي للبطاقات المستقبلية */
+            --bg-days: #e5e5ea;
+            
+            /* لون رصاصي غامق للبطاقات المستقبلية في التقويم */
+            --bg-future-card: #e0e0e0; 
             
             --text-main: #1c1c1e;
             --text-sub: #8e8e93;
@@ -27,8 +30,12 @@
             --brand-color: #7c3aed; 
             --brand-soft: rgba(124, 58, 237, 0.1);
             
-            --live-color: #ff3b30;  
-            --live-soft: rgba(255, 59, 48, 0.08);
+            /* أحمر هادئ لإخلاء المسؤولية والتنبيهات */
+            --live-color: #ff453a;  
+            --live-soft: rgba(255, 69, 58, 0.08);
+            
+            /* أحمر شفاف جداً لخلفية إخلاء المسؤولية */
+            --warning-bg: rgba(255, 69, 58, 0.04);
             
             --holiday-color: #5e5ce6; 
             --holiday-soft: rgba(94, 92, 230, 0.08);
@@ -51,14 +58,22 @@
             --bg-body: #0a0a0c; 
             --bg-card: #1c1c1e;
             --bg-nav: rgba(28, 28, 30, 0.95);
-            --bg-days: #2c2c2e; /* الرمادي الداكن في الوضع الليلي */
+            --bg-days: #2c2c2e;
+            
+            /* رصاصي غامق للبطاقات المستقبلية في الوضع الليلي */
+            --bg-future-card: #2c2c2e; 
             
             --text-main: #f2f2f7;
             --text-sub: #98989d;
-            --text-muted: #48484a;
+            --text-muted: #636366;
             
             --brand-color: #8b5cf6;
             --brand-soft: rgba(139, 92, 246, 0.15);
+            
+            --live-color: #ff453a;
+            --live-soft: rgba(255, 69, 58, 0.15);
+            --warning-bg: rgba(255, 69, 58, 0.05);
+            
             --success-green: #30d158; 
             
             --border-color: rgba(255, 255, 255, 0.1);
@@ -76,6 +91,7 @@
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
             overscroll-behavior-y: none;
+            transition: background-color 0.1s ease, color 0.1s ease;
         }
 
         /* ========================================= */
@@ -128,9 +144,8 @@
             width: 40px; height: 40px; border-radius: 50%;
             background: var(--bg-card); border: 1px solid var(--border-color);
             color: var(--text-main); display: flex; align-items: center; justify-content: center;
-            font-size: 1.1rem; cursor: pointer; box-shadow: var(--shadow-sm); 
-            flex-shrink: 0;
-            transform: translateZ(0);
+            font-size: 1.1rem; cursor: pointer; box-shadow: var(--shadow-sm); transition: transform 0.2s;
+            flex-shrink: 0; transform: translateZ(0);
         }
         .theme-btn:active { transform: scale(0.9) translateZ(0); }
 
@@ -142,8 +157,7 @@
         .holiday-alert-banner {
             display: none; background: var(--holiday-soft); border: 1px solid var(--holiday-color);
             border-radius: 16px; padding: 15px 20px; margin-bottom: 5px;
-            animation: fade-in 0.5s ease;
-            transform: translateZ(0); 
+            animation: fade-in 0.5s ease; transform: translateZ(0); 
         }
         .holiday-alert-header { color: var(--holiday-color); font-weight: 900; display: flex; align-items: center; gap: 8px; font-size: 1.1rem; margin-bottom: 5px;}
         .holiday-alert-text { color: var(--text-main); font-weight: 600; font-size: 0.95rem; margin: 0; line-height: 1.5;}
@@ -167,10 +181,57 @@
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
         /* ========================================= */
-        /* --- 4. شريط الأيام الذكي --- */
+        /* --- 4. شريط الأيام الذكي والـ Tooltip --- */
         /* ========================================= */
-        .section-title { font-size: 1.1rem; font-weight: 800; margin-bottom: 15px; color: var(--text-main); display: flex; align-items: center; gap: 8px;}
+        .section-title-wrapper {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; position: relative;
+        }
+        .section-title { font-size: 1.1rem; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 8px; margin: 0;}
         .section-title i { color: var(--brand-color); }
+        
+        .hint-wrapper { position: relative; display: flex; align-items: center; justify-content: center; }
+        
+        .hint-icon {
+            color: var(--text-muted); font-size: 1.1rem; cursor: pointer; padding: 5px; transition: color 0.2s;
+        }
+        .hint-icon:active { color: var(--brand-color); }
+
+        .custom-tooltip {
+            position: absolute;
+            top: calc(100% + 12px);
+            left: -10px;
+            width: max-content;
+            max-width: 220px;
+            background-color: var(--brand-color);
+            color: #ffffff;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-align: center;
+            line-height: 1.5;
+            box-shadow: 0 8px 20px rgba(124, 58, 237, 0.4);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-5px);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 100;
+            pointer-events: none;
+        }
+        .custom-tooltip::before {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: 15px;
+            border-width: 6px;
+            border-style: solid;
+            border-color: transparent transparent var(--brand-color) transparent;
+        }
+        .custom-tooltip.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
 
         .days-wrapper {
             position: relative; display: flex;
@@ -199,35 +260,30 @@
         .day-btn.active .d-num, .day-btn.active .d-name { color: var(--bg-body); }
 
         /* ========================================= */
-        /* --- 5. الخط الزمني (حل جذري 100% رياضي) --- */
+        /* --- 5. الخط الزمني الدقيق (رياضي 100%) --- */
         /* ========================================= */
         .timeline-container { position: relative; margin-top: 10px; }
         
-        /* ترك مسافة 45 بيكسل من اليمين داخل كل عنصر على حدة */
         .timeline-item { position: relative; padding-bottom: 25px; padding-right: 45px; }
         .timeline-item:last-child { padding-bottom: 0; }
         
-        /* التوسيط الرياضي الصريح (المحور يقع عند البيكسل رقم 22 من اليمين):
-           - الخط: يبعد عن اليمين 21 + عرضه 2 = 23 (مركزه = 22)
-           - الدائرة الثابتة: تبعد 15 + عرضها 14 = 29 (مركزها = 15+7 = 22)
-           - النقطة الحمراء: تبعد 17 + عرضها 10 = 27 (مركزها = 17+5 = 22)
-           ملاحظة: تم إلغاء transform: translateX لمنع تفاوت المتصفحات!
-        */
-        .timeline-line { position: absolute; right: 21px; top: 15px; bottom: 30px; width: 2px; background: var(--border-color); z-index: 1; }
-        .timeline-fill { position: absolute; right: 21px; top: 15px; width: 2px; background: var(--live-color); height: 0%; z-index: 2; transition: height 1s linear; }
+        .timeline-line { position: absolute; right: 20px; top: 15px; bottom: 30px; width: 2px; background: var(--border-color); margin-right: -1px; z-index: 1; }
+        .timeline-fill { position: absolute; right: 20px; top: 15px; width: 2px; background: var(--live-color); height: 0%; margin-right: -1px; z-index: 2; transition: height 1s linear; }
         
         .timeline-dot { 
-            position: absolute; right: 15px; top: 12px; 
+            position: absolute; right: 20px; top: 15px; 
             width: 14px; height: 14px; border-radius: 50%; 
-            background: var(--bg-card); border: 3px solid var(--text-muted); z-index: 4; 
+            background: var(--bg-card); border: 3px solid var(--text-muted); 
+            margin-right: -7px; margin-top: -7px; 
+            z-index: 4; 
         }
         
         .timeline-progress-dot { 
-            position: absolute; right: 17px; width: 10px; height: 10px; 
+            position: absolute; right: 20px; width: 10px; height: 10px; 
             border-radius: 50%; background: var(--live-color); z-index: 3; 
             opacity: 0; transition: top 1s linear; 
-            box-shadow: 0 0 0 4px rgba(255, 59, 48, 0.2); 
-            margin-top: -5px; /* لموازنتها مع الخاصية top من الجافاسكربت */
+            box-shadow: 0 0 0 4px rgba(255, 69, 58, 0.2); 
+            margin-right: -5px; margin-top: -5px; 
         }
 
         .class-content { 
@@ -260,10 +316,10 @@
         .timeline-item.live-now .timeline-dot { opacity: 0; } 
         .timeline-item.live-now .class-content { border-color: var(--live-color); background: var(--live-soft); }
         .timeline-item.live-now .class-time { color: var(--live-color); }
-        .timeline-item.live-now .course-code { border-color: rgba(255, 59, 48, 0.3); color: var(--live-color); background: rgba(255, 59, 48, 0.1);}
-        
+        .timeline-item.live-now .course-code { border-color: rgba(255, 69, 58, 0.3); color: var(--live-color); background: rgba(255, 69, 58, 0.1);}
+
         /* ========================================= */
-        /* --- 6. التقويم المصغر (إصلاح الألوان والبطاقات) --- */
+        /* --- 6. التقويم المصغر (إصلاح لون البطاقات) --- */
         /* ========================================= */
         .cal-list { display: flex; flex-direction: column; gap: 12px;}
         
@@ -275,11 +331,11 @@
             transform: translateZ(0); -webkit-transform: translateZ(0); will-change: transform;
         }
         
-        /* تمييز البطاقات المستقبلية بخلفية رمادية وإطار مختلف */
+        /* البطاقات المستقبلية باللون الرصاصي الغامق */
         .cal-row.future-dimmed { 
-            background-color: var(--bg-days); 
-            border: 1px dashed var(--border-color);
-            opacity: 0.85; 
+            background-color: var(--bg-future-card); 
+            border: 1px dashed var(--text-muted); 
+            opacity: 0.9; 
             box-shadow: none; 
         }
 
@@ -321,7 +377,7 @@
         .link-card:active { transform: scale(0.96) translateZ(0); }
 
         /* ========================================= */
-        /* --- 8. الشريط السفلي --- */
+        /* --- 8. الشريط السفلي والفوتر --- */
         /* ========================================= */
         .bottom-nav {
             position: fixed; bottom: 0; left: 0; right: 0;
@@ -333,30 +389,60 @@
             transform: translateZ(0); -webkit-transform: translate3d(0,0,0);
         }
 
-        .nav-item {
-            display: flex; flex-direction: column; align-items: center; gap: 4px;
-            color: var(--text-sub); background: none; border: none;
-            font-family: inherit; font-size: 0.7rem; font-weight: 800;
-            width: 33.3%; cursor: pointer; 
-        }
-        .nav-item i { font-size: 1.4rem; margin-bottom: 2px; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-sub); background: none; border: none; font-family: inherit; font-size: 0.7rem; font-weight: 800; width: 33.3%; cursor: pointer; }
+        .nav-item i { font-size: 1.4rem; margin-bottom: 2px; transition: transform 0.2s;}
         .nav-item.active { color: var(--brand-color); }
         .nav-item.active i { transform: translateY(-2px); }
 
-        /* الشاشات والفوتر */
         .view-section { display: none; animation: fade-in 0.3s ease forwards; }
         .view-section.active { display: flex; flex-direction: column; gap: 20px; }
         @keyframes fade-in { from { opacity: 0; transform: translateY(10px);} to { opacity: 1; transform: translateY(0);} }
 
+        /* تعديل صندوق إخلاء المسؤولية (أحمر هادئ وإطار منقط) */
         .footer-section { text-align: center; margin-top: 10px; padding-bottom: 20px; transform: translateZ(0); }
-        .disclaimer { background: rgba(255, 59, 48, 0.05); border: 1px dashed rgba(255, 59, 48, 0.3); border-radius: 12px; padding: 20px; margin-bottom: 15px; }
-        .disclaimer h4 { color: var(--live-color); font-size: 0.95rem; margin-bottom: 10px; display: flex; justify-content: center; align-items: center; gap: 8px; font-weight: 900;}
-        .disclaimer p { font-size: 0.85rem; color: var(--text-sub); line-height: 1.6; font-weight: 500; margin: 0; }
-        .disclaimer strong { font-weight: 800; color: inherit; } 
+        .disclaimer { 
+            background: var(--warning-bg); 
+            border: 1px dashed rgba(255, 69, 58, 0.4); 
+            border-radius: 12px; 
+            padding: 15px; 
+            margin-bottom: 15px; 
+        }
+        .disclaimer h4 { 
+            color: var(--live-color); 
+            font-size: 0.9rem; 
+            margin-bottom: 8px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            gap: 8px; 
+            font-weight: 700;
+        }
+        .disclaimer p { 
+            font-size: 0.8rem; 
+            color: var(--text-sub); 
+            line-height: 1.6; 
+            font-weight: 500; 
+            margin: 0; 
+        }
+        .disclaimer strong { font-weight: 700; color: inherit; } 
+
+        .swipe-toast {
+            position: fixed; bottom: 85px; left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--text-main); color: var(--bg-body);
+            padding: 10px 20px; border-radius: 50px;
+            font-size: 0.85rem; font-weight: 800;
+            z-index: 1000; opacity: 0; pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2); white-space: nowrap;
+        }
+        .swipe-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
     </style>
 </head>
 <body class="light-mode">
+
+    <div id="swipe-toast" class="swipe-toast"></div>
 
     <div class="app-core">
         
@@ -398,13 +484,23 @@
                     </div>
                 </div>
 
-                <div class="card" style="padding: 20px 15px;">
-                    <h3 class="section-title"><i class="fa-solid fa-layer-group"></i> جدول المحاضرات</h3>
+                <div class="card" id="schedule-card" style="padding: 20px 15px; user-select: none;">
+                    
+                    <div class="section-title-wrapper">
+                        <h3 class="section-title"><i class="fa-solid fa-layer-group"></i> جدول المحاضرات</h3>
+                        
+                        <div class="hint-wrapper">
+                            <i class="fa-solid fa-circle-info hint-icon" id="hint-trigger"></i>
+                            <div class="custom-tooltip" id="custom-tooltip">
+                                اسحب يميناً أو يساراً داخل الجدول لعرض الأيام الأخرى
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="days-wrapper" id="days-wrapper">
                         <div class="sliding-highlight" id="sliding-highlight"></div>
                     </div>
 
-                    <!-- الخط الزمني الرياضي الدقيق -->
                     <div class="timeline-container" id="timeline-container">
                         <div class="timeline-line"></div>
                         <div class="timeline-fill" id="timeline-fill"></div>
@@ -478,6 +574,20 @@
         setInterval(() => {
             document.getElementById('flip-wrapper').classList.toggle('flipped');
         }, 10000);
+
+        const hintTrigger = document.getElementById('hint-trigger');
+        const customTooltip = document.getElementById('custom-tooltip');
+
+        hintTrigger.addEventListener('click', (e) => {
+            e.stopPropagation(); 
+            customTooltip.classList.toggle('show');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!hintTrigger.contains(e.target) && !customTooltip.contains(e.target)) {
+                customTooltip.classList.remove('show');
+            }
+        });
 
         const navBtns = document.querySelectorAll('.nav-item');
         const views = document.querySelectorAll('.view-section');
@@ -666,6 +776,7 @@
             if (!classes) {
                 tlItemsCont.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-sub);"><i class="fa-solid fa-bed" style="font-size: 2rem; margin-bottom: 10px;"></i><br>لا توجد محاضرات في هذا اليوم.</div>`; 
                 document.getElementById('timeline-fill').style.height = '0';
+                document.getElementById('timeline-dot').style.opacity = '0';
                 timelineCache = []; return;
             }
 
@@ -783,10 +894,12 @@
                     countdownHtml = `<div class="cal-countdown active-green">${txt}</div>`;
                 }
 
+                let iconHtml = `<i class="${e.icon}"></i>`;
+
                 return `
                 <div class="cal-row type-${e.type} ${extraClass}">
                     <div class="cal-icon-col">
-                        <div class="cal-icon"><i class="${e.icon}"></i></div>
+                        <div class="cal-icon">${iconHtml}</div>
                     </div>
                     <div class="cal-text">
                         <div class="cal-title">${e.title}</div>
@@ -801,21 +914,42 @@
         updateStatusWidget();
         setInterval(() => { updateStatusWidget(); updateTimelineProgress(); }, 60000);
 
-        let touchStartX = 0;
-        const daysWrapperEl = document.getElementById('days-wrapper');
+        let scheduleTouchStartX = 0;
+        let scheduleTouchStartY = 0;
+        const scheduleCard = document.getElementById('schedule-card');
         
-        daysWrapperEl.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, {passive: true});
-        daysWrapperEl.addEventListener('touchend', e => {
+        function showToast(msg) {
+            const toast = document.getElementById('swipe-toast');
+            toast.innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+        
+        scheduleCard.addEventListener('touchstart', e => { 
+            scheduleTouchStartX = e.changedTouches[0].screenX; 
+            scheduleTouchStartY = e.changedTouches[0].screenY;
+        }, {passive: true});
+        
+        scheduleCard.addEventListener('touchend', e => {
             const touchEndX = e.changedTouches[0].screenX;
-            const diffX = touchStartX - touchEndX;
+            const touchEndY = e.changedTouches[0].screenY;
+            const diffX = scheduleTouchStartX - touchEndX;
+            const diffY = scheduleTouchStartY - touchEndY;
             
-            if (Math.abs(diffX) > 40) {
+            if (Math.abs(diffX) > 40 && Math.abs(diffX) > Math.abs(diffY)) {
                 const currentActive = document.querySelector('.day-btn.active');
+                if(!currentActive) return;
+                
                 const currentIndex = parseInt(currentActive.getAttribute('data-day'));
                 let nextIndex = currentIndex;
                 
-                if (diffX > 0 && currentIndex > 0) nextIndex--; 
-                else if (diffX < 0 && currentIndex < 4) nextIndex++; 
+                if (diffX < 0) { 
+                    if (currentIndex < 4) { nextIndex++; } 
+                    else { showToast('اسحب لليسار'); }
+                } else if (diffX > 0) { 
+                    if (currentIndex > 0) { nextIndex--; } 
+                    else { showToast('اسحب لليمين'); }
+                } 
                 
                 if (nextIndex !== currentIndex) {
                     document.querySelector(`.day-btn[data-day="${nextIndex}"]`).click();
